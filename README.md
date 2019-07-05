@@ -1,12 +1,31 @@
+**Установка:**
+
+Настройка сервера Apache:
+
+...
+
+Настройка MySql:
+
+хост: `localhost`
+
+порт: `3306`
+
+база: `webfood`
+
+юзер: `root`
+
+пароль: `1234`
+
+Подключение к db в PhpStorm:
+
+`jdbc:mysql://localhost:3306/webfood?useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC`
+
+
 **Как скачать проект:**
 
 В папке где будет находиться проект нужно выполнить команду:
 
 `git clone http://adlibtech.ru/git/alvastudio/WebFood.git`
-
-Подключение к db в PhpStorm:
-
-`jdbc:mysql://localhost:3306/webfood?useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC`
 
 Чтобы заполнить базу данных таблицами:
 
