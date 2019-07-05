@@ -119,3 +119,9 @@
 `composer install`
 
 `php ./vendor/bin/codecept build`
+
+
+### **Почтовый сервер**
+
+E-mail: `webfood.test@gmail.com`
+Пароль: `GrDM7b6h57HvZCq`
