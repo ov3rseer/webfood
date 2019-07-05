@@ -1,10 +1,70 @@
-**Установка:**
+### **Установка:**
 
-Настройка сервера Apache:
+#### Настройка сервера Apache:
 
-...
+Из корня / выполнить команды:
 
-Настройка MySql:
+`cd etc`
+
+`sudo gedit hosts`
+
+Внести изменения в файл hosts:
+
+`127.0.0.1 backend.webfood.local webfood.local`
+
+Далее выполняем команды:
+
+`cd apache2/sites-available/`
+
+`sudo cp 000-default.conf backend.webfood.local.conf`
+
+`sudo cp 000-default.conf webfood.local.conf`
+
+Внести изменения в файлы (обратить внимание на <путь к проекту> далее):
+
+`sudo gedit backend.webfood.local.conf `
+
+    <VirtualHost *:80>
+        ServerName backend.webfood.local
+        DocumentRoot "/<путь к проекту>/webfood/backend/web"      
+        <Directory "/<путь к проекту>/webfood/backend/web">
+            RewriteEngine on
+            RewriteCond %{REQUEST_FILENAME} !-f
+            RewriteCond %{REQUEST_FILENAME} !-d
+            RewriteRule . index.php
+            DirectoryIndex index.php
+            Require all granted
+        </Directory>
+    </VirtualHost>
+
+`sudo gedit webfood.local.conf `
+
+    <VirtualHost *:80>
+        ServerName webfood.local
+        DocumentRoot "/<путь к проекту>/webfood/frontend/web"      
+        <Directory "/<путь к проекту>/webfood/frontend/web">
+            RewriteEngine on
+            RewriteCond %{REQUEST_FILENAME} !-f
+            RewriteCond %{REQUEST_FILENAME} !-d
+            RewriteRule . index.php
+            DirectoryIndex index.php
+            Require all granted
+        </Directory>
+    </VirtualHost>
+
+#### Настройка MySql:
+
+После установки mysql выполняем команды:
+
+`sudo mysql -u root`
+
+`ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY '1234';`
+
+`FLUSH PRIVILEGES;`
+
+`CREATE DATABASE webfood CHARACTER SET utf8 COLLATE utf8_general_ci;`
+
+`FLUSH PRIVILEGES;`
 
 хост: `localhost`
 
@@ -16,12 +76,12 @@
 
 пароль: `1234`
 
-Подключение к db в PhpStorm:
+#### Подключение к db в PhpStorm:
 
 `jdbc:mysql://localhost:3306/webfood?useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC`
 
 
-**Как скачать проект:**
+### **Как скачать проект:**
 
 В папке где будет находиться проект нужно выполнить команду:
 
@@ -32,7 +92,7 @@
 `php yii migrate`
 
 
-**Правила:**
+### **Правила:**
 
 Перед тем как локально вносить изменения, необходимо сделать новую ветку. 
 После внесения изменений выполнить команды:
@@ -46,7 +106,7 @@
 **`НИ В КОЕМ СЛУЧАЕ НЕ ДЕЛАЕМ COMMIT В MASTER!!!`**
 
 
-**Запуск тестов:**
+### **Запуск тестов:**
 
 Из корня запустить команду:
 
