@@ -43,11 +43,13 @@ class SignupCest
     {
         $I->submitForm($this->formId, [
             'SignupForm[username]' => 'tester',
+            'SignupForm[surname]' => 'tester',
+            'SignupForm[name]' => 'tester',
             'SignupForm[email]' => 'tester.email@example.com',
             'SignupForm[password]' => 'tester_password',
         ]);
 
-        $I->seeRecord('common\models\User', [
+        $I->seeRecord('common\models\reference\User', [
             'username' => 'tester',
             'email' => 'tester.email@example.com',
         ]);

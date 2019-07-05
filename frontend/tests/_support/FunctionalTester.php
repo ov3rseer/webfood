@@ -1,7 +1,7 @@
 <?php
 namespace frontend\tests;
 
-use _generated\FunctionalTesterActions;
+
 use Codeception\Actor;
 
 /**
@@ -21,6 +21,8 @@ use Codeception\Actor;
  */
 class FunctionalTester extends Actor
 {
+    use _generated\FunctionalTesterActions;
+
     public function seeValidationError($message)
     {
         $this->see($message, '.help-block');

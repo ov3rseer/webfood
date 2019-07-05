@@ -26,7 +26,7 @@ class LoginFormTest extends Unit
         return [
             'user' => [
                 'class' => UserFixture::class,
-                'dataFile' => codecept_data_dir() . 'user.php'
+                'dataFile' => codecept_data_dir() . 'ref_user.php'
             ]
         ];
     }

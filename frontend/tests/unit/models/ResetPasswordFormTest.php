@@ -20,7 +20,7 @@ class ResetPasswordFormTest extends Unit
         $this->tester->haveFixtures([
             'user' => [
                 'class' => UserFixture::class,
-                'dataFile' => codecept_data_dir() . 'user.php'
+                'dataFile' => codecept_data_dir() . 'ref_user.php'
             ],
         ]);
     }

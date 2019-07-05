@@ -18,7 +18,7 @@ class LoginCest
     {
         return [
             'user' => [
-                'class' => UserFixture::className(),
+                'class' => UserFixture::class,
                 'dataFile' => codecept_data_dir() . 'login_data.php',
             ],
         ];
@@ -50,12 +50,9 @@ class LoginCest
         $I->seeValidationError('Incorrect username or password.');
     }
 
-    /**
-     * @param FunctionalTester $I
-     */
     public function checkInactiveAccount(FunctionalTester $I)
     {
-        $I->submitForm('#login-form', $this->formParams('test.test', 'Test1234'));
+        $I->submitForm('#login-form', $this->formParams('test.test', 'Test123'));
         $I->seeValidationError('Incorrect username or password');
     }
 

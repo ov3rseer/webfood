@@ -189,11 +189,7 @@ class User extends Reference implements IdentityInterface
         if (!static::isPasswordResetTokenValid($token)) {
             return null;
         }
-
-        return static::findOne([
-            'password_reset_token' => $token,
-            'is_active' => true,
-        ]);
+        return static::findOne(['password_reset_token' => $token]);
     }
 
     /**
@@ -204,10 +200,7 @@ class User extends Reference implements IdentityInterface
      */
     public static function findByVerificationToken($token)
     {
-        return static::findOne([
-            'verification_token' => $token,
-            'is_active' => false
-        ]);
+        return static::findOne(['verification_token' => $token]);
     }
 
     /**

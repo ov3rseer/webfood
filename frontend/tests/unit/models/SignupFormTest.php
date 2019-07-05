@@ -4,6 +4,7 @@ namespace frontend\tests\unit\models;
 use Codeception\Test\Unit;
 use common\fixtures\UserFixture;
 use frontend\models\SignupForm;
+use yii\base\Exception;
 
 class SignupFormTest extends Unit
 {
@@ -18,15 +19,20 @@ class SignupFormTest extends Unit
         $this->tester->haveFixtures([
             'user' => [
                 'class' => UserFixture::class,
-                'dataFile' => codecept_data_dir() . 'user.php'
+                'dataFile' => codecept_data_dir() . 'ref_user.php'
             ]
         ]);
     }
 
+    /**
+     * @throws Exception
+     */
     public function testCorrectSignup()
     {
         $model = new SignupForm([
             'username' => 'some_username',
+            'surname' => 'some_username',
+            'name' => 'some_username',
             'email' => 'some_email@example.com',
             'password' => 'some_password',
         ]);
@@ -35,7 +41,7 @@ class SignupFormTest extends Unit
         expect($user)->true();
 
         /** @var \common\models\reference\User $user */
-        $user = $this->tester->grabRecord('common\models\User', [
+        $user = $this->tester->grabRecord('common\models\reference\User', [
             'username' => 'some_username',
             'email' => 'some_email@example.com',
         ]);
@@ -51,6 +57,9 @@ class SignupFormTest extends Unit
         expect($mail->toString())->contains($user->verification_token);
     }
 
+    /**
+     * @throws Exception
+     */
     public function testNotCorrectSignup()
     {
         $model = new SignupForm([

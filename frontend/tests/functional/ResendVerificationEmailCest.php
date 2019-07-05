@@ -21,8 +21,8 @@ class ResendVerificationEmailCest
     {
         return [
             'user' => [
-                'class' => UserFixture::className(),
-                'dataFile' => codecept_data_dir() . 'user.php',
+                'class' => UserFixture::class,
+                'dataFile' => codecept_data_dir() . 'ref_user.php',
             ],
         ];
     }
@@ -65,7 +65,7 @@ class ResendVerificationEmailCest
 
     public function checkAlreadyVerifiedEmail(FunctionalTester $I)
     {
-        $I->submitForm($this->formId, $this->formParams('test2@mail.com'));
+        $I->submitForm($this->formId, $this->formParams('test3@mail.com'));
         $I->seeValidationError('There is no user with this email address.');
     }
 
@@ -73,10 +73,9 @@ class ResendVerificationEmailCest
     {
         $I->submitForm($this->formId, $this->formParams('test@mail.com'));
         $I->canSeeEmailIsSent();
-        $I->seeRecord('common\models\User', [
+        $I->seeRecord('common\models\reference\User', [
             'email' => 'test@mail.com',
             'username' => 'test.test',
-            'status' => \common\models\User::STATUS_INACTIVE
         ]);
         $I->see('Check your email for further instructions.');
     }

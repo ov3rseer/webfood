@@ -18,8 +18,8 @@ class VerifyEmailCest
     {
         return [
             'user' => [
-                'class' => UserFixture::className(),
-                'dataFile' => codecept_data_dir() . 'user.php',
+                'class' => UserFixture::class,
+                'dataFile' => codecept_data_dir() . 'ref_user.php',
             ],
         ];
     }
@@ -47,7 +47,7 @@ class VerifyEmailCest
 
     public function checkAlreadyActivatedToken(FunctionalTester $I)
     {
-        $I->amOnRoute('site/verify-email', ['token' => 'already_used_token_1548675330']);
+        $I->amOnRoute('site/verify-email', ['token' => 'already_used_token_15486753301']);
         $I->canSee('Bad Request', 'h1');
         $I->canSee('Wrong verify email token.');
     }
@@ -59,7 +59,7 @@ class VerifyEmailCest
         $I->canSee('Congratulations!', 'h1');
         $I->see('Logout (test.test)', 'form button[type=submit]');
 
-        $I->seeRecord('common\models\User', [
+        $I->seeRecord('common\models\reference\User', [
            'username' => 'test.test',
            'email' => 'test@mail.com',
         ]);
