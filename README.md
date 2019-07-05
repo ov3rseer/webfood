@@ -1,6 +1,8 @@
-Как скачать проект
+**Как скачать проект:**
 
-**Правила**
+...
+
+**Правила:**
 
 Перед тем как локально вносить изменения необходимо сделать новую ветку. 
 После внесения изменений:
@@ -13,7 +15,7 @@
 
 **`НИ В КОЕМ СЛУЧАЕ НЕ ДЕЛАЕМ COMMIT В MASTER!!!`**
 
-**Подключение к db в PhpStorm**
+**Подключение к db в PhpStorm:**
 
 `jdbc:mysql://localhost:3306/webfood?useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC`
 
