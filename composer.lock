@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "4d0d228be8c2a94d9ee9cea5d23b67ea",
+    "content-hash": "bee450e40d1a0166f78c825a23d91c18",
     "packages": [
         {
             "name": "behat/gherkin",
@@ -129,6 +129,44 @@
             ]
         },
         {
+            "name": "bower-asset/jquery-ui",
+            "version": "1.12.1",
+            "source": {
+                "type": "git",
+                "url": "git@github.com:components/jqueryui.git",
+                "reference": "44ecf3794cc56b65954cc19737234a3119d036cc"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/components/jqueryui/zipball/44ecf3794cc56b65954cc19737234a3119d036cc",
+                "reference": "44ecf3794cc56b65954cc19737234a3119d036cc",
+                "shasum": null
+            },
+            "require": {
+                "bower-asset/jquery": ">=1.6"
+            },
+            "type": "bower-asset",
+            "license": [
+                "MIT"
+            ]
+        },
+        {
+            "name": "bower-asset/jqueryui-timepicker-addon",
+            "version": "v1.6.3",
+            "source": {
+                "type": "git",
+                "url": "git@github.com:trentrichardson/jQuery-Timepicker-Addon.git",
+                "reference": "397d6ed930649ea7224123d140d341e9f3ffaba6"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/trentrichardson/jQuery-Timepicker-Addon/zipball/397d6ed930649ea7224123d140d341e9f3ffaba6",
+                "reference": "397d6ed930649ea7224123d140d341e9f3ffaba6",
+                "shasum": null
+            },
+            "type": "bower-asset"
+        },
+        {
             "name": "bower-asset/punycode",
             "version": "v1.3.2",
             "source": {
@@ -140,6 +178,22 @@
                 "type": "zip",
                 "url": "https://api.github.com/repos/bestiejs/punycode.js/zipball/38c8d3131a82567bfef18da09f7f4db68c84f8a3",
                 "reference": "38c8d3131a82567bfef18da09f7f4db68c84f8a3",
+                "shasum": null
+            },
+            "type": "bower-asset"
+        },
+        {
+            "name": "bower-asset/select2",
+            "version": "4.0.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/select2/select2.git",
+                "reference": "622a619d25358b86a93c2335f88e1884acc9ccb8"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/select2/select2/zipball/622a619d25358b86a93c2335f88e1884acc9ccb8",
+                "reference": "622a619d25358b86a93c2335f88e1884acc9ccb8",
                 "shasum": null
             },
             "type": "bower-asset"
@@ -927,6 +981,64 @@
                 "url"
             ],
             "time": "2019-07-01T23:21:34+00:00"
+        },
+        {
+            "name": "janisto/yii2-timepicker",
+            "version": "1.1.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/janisto/yii2-timepicker.git",
+                "reference": "91b3e8483404f0667eaa9fd73acf121a99494999"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/janisto/yii2-timepicker/zipball/91b3e8483404f0667eaa9fd73acf121a99494999",
+                "reference": "91b3e8483404f0667eaa9fd73acf121a99494999",
+                "shasum": ""
+            },
+            "require": {
+                "bower-asset/jqueryui-timepicker-addon": ">=1.5.2",
+                "php": ">=5.4.0",
+                "yiisoft/yii2": "*",
+                "yiisoft/yii2-jui": ">=2.0.4"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "~4.5",
+                "scrutinizer/ocular": "~1.1"
+            },
+            "type": "yii2-extension",
+            "extra": {
+                "asset-installer-paths": {
+                    "bower-asset-library": "vendor/bower"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "janisto\\timepicker\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "public domain"
+            ],
+            "authors": [
+                {
+                    "name": "Jani Mikkonen",
+                    "email": "janisto@php.net"
+                }
+            ],
+            "description": "Yii 2 widget for jQuery Timepicker Addon.",
+            "homepage": "https://github.com/janisto/yii2-timepicker",
+            "keywords": [
+                "date",
+                "datetime",
+                "extension",
+                "time",
+                "timepicker",
+                "widget",
+                "yii2"
+            ],
+            "time": "2015-11-12T10:16:09+00:00"
         },
         {
             "name": "myclabs/deep-copy",
@@ -3693,6 +3805,52 @@
                 "yii2"
             ],
             "time": "2018-07-05T15:44:47+00:00"
+        },
+        {
+            "name": "yiisoft/yii2-jui",
+            "version": "2.0.7",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/yiisoft/yii2-jui.git",
+                "reference": "ce45c16d4fbbe7d1c516d8d0e8311e07f6138eed"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/yiisoft/yii2-jui/zipball/ce45c16d4fbbe7d1c516d8d0e8311e07f6138eed",
+                "reference": "ce45c16d4fbbe7d1c516d8d0e8311e07f6138eed",
+                "shasum": ""
+            },
+            "require": {
+                "bower-asset/jquery-ui": "~1.12.1",
+                "yiisoft/yii2": "~2.0.4"
+            },
+            "type": "yii2-extension",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "2.0.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "yii\\jui\\": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-3-Clause"
+            ],
+            "authors": [
+                {
+                    "name": "Qiang Xue",
+                    "email": "qiang.xue@gmail.com"
+                }
+            ],
+            "description": "The Jquery UI extension for the Yii framework",
+            "keywords": [
+                "jQuery UI",
+                "yii2"
+            ],
+            "time": "2017-11-25T15:32:29+00:00"
         },
         {
             "name": "yiisoft/yii2-swiftmailer",

@@ -2,9 +2,20 @@
 
 namespace backend\widgets;
 
+use backend\widgets\BootstrapDateRangePicker\BootstrapDateRangePicker;
+use backend\widgets\IframeDialog\IframeDialogAsset;
+use backend\widgets\Select2\Select2;
 use common\models\ActiveRecord;
-use ReflectionException;
+use common\models\document\Document;
+use common\models\enum\Enum;
+use common\models\reference\Reference;
+use ReflectionClass;
+use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
+use yii\helpers\Inflector;
+use yii\helpers\Url;
+use yii\web\JsExpression;
+use yii\web\View;
 
 class ActiveField extends \yii\widgets\ActiveField
 {
@@ -105,10 +116,263 @@ class ActiveField extends \yii\widgets\ActiveField
     }
 
     /**
+     * Генерация поля для ввода даты со временем
+     * @param boolean $singleDate выбор только одной даты
+     * @return $this
+     * @throws \Exception
+     */
+    public function dateTime($singleDate = true)
+    {
+        $this->parts['{input}'] = BootstrapDateRangePicker::widget([
+            'model' => $this->model,
+            'attribute' => Html::getAttributeName($this->attribute),
+            'options' => $this->inputOptions,
+            'clientOptions' => [
+                'singleDatePicker' => $singleDate,
+                'autoUpdateInput' => false,
+                'timePicker' => true,
+                'timePicker24Hour' => true,
+                'timePickerSeconds' => true,
+                'locale' => [
+                    'format' => 'YYYY-MM-DD HH:mm:ss',
+                    'applyLabel' => 'Применить',
+                    'cancelLabel' => 'Отмена',
+                    'customRangeLabel' => 'Вручную',
+                ],
+                'linkedCalendars' => false,
+                'ranges' => [
+                    'Сегодня' => [
+                        new JsExpression('moment().hours(0).minutes(0).seconds(0)'),
+                        new JsExpression('moment().hours(23).minutes(59).seconds(59)')
+                    ],
+                    'Вчера' => [
+                        new JsExpression('moment().subtract(1, "days").hours(0).minutes(0).seconds(0)'),
+                        new JsExpression('moment().subtract(1, "days").hours(23).minutes(59).seconds(59)')
+                    ],
+                    'Текущая неделя' => [
+                        new JsExpression('moment().startOf("week").hours(0).minutes(0).seconds(0)'),
+                        new JsExpression('moment().endOf("week").hours(23).minutes(59).seconds(59)')
+                    ],
+                    'Прошлая неделя' => [
+                        new JsExpression('moment().subtract(1, "week").startOf("week").hours(0).minutes(0).seconds(0)'),
+                        new JsExpression('moment().subtract(1, "week").endOf("week").hours(23).minutes(59).seconds(59)')
+                    ],
+                    'Текущий месяц' => [
+                        new JsExpression('moment().startOf("month").hours(0).minutes(0).seconds(0)'),
+                        new JsExpression('moment().endOf("month").hours(23).minutes(59).seconds(59)')
+                    ],
+                    'Прошлый месяц' => [
+                        new JsExpression('moment().subtract(1, "month").startOf("month").hours(0).minutes(0).seconds(0)'),
+                        new JsExpression('moment().subtract(1, "month").endOf("month").hours(23).minutes(59).seconds(59)')
+                    ],
+                ],
+            ],
+            'clientEvents' => [
+                'apply.daterangepicker' => new JsExpression('function(ev, picker) {
+                    $(this).val(picker.startDate.format("YYYY-MM-DD HH:mm:ss") ' . ($singleDate ? '' : ' + " - " + picker.endDate.format("YYYY-MM-DD HH:mm:ss")'). ');
+                    $(this).trigger("change");
+                }'),
+                'cancel.daterangepicker' => new JsExpression('function(ev, picker) {
+                    $(this).val("");
+                    $(this).trigger("change");
+                }'),
+            ],
+        ]);
+        return $this;
+    }
+
+    /**
+     * Генерация поля для ввода даты со временем
+     * @param boolean $singleDate выбор только одной даты
+     * @return $this
+     * @throws \Exception
+     */
+    public function date($singleDate = true)
+    {
+        $this->parts['{input}'] = BootstrapDateRangePicker::widget([
+            'model' => $this->model,
+            'attribute' => Html::getAttributeName($this->attribute),
+            'options' => $this->inputOptions,
+            'clientOptions' => [
+                'singleDatePicker' => $singleDate,
+                'autoUpdateInput' => false,
+                'locale' => [
+                    'format' => 'YYYY-MM-DD',
+                    'applyLabel' => 'Применить',
+                    'cancelLabel' => 'Отмена',
+                    'customRangeLabel' => 'Вручную',
+                ],
+                'linkedCalendars' => false,
+                'ranges' => [
+                    'Сегодня' => [
+                        new JsExpression('moment().hours(0).minutes(0).seconds(0)'),
+                        new JsExpression('moment().hours(23).minutes(59).seconds(59)')
+                    ],
+                    'Вчера' => [
+                        new JsExpression('moment().subtract(1, "days").hours(0).minutes(0).seconds(0)'),
+                        new JsExpression('moment().subtract(1, "days").hours(23).minutes(59).seconds(59)')
+                    ],
+                    'Текущая неделя' => [
+                        new JsExpression('moment().startOf("week").hours(0).minutes(0).seconds(0)'),
+                        new JsExpression('moment().endOf("week").hours(23).minutes(59).seconds(59)')
+                    ],
+                    'Прошлая неделя' => [
+                        new JsExpression('moment().subtract(1, "week").startOf("week").hours(0).minutes(0).seconds(0)'),
+                        new JsExpression('moment().subtract(1, "week").endOf("week").hours(23).minutes(59).seconds(59)')
+                    ],
+                    'Текущий месяц' => [
+                        new JsExpression('moment().startOf("month").hours(0).minutes(0).seconds(0)'),
+                        new JsExpression('moment().endOf("month").hours(23).minutes(59).seconds(59)')
+                    ],
+                    'Прошлый месяц' => [
+                        new JsExpression('moment().subtract(1, "month").startOf("month").hours(0).minutes(0).seconds(0)'),
+                        new JsExpression('moment().subtract(1, "month").endOf("month").hours(23).minutes(59).seconds(59)')
+                    ],
+                ],
+            ],
+            'clientEvents' => [
+                'apply.daterangepicker' => new JsExpression('function(ev, picker) {
+                    $(this).val(picker.startDate.format("YYYY-MM-DD") ' . ($singleDate ? '' : ' + " - " + picker.endDate.format("YYYY-MM-DD")'). ');
+                    $(this).trigger("change");
+                }'),
+                'cancel.daterangepicker' => new JsExpression('function(ev, picker) {
+                    $(this).val("");
+                    $(this).trigger("change");
+                }'),
+            ],
+        ]);
+        return $this;
+    }
+
+    /**
+     * Генерация поля для вывода ссылки
+     * @param boolean $hasMultiselect
+     * @return $this
+     * @throws \ReflectionException
+     * @throws \yii\base\InvalidConfigException
+     * @throws \Exception
+     */
+    public function reference($hasMultiselect = false)
+    {
+        $attribute = Html::getAttributeName($this->attribute);
+        if ($relation = $this->model->getAttributeRelation($attribute)) {
+            /** @var ActiveRecord $class */
+            $class = $relation['class'];
+            if (is_subclass_of($class, Enum::class, true)) {
+                if (!isset($this->inputOptions['prompt'])) {
+                    $this->inputOptions['prompt'] = '(не указано)';
+                } else if ($this->inputOptions['prompt'] === false) {
+                    unset($this->inputOptions['prompt']);
+                }
+                $items = isset($this->additionalOptions['items'])
+                    ? $this->additionalOptions['items']
+                    : $class::find()->indexBy('id')->orderBy('name')->all();
+                $this->dropDownList($items, $this->inputOptions);
+                $this->parts['{label}'] = Html::activeLabel($this->model, $relation['name'], $this->labelOptions);
+                return $this;
+            } else if (is_subclass_of($class, Reference::class, true) || is_subclass_of($class, Document::class, true)) {
+                $isDocument = is_subclass_of($class, Document::class, true);
+                $controllerId = '/' . ($isDocument ? 'document' : 'reference') . '/' . Inflector::camel2id((new ReflectionClass($class))->getShortName());
+                $widgetConfig = [
+                    'options' => array_merge($this->inputOptions, [
+                        'class' => 'reference-field',
+                    ]),
+                    'pluginOptions' => [
+                        'placeholder' => isset($this->additionalOptions['placeholder']) ? $this->additionalOptions['placeholder'] : 'Выберите значение...',
+                        'allowClear' => true,
+                        'width' => null,
+                    ],
+                ];
+                $items = [];
+                if ($hasMultiselect) {
+                    /** @var Reference[]|Document[] $models */
+                    $models = $this->model->{$relation['name']};
+                    foreach ($models as $model) {
+                        $items[$model->id] = (string)$model;
+                    }
+                    $widgetConfig = ArrayHelper::merge($widgetConfig, [
+                        'options' => [
+                            'multiple' => true,
+                        ],
+                        'name' => isset($this->inputOptions['name'])
+                            ? $this->inputOptions['name'] : Html::getInputName($this->model, $this->attribute) . '[]',
+                        'items' => $items,
+                        'value' => array_keys($items),
+                        'pluginOptions' => [
+                            'multiple' => true,
+                        ],
+                    ]);
+                } else {
+                    $items[''] = '';
+                    if (key_exists('value', $widgetConfig['options'])) {
+                        $value = $widgetConfig['options']['value'];
+                        if (is_array($value)) {
+                            $items[$value[0]] = $value[1];
+                        } else {
+                            $items[$value] = $value;
+                        }
+                    } else {
+                        $value = $this->model->{$attribute};
+                        if ($value) {
+                            $items[$value] = (string)$class::findOne($value);
+                        }
+                    }
+                    $widgetConfig = ArrayHelper::merge($widgetConfig, [
+                        'model'     => $this->model,
+                        'attribute' => $this->attribute,
+                    ]);
+                }
+                if (isset($this->additionalOptions['items']) && is_array($this->additionalOptions['items'])) {
+                    $widgetConfig['items'] = ['' => ''];
+                    foreach ($this->additionalOptions['items'] as $key => $val) {
+                        $widgetConfig['items'][$key] = $val;
+                    }
+                } else {
+                    $widgetConfig['items'] = $items;
+                    $widgetConfig['pluginOptions']['ajax'] = array_merge([
+                        'url' => (!empty($this->additionalOptions['searchUrl']) ? $this->additionalOptions['searchUrl'] : Url::to([$controllerId . '/search'])),
+                        'dataType' => 'json',
+                        'quietMillis' => 250,
+                        'data' => new JsExpression('function(term, page) {return term;}'),
+                        'processResults' => new JsExpression('function(data, page) { return { results: data }; }'),
+                    ], !empty( $this->additionalOptions['ajax-options']) ? $this->additionalOptions['ajax-options'] : []);
+                }
+                $this->parts['{input}'] = Html::beginTag('div', ['class' => 'input-group select2-bootstrap-append']);
+                $this->parts['{input}'] .= Select2::widget($widgetConfig);
+                if (empty($this->additionalOptions['items'])) {
+                    $this->parts['{input}'] .= Html::beginTag('div', ['class' => 'input-group-btn']);
+                    $this->parts['{input}'] .= Html::a('...',
+                        [
+                            (!empty($this->additionalOptions['selectUrl']) ? $this->additionalOptions['selectUrl'] : $controllerId . '/select'),
+                            'layout' => 'iframe'
+                        ],
+                        ['class' => 'btn btn-default reference-field-select']
+                    );
+                    $this->parts['{input}'] .= Html::endTag('div');
+                }
+                $this->parts['{input}'] .= Html::endTag('div');
+
+                $view = $this->form->getView();
+                IframeDialogAsset::register($view);
+                $scripts = "
+                    $('.reference-field-select').click(function(e) {
+                        e.preventDefault();
+                        $.iframedialog({url:$(this).attr('href'), opener:$(this).closest('.input-group')});
+                    });
+                ";
+                $view->registerJs($scripts, View::POS_READY, 'reference-field');
+                $this->parts['{label}'] = Html::activeLabel($this->model, $relation['name'], $this->labelOptions);
+                return $this;
+            }
+        }
+        return $this->textInput();
+    }
+
+    /**
      * Генерация поля для вывода значения без возможности ручного изменения
      * @param array $options
      * @return $this
-     * @throws ReflectionException
+     * @throws \ReflectionException
      */
     public function readonly($options = [])
     {

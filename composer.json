@@ -20,7 +20,9 @@
         "yiisoft/yii2-swiftmailer": "~2.0.0 || ~2.1.0",
         "codeception/codeception": "*",
         "codeception/specify": "*",
-        "codeception/verify": "*"
+        "codeception/verify": "*",
+        "bower-asset/select2": "4.0.2",
+        "bower-asset/bootstrap-daterangepicker": "^2.1"
     },
     "require-dev": {
         "yiisoft/yii2-debug": "~2.1.0",
