@@ -52,6 +52,8 @@
         </Directory>
     </VirtualHost>
 
+`sudo a2ensite backend.webfood.local.conf webfood.local.conf`
+
 #### Настройка MySql:
 
 После установки mysql выполняем команды:
