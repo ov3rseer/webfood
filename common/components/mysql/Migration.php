@@ -338,7 +338,6 @@ class Migration extends \yii\db\Migration
             'id'              => $this->primaryKey(),
             'date'            => $this->timestamp()->notNull()->indexed(),
             'status_id'       => $this->integer()->notNull()->indexed()->foreignKey('{{%enum_document_status}}', 'id'),
-            'organization_id' => $this->integer()->notNull()->indexed()->foreignKey('{{%ref_organization}}', 'id'),
             'document_basis_type_id' => $this->integer()->foreignKey('{{%sys_entity}}', 'id'),
             'document_basis_id' => $this->integer(),
         ];
