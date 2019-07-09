@@ -4,8 +4,9 @@ namespace backend\widgets;
 
 use backend\models\form\Form;
 use common\models\ActiveRecord;
+use yii\widgets\ActiveForm as BaseActiveForm;
 
-class ActiveForm extends \yii\widgets\ActiveForm
+class ActiveForm extends BaseActiveForm
 {
     /**
      * @var string the default field class name when calling [[field()]] to create a new field.
@@ -36,22 +37,32 @@ class ActiveForm extends \yii\widgets\ActiveForm
      */
     public function autoField($model, $attribute, $options = [])
     {
-        if ($model->hasAttribute($attribute) && !$model->isAttributeSafe($attribute)) {
+        $relationData = $model->getAttributeRelation($attribute);
+        $relation = $relationData ? $relationData['name'] : null;
+        if (!$model->isAttributeSafe($attribute) && !$model->getRelation($attribute, false) && (!$relation || !$model->getRelation($relation, false))) {
             return false;
         }
-        unset($options['type'], $options['displayType']);
         $fieldOptions = $model->getFieldOptions($attribute);
         if (isset($fieldOptions['additionalOptions'])) {
             $options['additionalOptions'] = $fieldOptions['additionalOptions'];
         }
+        $displayType = !empty($options['displayType']) ? $options['displayType'] : $fieldOptions['displayType'];
+        unset($options['type'], $options['displayType']);
         /** @var ActiveField $result */
         $result = $this->field($model, $attribute, $options);
-        switch ($fieldOptions['displayType']) {
+        switch ($displayType) {
             case ActiveField::TEXT:
-                $result->textarea();
+                $toggleButton = isset($options['additionalOptions']) && !empty($options['additionalOptions']['toggleButton']);
+                $result->textarea([], $toggleButton);
                 break;
             case ActiveField::BOOL:
-                $result->checkbox();
+                if ($model->scenario == $model::SCENARIO_SEARCH) {
+                    $result->dropDownList(
+                        ['' => '(не указано)', '0' => 'Нет', '1' => 'Да']
+                    );
+                } else {
+                    $result->checkbox();
+                }
                 break;
             case ActiveField::HIDDEN:
                 $result->template = '{input}';
@@ -65,7 +76,10 @@ class ActiveForm extends \yii\widgets\ActiveForm
                 break;
             case ActiveField::TIMESTAMP:
             case ActiveField::DATETIME:
-                $result->dateTime();
+                $result->dateTime($model->scenario != $model::SCENARIO_SEARCH && !($model instanceof Report));
+                break;
+            case ActiveField::DATE:
+                $result->date($model->scenario != $model::SCENARIO_SEARCH && !($model instanceof Report));
                 break;
             case ActiveField::ENUM:
             case ActiveField::REFERENCE:
@@ -82,6 +96,15 @@ class ActiveForm extends \yii\widgets\ActiveForm
                 break;
             case ActiveField::COLOR:
                 $result->textInput();
+                break;
+            case ActiveField::DROPDOWN:
+                $result->dropDownList($fieldOptions['additionalOptions']['items']);
+                break;
+            case ActiveField::CHECKBOX_LIST:
+                $result->checkboxList($fieldOptions['additionalOptions']['items']);
+                break;
+            case ActiveField::SCHEDULE:
+                $result->schedule();
                 break;
             default:
                 $result->textInput();

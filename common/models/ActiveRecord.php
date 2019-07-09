@@ -5,11 +5,10 @@ namespace common\models;
 use backend\widgets\ActiveField;
 use common\components\DateTime;
 use common\helpers\StringHelper;
+use common\models\enum\Enum;
 use common\models\tablepart\TablePart;
 use common\queries\ActiveQuery;
 use ReflectionClass;
-use ReflectionException;
-use ReflectionProperty;
 use yii;
 use yii\base\Exception;
 use yii\base\UserException;
@@ -155,13 +154,13 @@ abstract class ActiveRecord extends yii\db\ActiveRecord
     /**
      * Получение публичных свойств класса
      * @return array
-     * @throws ReflectionException
+     * @throws \ReflectionException
      */
     public function getPublicProperties()
     {
         $class = new ReflectionClass($this);
         $result = [];
-        foreach ($class->getProperties(ReflectionProperty::IS_PUBLIC) as $property) {
+        foreach ($class->getProperties(\ReflectionProperty::IS_PUBLIC) as $property) {
             if (!$property->isStatic()) {
                 $result[] = $property->getName();
             }
@@ -171,7 +170,7 @@ abstract class ActiveRecord extends yii\db\ActiveRecord
 
     /**
      * @inheritdoc
-     * @throws ReflectionException
+     * @throws \ReflectionException
      */
     public function attributes()
     {
@@ -180,7 +179,7 @@ abstract class ActiveRecord extends yii\db\ActiveRecord
 
     /**
      * @inheritdoc
-     * @throws ReflectionException
+     * @throws \ReflectionException
      */
     public function generateAttributeLabel($name)
     {
@@ -294,23 +293,19 @@ abstract class ActiveRecord extends yii\db\ActiveRecord
      * Возвращает массив настроек атрибутов модели
      * @return array
      * @throws yii\base\InvalidConfigException
-     * @throws ReflectionException
+     * @throws \ReflectionException
      */
     public function getFieldsOptions()
     {
         if ($this->_fieldsOptions === []) {
             $schema = $this->getTableSchema();
             $relations = $this->getAttributesWithRelation();
-            $fieldOptions = [];
             foreach ($this->attributes() as $attribute) {
                 if (isset($relations[$attribute])) {
-//                    if ($relations[$attribute]['class'] == Category::className()) {
-//                        $fieldOptions['type'] = ActiveField::CATEGORY;
-//                    } else {
-//                        $fieldOptions['type'] =
-//                            is_subclass_of($relations[$attribute]['class'], Enum::className(), true) ?
-//                                ActiveField::ENUM : ActiveField::REFERENCE;
-//                    }
+                    $fieldOptions['type'] =
+                        is_subclass_of($relations[$attribute]['class'], Enum::class, true) ?
+                            ActiveField::ENUM : ActiveField::REFERENCE;
+
                 } elseif (($column = $schema->getColumn($attribute)) !== null) {
                     $fieldOptions['type'] = $column->type;
                 } else {
@@ -333,7 +328,7 @@ abstract class ActiveRecord extends yii\db\ActiveRecord
      * @param string $attribute
      * @return array
      * @throws yii\base\InvalidConfigException
-     * @throws ReflectionException
+     * @throws \ReflectionException
      */
     public function getFieldOptions($attribute)
     {
@@ -344,7 +339,7 @@ abstract class ActiveRecord extends yii\db\ActiveRecord
     /**
      * Возвращает массив настроек связей атрибутов с другими моделями
      * @return array
-     * @throws ReflectionException
+     * @throws \ReflectionException
      */
     public function getAttributesWithRelation()
     {
@@ -374,7 +369,7 @@ abstract class ActiveRecord extends yii\db\ActiveRecord
      * Возвращает настройки связи атрибута с другой моделью
      * @param string $attribute
      * @return mixed
-     * @throws ReflectionException
+     * @throws \ReflectionException
      */
     public function getAttributeRelation($attribute)
     {
@@ -394,7 +389,7 @@ abstract class ActiveRecord extends yii\db\ActiveRecord
     /**
      * @inheritdoc
      * @throws yii\base\InvalidConfigException
-     * @throws ReflectionException
+     * @throws \ReflectionException
      */
     public function load($data, $formName = null)
     {
@@ -478,8 +473,8 @@ abstract class ActiveRecord extends yii\db\ActiveRecord
 
     /**
      * @inheritdoc
-     * @param $insert
-     * @param $changedAttributes
+     * @param bool $insert
+     * @param array $changedAttributes
      * @throws UserException
      * @throws \Throwable
      * @throws yii\db\StaleObjectException
@@ -502,7 +497,7 @@ abstract class ActiveRecord extends yii\db\ActiveRecord
                 $tablePartRow->save();
             }
             foreach ($existentTablePartRows as $existentTablePartRow) {
-                    $existentTablePartRow->delete();
+                $existentTablePartRow->delete();
             }
         }
         TagDependency::invalidate(Yii::$app->cache, [static::getTagForTable(), static::getTagForRow($this->id)]);
@@ -510,8 +505,9 @@ abstract class ActiveRecord extends yii\db\ActiveRecord
 
     /**
      * @inheritdoc
-     * @throws yii\db\StaleObjectException
+     * @return bool
      * @throws \Throwable
+     * @throws yii\db\StaleObjectException
      */
     public function beforeDelete()
     {
@@ -527,8 +523,8 @@ abstract class ActiveRecord extends yii\db\ActiveRecord
 
     /**
      * @inheritdoc
-     * @throws yii\db\StaleObjectException
      * @throws \Throwable
+     * @throws yii\db\StaleObjectException
      */
     public function afterDelete()
     {
@@ -597,8 +593,8 @@ abstract class ActiveRecord extends yii\db\ActiveRecord
     /**
      * Удаление связанных отношений модели
      * @param array $relations
-     * @throws yii\db\StaleObjectException
      * @throws \Throwable
+     * @throws yii\db\StaleObjectException
      */
     protected function deleteRelations($relations)
     {
@@ -628,12 +624,12 @@ abstract class ActiveRecord extends yii\db\ActiveRecord
     }
 
     /**
-     * Возврщает источник данных для поиска моделей
+     * Возвращает источник данных для поиска моделей
      * @param array $params
      * @param ActiveQuery|null $query
      * @return ActiveDataProvider
      * @throws yii\base\InvalidConfigException
-     * @throws ReflectionException
+     * @throws \ReflectionException
      */
     public function search($params, $query = null)
     {
@@ -652,8 +648,6 @@ abstract class ActiveRecord extends yii\db\ActiveRecord
                     case 'string':
                         if ($columnSchema->type == (Yii::$app->db->schema)::TYPE_STRING) {
                             $query->andWhere(['LIKE', 'LOWER(' . $attributeWithAlias . ')', mb_strtolower($value)]);
-                        } else if ($columnSchema->type == (Yii::$app->db->schema)::TYPE_UUID) {
-                            $query->andWhere(['LIKE', 'LOWER(CAST(' . $attributeWithAlias . ' AS VARCHAR))', mb_strtolower(trim($value))]);
                         } else if (((mb_strpos($columnSchema->type, 'date') !== false) || (mb_strpos($columnSchema->type, 'timestamp') !== false))
                             && is_string($value) && (mb_strpos($value, ' - ') !== false)) {
                             $interval = explode(' - ', $value);

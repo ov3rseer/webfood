@@ -17,6 +17,9 @@ return [
             'csrfParam' => '_csrf-frontend',
             'baseUrl' => '',
         ],
+        'assetManager' => [
+            'linkAssets' => true,
+        ],
         'user' => [
             'identityClass' => 'common\models\reference\User',
             'enableAutoLogin' => true,

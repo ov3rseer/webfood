@@ -3,10 +3,13 @@ return [
     'components' => [
         'db' => [
             'class' => 'yii\db\Connection',
+            'schemaMap' => ['mysql' => 'common\components\mysql\Schema'],
+            'charset' => 'utf8',
             'dsn' => 'mysql:host=localhost;dbname=webfood',
             'username' => 'root',
             'password' => '1234',
-            'charset' => 'utf8',
+            'enableSchemaCache' => true,
+            'schemaCache' => 'schemaCache',
         ],
         'mailer' => [
             'class' => 'yii\swiftmailer\Mailer',

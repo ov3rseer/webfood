@@ -1,6 +1,6 @@
 <?php
 
-use common\components\Migration;
+use common\components\mysql\Migration;
 
 class m130524_201442_init extends Migration
 {
@@ -20,11 +20,20 @@ class m130524_201442_init extends Migration
             'password_hash' => $this->string()->notNull(),
             'password_reset_token' => $this->string()->unique(),
             'email' => $this->string()->notNull()->unique(),
+            'verification_token', $this->string()->defaultValue(null)
         ]);
+
+        $this->createSystemTable('{{%sys_entity}}', [
+            'class_name' => $this->string()->notNull()
+        ]);
+
+        $this->insert('{{%sys_entity%}}', ['class_name' => 'common\models\reference\User']);
     }
 
     public function down()
     {
         $this->dropTable('{{%ref_user}}');
+        $this->dropTable('{{%sys_entity}}');
+        $this->delete('{{%sys_entity%}}', ['class_name' => 'common\models\reference\User']);
     }
 }

@@ -5,15 +5,19 @@ namespace backend\controllers;
 use backend\models\form\Form;
 use backend\widgets\ActiveField;
 use backend\widgets\ActiveForm;
+use common\helpers\ArrayHelper;
 use common\models\ActiveRecord;
 use common\models\cross\CrossTable;
 use common\models\tablepart\TablePart;
+use Yii;
+use yii\base\Action;
 use yii\base\InvalidConfigException;
 use yii\filters\AccessControl;
 use yii\filters\ContentNegotiator;
 use yii\filters\VerbFilter;
 use yii\helpers\Html;
 use yii\web\Controller;
+use yii\web\ForbiddenHttpException;
 use yii\web\NotFoundHttpException;
 use yii\web\Response;
 
@@ -65,6 +69,11 @@ abstract class ModelController extends Controller
                 'modelClass' => $this->modelClass,
                 'viewPath' => '@backend/views/base/update',
             ],
+            'view' => [
+                'class' => 'backend\actions\base\ViewAction',
+                'modelClass' => $this->modelClass,
+                'viewPath' => '@backend/views/base/view',
+            ],
             'delete' => [
                 'class' => 'backend\actions\base\DeleteAction',
                 'modelClass' => $this->modelClass,
@@ -79,7 +88,7 @@ abstract class ModelController extends Controller
                 'searchFields' => ['id'],
             ],
             'select' => [
-                'class' => 'backend\actions\base\SelectAction',
+                'class' => 'backend\actions\base\IndexAction',
                 'modelClass' => $this->modelClass,
                 'viewPath' => '@backend/views/base/select',
             ],
@@ -91,15 +100,52 @@ abstract class ModelController extends Controller
      */
     public function behaviors()
     {
-        return array_merge(parent::behaviors(), [
+        return ArrayHelper::merge(parent::behaviors(), [
             'access' => [
                 'class' => AccessControl::class,
                 'rules' => [
                     [
+                        'actions' => ['index'],
                         'allow' => true,
                         'roles' => ['@'],
                     ],
+                    [
+                        'actions' => ['search', 'select'],
+                        'allow' => true,
+                        'roles' => ['@'],
+                    ],
+                    [
+                        'actions' => ['create'],
+                        'allow' => true,
+                        'roles' => [static::class . '.Create'],
+                    ],
+                    [
+                        'actions' => ['update'],
+                        'allow' => true,
+                        'roles' => ['@'],
+                    ],
+                    [
+                        'actions' => ['delete', 'delete-checked'],
+                        'allow' => true,
+                        'roles' => [static::class . '.Delete'],
+                    ],
                 ],
+
+                'denyCallback' => function ($rule, $action) {
+                    unset($rule);
+                    /**
+                     * @var Action $action
+                     */
+                    if ($action->id == 'update') {
+                        $action->controller->redirect(['view'] + Yii::$app->request->get());
+                    } else {
+                        if (Yii::$app->user !== false && Yii::$app->user->getIsGuest()) {
+                            Yii::$app->user->loginRequired();
+                        } else {
+                            throw new ForbiddenHttpException(Yii::t('yii', 'You are not allowed to perform this action.'));
+                        }
+                    }
+                }
             ],
             'verbs' => [
                 'class' => VerbFilter::class,
@@ -201,10 +247,11 @@ abstract class ModelController extends Controller
         $result = [];
         foreach ($model->getTableParts() as $relation => $relationClass) {
             $result[$relation] = [
-                'label' => $model->getAttributeLabel($relation),
-                'view' => '@backend/views/base/_tablePart',
-                'params' => [
-                    'relation' => $relation,
+                'label'      => $model->getAttributeLabel($relation) . ' (' . count($model->{$relation}) . ')',
+                'viewUpdate' => '@backend/views/base/_tablePartUpdate',
+                'viewView'   => '@backend/views/base/_tablePartView',
+                'params'     => [
+                    'relation'      => $relation,
                     'relationClass' => $relationClass,
                 ],
             ];
@@ -217,11 +264,12 @@ abstract class ModelController extends Controller
      * @param \common\models\ActiveRecord $model
      * @param string $tablePartRelation
      * @param \backend\widgets\ActiveForm $form
+     * @param bool $readonly
      * @return array список колонок
      * @throws InvalidConfigException
      * @throws \ReflectionException
      */
-    public function getTablePartColumns($model, $tablePartRelation, $form)
+    static public function getTablePartColumns($model, $tablePartRelation, $form, $readonly = false)
     {
         $tableParts = $model->getTableParts();
         if (!isset($tableParts[$tablePartRelation])) {
@@ -238,24 +286,41 @@ abstract class ModelController extends Controller
             }
             $fieldOptions = $tablePartModel->getFieldOptions($attribute);
             $headerOptions = [];
-            if (in_array($fieldOptions['type'], [ActiveField::REFERENCE, ActiveField::MULTI_REFERENCE, ActiveField::ENUM])) {
+            if (in_array($fieldOptions['type'], [ActiveField::REFERENCE, ActiveField::MULTI_REFERENCE])) {
                 $headerOptions['style'] = 'width:400px;';
+            } else if (in_array($fieldOptions['type'], [ActiveField::ENUM])) {
+                $headerOptions['style'] = 'width:200px;';
+            } else if (in_array($fieldOptions['type'], [ActiveField::INT, ActiveField::FLOAT, ActiveField::DECIMAL, ActiveField::MONEY])) {
+                $headerOptions['style'] = 'width:120px;';
             }
             $result[$attribute] = [
                 'attribute' => $attribute,
                 'label' => $tablePartModel->getAttributeLabel($attribute),
                 'headerOptions' => $headerOptions,
                 'format' => 'raw',
-                'value' => function($tablePartRow) use ($form, $model, $tablePartRelation, $attribute) {
+                'value' => function($tablePartRow) use ($form, $model, $tablePartRelation, $attribute, $readonly) {
                     /** @var TablePart $tablePartRow */
-                    return $form->autoField($tablePartRow, $attribute, [
-                        'template' => "{input}\n{hint}\n{error}",
-                        'inputOptions' => [
-                            'id' => Html::getInputId($model, '[' . $tablePartRelation . '][' . $tablePartRow->id . ']' . $attribute),
-                            'name' => Html::getInputName($model, '[' . $tablePartRelation . '][' . $tablePartRow->id . ']' . $attribute),
-                            'class' => 'form-control',
-                        ],
-                    ]);
+                    if ($readonly) {
+                        $result = $form->field($tablePartRow, $attribute, [
+                            'template' => "{input}\n{hint}\n{error}",
+                            'inputOptions' => [
+                                'id' => Html::getInputId($model, '[' . $tablePartRelation . '][' . $tablePartRow->id . ']' . $attribute),
+                                'name' => Html::getInputName($model, '[' . $tablePartRelation . '][' . $tablePartRow->id . ']' . $attribute),
+                                'class' => 'form-control',
+                            ],
+                        ])->readonly();
+                    } else {
+                        $result = $form->autoField($tablePartRow, $attribute, [
+                            'template' => "{input}\n{hint}\n{error}",
+                            'inputOptions' => [
+                                'id' => Html::getInputId($model, '[' . $tablePartRelation . '][' . $tablePartRow->id . ']' . $attribute),
+                                'name' => Html::getInputName($model, '[' . $tablePartRelation . '][' . $tablePartRow->id . ']' . $attribute),
+                                'class' => 'form-control',
+                                'label' => '',
+                            ],
+                        ]);
+                    }
+                    return $result;
                 },
             ];
         }
@@ -269,15 +334,17 @@ abstract class ModelController extends Controller
      * @param string $crossTableRelationClass
      * @param string $parentAttribute
      * @param \backend\widgets\ActiveForm $form
+     * @param boolean $isExternalEdit
      * @return array список колонок
      * @throws InvalidConfigException
      * @throws \ReflectionException
      */
-    public function getCrossTableColumns($model, $crossTableRelation, $crossTableRelationClass, $parentAttribute, $form)
+    public function getCrossTableColumns($model, $crossTableRelation, $crossTableRelationClass, $parentAttribute, $form, $isExternalEdit = false)
     {
         /** @var CrossTable $crossTableRowModel */
         $crossTableRowModel = new $crossTableRelationClass();
         $result = [];
+        $attributesWithRelation = $crossTableRowModel->getAttributesWithRelation();
         foreach ($crossTableRowModel->activeAttributes() as $attribute) {
             if ($attribute == $parentAttribute) {
                 continue;
@@ -285,25 +352,59 @@ abstract class ModelController extends Controller
             $fieldOptions = $crossTableRowModel->getFieldOptions($attribute);
             $headerOptions = [];
             if (in_array($fieldOptions['type'], [ActiveField::REFERENCE, ActiveField::MULTI_REFERENCE, ActiveField::ENUM])) {
-                $headerOptions['style'] = 'width:400px;';
+                $headerOptions['style'] = 'width:300px;';
             }
-            $result[$attribute] = [
-                'attribute' => $attribute,
-                'label' => $crossTableRowModel->getAttributeLabel($attribute),
-                'headerOptions' => $headerOptions,
-                'format' => 'raw',
-                'value' => function($crossTableRow) use ($form, $model, $crossTableRelation, $attribute) {
-                    /** @var CrossTable $crossTableRow */
-                    return $form->autoField($crossTableRow, $attribute, [
-                        'template' => "{input}\n{hint}\n{error}",
-                        'inputOptions' => [
-                            'id' => Html::getInputId($crossTableRow, '[' . $crossTableRow->id . ']' . $attribute),
-                            'name' => Html::getInputName($crossTableRow, '[' . $crossTableRow->id . ']' . $attribute),
-                            'class' => 'form-control',
-                        ],
-                    ]);
-                },
-            ];
+            if ($isExternalEdit) {
+                if ($crossTableRowModel->hasAttribute($attribute) && !$crossTableRowModel->isAttributeSafe($attribute)) {
+                    continue;
+                }
+                $fieldOptions = $crossTableRowModel->getFieldOptions($attribute);
+                if (!$fieldOptions || $fieldOptions['type'] == ActiveField::IGNORE) {
+                    continue;
+                }
+                $result[$attribute] = [
+                    'attribute' => $attribute,
+                    'label' => $crossTableRowModel->getAttributeLabel($attribute),
+                    'headerOptions' => $headerOptions,
+                    'format' => 'raw',
+                    'value' => function($crossTableRow) use ($attribute, $fieldOptions, $attributesWithRelation) {
+                        /** @var CrossTable $crossTableRow */
+                        switch ($fieldOptions['displayType']) {
+                            case ActiveField::BOOL:
+                                $result = \Yii::$app->formatter->format($crossTableRow->{$attribute}, 'boolean');
+                                break;
+                            case ActiveField::PASSWORD:
+                                $result = '******';
+                                break;
+                            default:
+                                if (isset($attributesWithRelation[$attribute])) {
+                                    $attribute = $attributesWithRelation[$attribute]['name'];
+                                }
+                                $value = $crossTableRow->{$attribute};
+                                $result = !is_object($value) && is_array($value) ? implode(', ', $value) : (string)$value;
+                        }
+                        return $result;
+                    },
+                ];
+            } else {
+                $result[$attribute] = [
+                    'attribute' => $attribute,
+                    'label' => $crossTableRowModel->getAttributeLabel($attribute),
+                    'headerOptions' => $headerOptions,
+                    'format' => 'raw',
+                    'value' => function($crossTableRow) use ($form, $model, $crossTableRelation, $attribute) {
+                        /** @var CrossTable $crossTableRow */
+                        return $form->autoField($crossTableRow, $attribute, [
+                            'template' => "{input}\n{hint}\n{error}",
+                            'inputOptions' => [
+                                'id' => Html::getInputId($crossTableRow, '[' . $crossTableRow->id . ']' . $attribute),
+                                'name' => Html::getInputName($crossTableRow, '[' . $crossTableRow->id . ']' . $attribute),
+                                'class' => 'form-control',
+                            ],
+                        ]);
+                    },
+                ];
+            }
         }
         return $result;
     }
@@ -311,14 +412,16 @@ abstract class ModelController extends Controller
     /**
      * Вывод поля формы с автоопределением типа поля
      * @param ActiveRecord $model
+     * @param ActiveRecord $filterModel
      * @return array
      * @throws InvalidConfigException
      * @throws \ReflectionException
      */
-    public function generateAutoColumns($model)
+    public function generateAutoColumns($model, $filterModel)
     {
         $result = [];
         $form = new ActiveForm(); ob_get_clean();
+        $filterFieldsOptions = $filterModel->getFieldsOptions();
         foreach ($model->getFieldsOptions() as $field => $fieldOptions) {
             $originalField = $field;
             if (in_array($fieldOptions['displayType'], [
@@ -337,19 +440,35 @@ abstract class ModelController extends Controller
             }
             if (in_array($fieldOptions['displayType'], [ActiveField::BOOL, ActiveField::EMAIL])) {
                 $columnType = $fieldOptions['displayType'];
-            } else if (in_array($fieldOptions['displayType'], [ActiveField::ENUM, ActiveField::REFERENCE])) {
+            } else if (in_array($fieldOptions['displayType'], [ActiveField::ENUM, ActiveField::REFERENCE, ActiveField::CATEGORY])) {
                 if ($relationData = $model->getAttributeRelation($field)) {
                     $field = $relationData['name'];
                 }
             }
-            $filterField = $form->autoField($model, $originalField, $fieldOptions);
-            $filterField = $filterField ? (string)$filterField->label(false) : false;
+            $filter = false;
+            $headerOptions = [];
+            $filterOptions = [];
+            $filterFieldOptions = isset($filterFieldsOptions[$originalField]) ? $filterFieldsOptions[$originalField] : null;
+            if ($filterFieldOptions) {
+                if ($filterFieldOptions['displayType'] == ActiveField::BOOL) {
+                    $headerOptions = ['style' => 'min-width:150px;'];
+                    $filter = $form->field($filterModel, $originalField)->dropDownList(
+                        ['' => '(не указано)', '0' => 'Нет', '1' => 'Да']
+                    );
+                } else {
+                    $headerOptions = ['style' => 'min-width:100px;'];
+                    $filterOptions = ['style' => 'max-width:200px;'];
+                    $filter = $form->autoField($filterModel, $originalField, $filterFieldOptions);
+                }
+                $filter = $filter ? (string)$filter->label(false) : false;
+            }
             $result[$field] = [
                 'attribute' => $field,
                 'label' => $model->getAttributeLabel($field),
                 'format' => $columnType,
-                'headerOptions' => ['style' => 'min-width:100px;'],
-                'filter' => $filterField,
+                'headerOptions' => $headerOptions,
+                'filter' => $filter,
+                'filterOptions' => $filterOptions,
             ];
         }
         return $result;

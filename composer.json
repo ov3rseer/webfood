@@ -16,21 +16,25 @@
     "require": {
         "php": ">=7.2.0",
         "yiisoft/yii2": "~2.0.14",
-        "yiisoft/yii2-bootstrap": "~2.0.0",
-        "yiisoft/yii2-swiftmailer": "~2.0.0 || ~2.1.0",
-        "codeception/codeception": "*",
-        "codeception/specify": "*",
-        "codeception/verify": "*",
+        "yiisoft/yii2-bootstrap": "*",
+        "yiisoft/yii2-swiftmailer": "*",
+        "janisto/yii2-timepicker": "1.1.0",
         "bower-asset/select2": "4.0.2",
-        "bower-asset/bootstrap-daterangepicker": "^2.1"
+        "imagine/imagine": "0.6.3",
+        "dkrnl/simplexmlreader": "dev-master",
+        "guzzlehttp/guzzle": "6.2.3",
+        "bower-asset/vis": "4.19.1",
+        "bower-asset/bootstrap-daterangepicker": "^2.1",
+        "box/spout": "2.7.3",
+        "phpoffice/phpspreadsheet": "^1.5",
+        "ext-dom": "*",
+        "ext-ftp": "*"
     },
     "require-dev": {
-        "yiisoft/yii2-debug": "~2.1.0",
-        "yiisoft/yii2-gii": "~2.1.0",
-        "yiisoft/yii2-faker": "~2.0.0",
-        "codeception/base": "^2.4.0",
-        "phpunit/phpunit": "~6.5.5",
-        "symfony/browser-kit": ">=2.7 <=4.2.4"
+        "yiisoft/yii2-debug": "*",
+        "yiisoft/yii2-gii": "*",
+        "yiisoft/yii2-faker": "*",
+        "codeception/codeception": "*"
     },
     "config": {
         "process-timeout": 1800,

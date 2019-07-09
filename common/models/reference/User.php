@@ -59,9 +59,10 @@ class User extends Reference implements IdentityInterface
     public function rules()
     {
         return array_merge(parent::rules(), [
+            [['username'], 'string'],
             [['email'], 'filter', 'filter' => 'trim'],
             [['email', 'name', 'surname'], 'string', 'max' => 255],
-            [['email'], 'required'],
+            [['email', 'username', 'name', 'surname'], 'required'],
             [['email'], 'unique', 'message' => 'Этот email-адрес уже зарегистрирован.'],
             [['password'], 'string'],
         ]);
@@ -291,6 +292,8 @@ class User extends Reference implements IdentityInterface
             parent::getFieldsOptions();
             $this->_fieldsOptions['password_hash']['displayType'] = ActiveField::IGNORE;
             $this->_fieldsOptions['auth_key']['displayType'] = ActiveField::IGNORE;
+            $this->_fieldsOptions['verification_token']['displayType'] = ActiveField::IGNORE;
+            $this->_fieldsOptions['password_reset_token']['displayType'] = ActiveField::IGNORE;
             $this->_fieldsOptions['email']['displayType'] = ActiveField::EMAIL;
         }
         return $this->_fieldsOptions;

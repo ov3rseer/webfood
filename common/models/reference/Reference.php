@@ -19,7 +19,6 @@ use yii\helpers\Url;
  * @property string   $guid
  * @property string   $name
  * @property boolean  $is_active
- * @property string   $comment
  * @property integer  $create_user_id
  * @property integer  $update_user_id
  * @property DateTime $create_date
@@ -42,9 +41,10 @@ abstract class Reference extends ActiveRecord
     public function rules()
     {
         return array_merge(parent::rules(), [
+            [['id'], 'integer'],
             [['name'], 'filter', 'filter' => 'trim'],
             [['name'], 'string', 'max' => 256],
-            [['comment'], 'string'], 'nameRequired' => [['name'], 'required'],
+            [['is_active'], 'boolean'],
             [['is_active'], 'default', 'value' => true],
         ]);
     }
@@ -109,7 +109,6 @@ abstract class Reference extends ActiveRecord
     {
         return array_merge(parent::attributeLabels(), [
             'is_active'      => 'Активен',
-            'comment'        => 'Комментарий',
             'create_date'    => 'Дата создания',
             'update_date'    => 'Дата изменения',
             'create_user_id' => 'Автор',

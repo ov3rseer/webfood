@@ -14,11 +14,10 @@ body {
     padding: 70px 15px 20px;
 }
 
-.footer {
-    height: 60px;
-    background-color: #f5f5f5;
-    border-top: 1px solid #ddd;
-    padding-top: 20px;
+.wrap > .container-fluid {
+    padding-top: 70px;
+    padding-right: 15px;
+    padding-left: 15px;
 }
 
 .jumbotron {
@@ -41,6 +40,7 @@ a.asc:after, a.desc:after {
     position: relative;
     top: 1px;
     display: inline-block;
+    font-family: 'Glyphicons Halflings', serif;
     font-style: normal;
     font-weight: normal;
     line-height: 1;
@@ -71,6 +71,10 @@ a.desc:after {
     content: "\e156";
 }
 
+.grid-view {
+    overflow: auto;
+}
+
 .grid-view td {
     white-space: nowrap;
 }
@@ -78,6 +82,21 @@ a.desc:after {
 .grid-view .filters input,
 .grid-view .filters select {
     min-width: 50px;
+}
+
+table.table-bordered.table-fix-head th {
+    outline: solid 1px #ddd;
+    outline-offset: -1px;
+}
+
+table.table-bordered.table-fix-col-1 tr > td:nth-child(1) {
+    outline: solid 1px #ddd;
+    outline-offset: -1px;
+}
+
+table.table-bordered.table-fix-col-2 tr > td:nth-child(2) {
+    outline: solid 1px #ddd;
+    outline-offset: -1px;
 }
 
 .hint-block {
@@ -95,25 +114,108 @@ a.desc:after {
 }
 
 /* align the logout "link" (button in form) of the navbar */
-.nav li > form > button.logout {
-    padding: 15px;
-    border: none;
+.nav > li > form {
+    padding: 8px;
 }
 
-@media(max-width:767px) {
-    .nav li > form > button.logout {
-        display:block;
-        text-align: left;
-        width: 100%;
-        padding: 10px 15px;
-    }
-}
-
-.nav > li > form > button.logout:focus,
-.nav > li > form > button.logout:hover {
+.nav > li > form > button:hover {
     text-decoration: none;
 }
 
-.nav > li > form > button.logout:focus {
-    outline: none;
+/* Стили приложения */
+
+.panel-heading {
+    padding: 10px;
+}
+
+.gridview-toolbar {
+    padding: 10px;
+    background-color: #f5f5f5;
+    border: 1px solid #ddd;
+    border-radius: 4px 4px 0 0;
+    border-bottom: none;
+}
+
+.tab-content > .tab-pane {
+    padding-top: 15px;
+}
+
+/* Страница выбора элемента справочника из списка */
+
+.reference-select {
+    padding-top: 15px;
+}
+
+/* Общие стили форм редактирования */
+
+.form-group-visible-only-with-error .help-block {
+    display: none;
+}
+.form-group-visible-only-with-error.has-error .help-block {
+    display: block;
+}
+
+/* Настройка bootstrap-стилей */
+
+.radio input[type='radio'],
+.radio-inline input[type='radio'],
+.checkbox input[type='checkbox'],
+.checkbox-inline input[type='checkbox'] {
+    margin-left: 0;
+}
+
+.radio label > input[type='radio'],
+.radio-inline label > input[type='radio'],
+.checkbox label > input[type='checkbox'],
+.checkbox-inline label > input[type='checkbox'] {
+    margin-left: -20px;
+}
+
+.checkbox-list label {
+    display: block;
+}
+
+.form-inline .control-label {
+    padding-left: 10px;
+}
+
+.modal-lg {
+    width: 90%;
+}
+
+.tab-content {
+    margin-bottom: 20px;
+}
+
+.navbar-inverse {
+    background-color: #ffd400;
+}
+
+.navbar-inverse .navbar-nav > li > a,
+.navbar-inverse .navbar-brand,
+.navbar-inverse .btn-link
+{
+    color: #1a1a18;
+}
+
+.navbar-inverse .navbar-toggle {
+    border-color: #ffffff;
+}
+
+.navbar-inverse .navbar-brand:hover,
+.navbar-inverse .navbar-brand:focus,
+.navbar-inverse .navbar-nav > li > a:hover,
+.navbar-inverse .navbar-nav > li > a:focus,
+.navbar-inverse .btn-link:hover,
+.navbar-inverse .btn-link:focus
+{
+    color: #ff4c06;
+}
+
+td > .form-group {
+    margin-bottom: 0;
+}
+
+td > .form-group .help-block {
+    margin-bottom: 0;
 }

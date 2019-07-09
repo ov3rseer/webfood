@@ -19,5 +19,9 @@ class AppAsset extends AssetBundle
     public $depends = [
         'yii\web\YiiAsset',
         'yii\bootstrap\BootstrapAsset',
+
+        'backend\widgets\IframeDialog\IframeDialogAsset',
+        'backend\widgets\Select2\Select2CustomAsset',
+        'backend\widgets\BootstrapDateRangePicker\BootstrapDateRangePickerAsset',
     ];
 }

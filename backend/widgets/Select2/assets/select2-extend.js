@@ -1,11 +1,12 @@
 ;(function($) {
+
     $.fn.select2Extend = function(method, options) {
         if (!this.data('select2')) {
             return this;
         }
         return this.each(function() {
             var $select = $(this);
-            if (method == 'updateItems') {
+            if (method === 'updateItems') {
                 // https://github.com/select2/select2/issues/2830
                 var settings = $select.data('select2').options.options;
                 $select.html('');
@@ -21,4 +22,15 @@
             }
         });
     };
+
+    // Сохранение порядка выбранных элементов (в порядке выбора элементов)
+    $('select').on('select2:select', function(event) {
+        var $select = $(this);
+        var optionId = event.params.data.id;
+        var $option = $select.find('> option[value="' + optionId + '"]');
+        $option.detach();
+        $select.append($option);
+        $select.trigger('change');
+    });
+
 }(jQuery));

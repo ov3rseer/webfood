@@ -6,7 +6,7 @@ use DateTime as BaseDateTime;
 use DateTimeZone;
 use Exception;
 
-class Datetime extends BaseDateTime
+class DateTime extends BaseDateTime
 {
     /**
      * SQL формат строки без времени

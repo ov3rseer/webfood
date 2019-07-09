@@ -248,8 +248,6 @@ class ActiveField extends \yii\widgets\ActiveField
      * Генерация поля для вывода ссылки
      * @param boolean $hasMultiselect
      * @return $this
-     * @throws \ReflectionException
-     * @throws \yii\base\InvalidConfigException
      * @throws \Exception
      */
     public function reference($hasMultiselect = false)

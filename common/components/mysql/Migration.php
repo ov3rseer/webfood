@@ -1,9 +1,6 @@
 <?php
 
-namespace common\components;
-
-use yii\base\NotSupportedException;
-use yii\db\Exception;
+namespace common\components\mysql;
 
 /**
  * Расширенный класс миграции
@@ -213,8 +210,8 @@ class Migration extends \yii\db\Migration
      * Сброс значения последовательности таблицы
      * @param string $table название таблицы
      * @param mixed $value новое значение последовательности
-     * @throws NotSupportedException
-     * @throws Exception
+     * @throws \yii\base\NotSupportedException
+     * @throws \yii\db\Exception
      */
     protected function resetSequence($table, $value = null)
     {
@@ -275,8 +272,8 @@ class Migration extends \yii\db\Migration
      * Создание таблицы для модели перечисления
      * @param string $table
      * @param array $values
-     * @throws Exception
-     * @throws NotSupportedException
+     * @throws \yii\db\Exception
+     * @throws \yii\base\NotSupportedException
      */
     protected function createEnumTable($table, $values)
     {
@@ -301,17 +298,15 @@ class Migration extends \yii\db\Migration
     {
         $columnsBefore = [
             'id'        => $this->primaryKey(),
+            'name'      => $this->string(256)->notNull()->indexed(),
             'is_active' => $this->boolean()->notNull()->defaultValue(true),
         ];
         $columnsAfter = [
-            'comment'        => $this->text(),
+            'create_user_id' => $this->integer()->foreignKey('{{%ref_user}}', 'id'),
+            'update_user_id' => $this->integer()->foreignKey('{{%ref_user}}', 'id'),
             'create_date'    => $this->timestamp()->notNull()->defaultExpression('NOW()'),
             'update_date'    => $this->timestamp()->notNull()->defaultExpression('NOW()'),
         ];
-        if ($table != '{{%ref_user}}') {
-           $columnsAfter['create_user_id'] = $this->integer()->foreignKey('{{%ref_user}}', 'id');
-           $columnsAfter['update_user_id'] = $this->integer()->foreignKey('{{%ref_user}}', 'id');
-        }
         $this->createTable($table, array_merge($columnsBefore, $specificColumns, $columnsAfter));
     }
 
@@ -342,11 +337,12 @@ class Migration extends \yii\db\Migration
         $columnsBefore = [
             'id'              => $this->primaryKey(),
             'date'            => $this->timestamp()->notNull()->indexed(),
+            'status_id'       => $this->integer()->notNull()->indexed()->foreignKey('{{%enum_document_status}}', 'id'),
+            'organization_id' => $this->integer()->notNull()->indexed()->foreignKey('{{%ref_organization}}', 'id'),
             'document_basis_type_id' => $this->integer()->foreignKey('{{%sys_entity}}', 'id'),
             'document_basis_id' => $this->integer(),
         ];
         $columnsAfter = [
-            'comment'        => $this->text()->notNull()->defaultValue(''),
             'create_user_id' => $this->integer()->foreignKey('{{%ref_user}}', 'id'),
             'update_user_id' => $this->integer()->foreignKey('{{%ref_user}}', 'id'),
             'create_date'    => $this->timestamp()->notNull()->defaultExpression('NOW()'),

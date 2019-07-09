@@ -13,10 +13,17 @@ return [
     'controllerNamespace' => 'backend\controllers',
     'bootstrap' => ['log'],
     'modules' => [],
+    'aliases' => [
+        '@bower' => '@vendor/bower-asset',
+        '@npm'   => '@vendor/npm-asset',
+    ],
     'components' => [
         'request' => [
             'csrfParam' => '_csrf-backend',
             'baseUrl' => '',
+        ],
+        'assetManager' => [
+            'linkAssets' => true,
         ],
         'user' => [
             'identityClass' => 'common\models\reference\User',
