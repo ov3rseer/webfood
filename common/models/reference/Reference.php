@@ -179,6 +179,7 @@ abstract class Reference extends ActiveRecord
         if ($this->_fieldsOptions === []) {
             parent::getFieldsOptions();
             if ($this->scenario != self::SCENARIO_SEARCH) {
+                $this->_fieldsOptions['is_active']['displayType'] = ActiveField::BOOL;
                 $this->_fieldsOptions['create_user_id']['displayType'] = ActiveField::READONLY;
                 $this->_fieldsOptions['update_user_id']['displayType'] = ActiveField::READONLY;
                 $this->_fieldsOptions['create_date']['displayType'] = ActiveField::READONLY;
