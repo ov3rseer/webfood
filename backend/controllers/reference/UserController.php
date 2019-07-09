@@ -21,12 +21,12 @@ class UserController extends ReferenceController
             'create' => [
                 'class' => 'backend\actions\base\CreateAction',
                 'modelClass' => $this->modelClass,
-                'viewPath' => '@backend/views/reference/user/update',
+                'viewPath' => '@backend/views/base/update',
             ],
             'update' => [
                 'class' => 'backend\actions\base\UpdateAction',
                 'modelClass' => $this->modelClass,
-                'viewPath' => '@backend/views/reference/user/update',
+                'viewPath' => '@backend/views/base/update',
             ],
         ]);
     }

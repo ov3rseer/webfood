@@ -21,12 +21,11 @@
         "janisto/yii2-timepicker": "1.1.0",
         "bower-asset/select2": "4.0.2",
         "imagine/imagine": "0.6.3",
-        "dkrnl/simplexmlreader": "dev-master",
         "guzzlehttp/guzzle": "6.2.3",
         "bower-asset/vis": "4.19.1",
         "bower-asset/bootstrap-daterangepicker": "^2.1",
         "box/spout": "2.7.3",
-        "phpoffice/phpspreadsheet": "^1.5",
+        "phpoffice/phpspreadsheet": "*",
         "ext-dom": "*",
         "ext-ftp": "*"
     },
