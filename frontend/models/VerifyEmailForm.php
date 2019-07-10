@@ -48,6 +48,7 @@ class VerifyEmailForm extends Model
     public function verifyEmail()
     {
         $user = $this->_user;
+        $user->is_active = true;
         return $user->save(false) ? $user : null;
     }
 }

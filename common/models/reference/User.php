@@ -88,7 +88,7 @@ class User extends Reference implements IdentityInterface
      */
     public static function findIdentity($id)
     {
-        return static::find()->active()->andWhere(['id' => $id])->one();
+        return static::find()->active()->andWhere(['id' => $id, 'is_active' => true])->one();
     }
 
     /**
@@ -190,7 +190,7 @@ class User extends Reference implements IdentityInterface
         if (!static::isPasswordResetTokenValid($token)) {
             return null;
         }
-        return static::findOne(['password_reset_token' => $token]);
+        return static::findOne(['password_reset_token' => $token, 'is_active' => true]);
     }
 
     /**
@@ -201,7 +201,7 @@ class User extends Reference implements IdentityInterface
      */
     public static function findByVerificationToken($token)
     {
-        return static::findOne(['verification_token' => $token]);
+        return static::findOne(['verification_token' => $token, 'is_active' => false]);
     }
 
     /**

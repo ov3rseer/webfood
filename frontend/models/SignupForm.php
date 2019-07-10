@@ -63,6 +63,7 @@ class SignupForm extends Model
         $user->email = $this->email;
         $user->name = $this->name;
         $user->surname = $this->surname;
+        $user->is_active = false;
         $user->setPassword($this->password);
         $user->generateAuthKey();
         $user->generateEmailVerificationToken();
