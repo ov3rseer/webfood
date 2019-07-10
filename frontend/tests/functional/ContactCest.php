@@ -21,11 +21,11 @@ class ContactCest
     {
         $I->submitForm('#contact-form', []);
         $I->see('Contact', 'h1');
-        $I->seeValidationError('Name cannot be blank');
-        $I->seeValidationError('Email cannot be blank');
-        $I->seeValidationError('Subject cannot be blank');
-        $I->seeValidationError('Body cannot be blank');
-        $I->seeValidationError('The verification code is incorrect');
+        $I->seeValidationError('Необходимо заполнить «Name».');
+        $I->seeValidationError('Необходимо заполнить «Email»');
+        $I->seeValidationError('Необходимо заполнить «Subject».');
+        $I->seeValidationError('Необходимо заполнить «Body».');
+        $I->seeValidationError('Неправильный проверочный код.');
     }
 
     public function checkContactSubmitNotCorrectEmail(FunctionalTester $I)
@@ -37,11 +37,11 @@ class ContactCest
             'ContactForm[body]' => 'test content',
             'ContactForm[verifyCode]' => 'testme',
         ]);
-        $I->seeValidationError('Email is not a valid email address.');
-        $I->dontSeeValidationError('Name cannot be blank');
-        $I->dontSeeValidationError('Subject cannot be blank');
-        $I->dontSeeValidationError('Body cannot be blank');
-        $I->dontSeeValidationError('The verification code is incorrect');
+        $I->seeValidationError('Значение «Email» не является правильным email адресом.');
+        $I->dontSeeValidationError('Необходимо заполнить «Name».');
+        $I->dontSeeValidationError('Необходимо заполнить «Subject».');
+        $I->dontSeeValidationError('Необходимо заполнить «Body».');
+        $I->dontSeeValidationError('Неправильный проверочный код.');
     }
 
     public function checkContactSubmitCorrectData(FunctionalTester $I)
@@ -54,6 +54,6 @@ class ContactCest
             'ContactForm[verifyCode]' => 'testme',
         ]);
         $I->seeEmailIsSent();
-        $I->see('Thank you for contacting us. We will respond to you as soon as possible.');
+        $I->see('Благодарим вас за обращение. Мы ответим вам как можно скорее.');
     }
 }

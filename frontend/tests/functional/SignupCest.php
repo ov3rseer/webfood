@@ -16,12 +16,15 @@ class SignupCest
 
     public function signupWithEmptyFields(FunctionalTester $I)
     {
-        $I->see('Signup', 'h1');
-        $I->see('Please fill out the following fields to signup:');
+        $I->see('Регистрация', 'h1');
+        $I->see('Пожалуйста, заполните следующие поля для регистрации:');
         $I->submitForm($this->formId, []);
-        $I->seeValidationError('Username cannot be blank.');
-        $I->seeValidationError('Email cannot be blank.');
-        $I->seeValidationError('Password cannot be blank.');
+        $I->seeValidationError('Необходимо заполнить «Логин».');
+        $I->seeValidationError('Необходимо заполнить «Фамилия».');
+        $I->seeValidationError('Необходимо заполнить «Имя».');
+        $I->seeValidationError('Необходимо заполнить «Email».');
+        $I->seeValidationError('Необходимо заполнить «Пароль».');
+        $I->seeValidationError('Необходимо заполнить «Повторите пароль».');
 
     }
 
@@ -29,14 +32,21 @@ class SignupCest
     {
         $I->submitForm(
             $this->formId, [
-            'SignupForm[username]'  => 'tester',
-            'SignupForm[email]'     => 'ttttt',
-            'SignupForm[password]'  => 'tester_password',
-        ]
+                'SignupForm[username]' => 'tester',
+                'SignupForm[surname]' => 'tester',
+                'SignupForm[name]' => 'tester',
+                'SignupForm[email]' => 'ttttt',
+                'SignupForm[password]' => 'tester_password',
+                'SignupForm[password_repeat]' => 'tester_password',
+            ]
         );
-        $I->dontSee('Username cannot be blank.', '.help-block');
-        $I->dontSee('Password cannot be blank.', '.help-block');
-        $I->see('Email is not a valid email address.', '.help-block');
+        $I->dontSee('Необходимо заполнить «Логин».', '.help-block');
+        $I->dontSee('Необходимо заполнить «Фамилия».', '.help-block');
+        $I->dontSee('Необходимо заполнить «Имя».', '.help-block');
+        $I->dontSee('Необходимо заполнить «Email».', '.help-block');
+        $I->dontSee('Необходимо заполнить «Пароль».', '.help-block');
+        $I->dontSee('Необходимо заполнить «Повторите пароль».', '.help-block');
+        $I->see('Значение «Email» не является правильным email адресом.', '.help-block');
     }
 
     public function signupSuccessfully(FunctionalTester $I)
@@ -47,6 +57,7 @@ class SignupCest
             'SignupForm[name]' => 'tester',
             'SignupForm[email]' => 'tester.email@example.com',
             'SignupForm[password]' => 'tester_password',
+            'SignupForm[password_repeat]' => 'tester_password',
         ]);
 
         $I->seeRecord('common\models\reference\User', [

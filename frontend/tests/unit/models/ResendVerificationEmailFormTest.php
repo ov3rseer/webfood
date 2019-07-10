@@ -45,7 +45,7 @@ class ResendVerificationEmailFormTest extends Unit
 
         expect($model->validate())->false();
         expect($model->hasErrors())->true();
-        expect($model->getFirstError('email'))->equals('Email cannot be blank.');
+        expect($model->getFirstError('email'))->equals('Необходимо заполнить «Email».');
     }
 
     public function testResendToActiveUser()

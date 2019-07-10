@@ -11,8 +11,8 @@ class HomeCest
     {
         $I->amOnPage(Yii::$app->homeUrl);
         $I->see('WebFood');
-        $I->seeLink('About');
-        $I->click('About');
-        $I->see('This is the About page.');
+        $I->seeLink('Регистрация');
+        $I->click('Регистрация');
+        $I->see('Регистрация', 'h1');
     }
 }
