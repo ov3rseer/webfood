@@ -223,7 +223,7 @@ class SiteController extends Controller
         }
         if ($user = $model->verifyEmail()) {
             if (Yii::$app->user->login($user)) {
-                Yii::$app->session->setFlash('success', 'Ваше email был подтвержден!');
+                Yii::$app->session->setFlash('success', 'Ваш email был подтвержден!');
                 return $this->goHome();
             }
         }

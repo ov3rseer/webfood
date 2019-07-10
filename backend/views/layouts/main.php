@@ -41,13 +41,29 @@ AppAsset::register($this);
         $menuItems[] = ['label' => 'Вход', 'url' => ['/site/login']];
     } else {
         $menuItems = [
-            ['label' => 'Главная', 'url' => ['/site/index']],
+            [
+                'label' => 'Главная',
+                'url' => ['/site/index']
+            ],
+            [
+                'label' => 'Документы',
+                'items' => [],
+            ],
             [
                 'label' => 'Справочники',
                 'items' => [
                     [
                         'label' => 'Пользователи',
                         'url' => ['/reference/user/index'],
+                    ],
+                ],
+            ],
+            [
+                'label' => 'Администрирование',
+                'items' => [
+                    [
+                        'label' => 'Права доступа',
+                        'url' => ['/system/role/index'],
                     ],
                 ],
             ],

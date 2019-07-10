@@ -55,7 +55,7 @@ class VerifyEmailCest
     public function checkSuccessVerification(FunctionalTester $I)
     {
         $I->amOnRoute('site/verify-email', ['token' => '4ch0qbfhvWwkcuWqjN8SWRq72SOw1KYT_1548675330']);
-        $I->canSee('Ваше email был подтвержден!');
+        $I->canSee('Ваш email был подтвержден!');
         $I->canSee('Поздравляю!', 'h1');
         $I->see('Выход (test.test)', 'form button[type=submit]');
 
