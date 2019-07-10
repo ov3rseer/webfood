@@ -2,7 +2,7 @@
 
 use common\components\mysql\Migration;
 
-class m190710_113758_add_rbac_entities extends Migration
+class m130710_113758_add_rbac_entities extends Migration
 {
     /**
      * @inheritdoc

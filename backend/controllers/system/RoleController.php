@@ -146,12 +146,12 @@ class RoleController extends SystemController
                     [
                         'actions' => ['update'],
                         'allow'   => true,
-                        'roles'   => ['@'],
+                        'roles'   => [static::className() . '.Update', static::className() . '.View'],
                     ],
                     [
                         'actions' => ['create'],
                         'allow'   => true,
-                        'roles'   => ['@'],
+                        'roles'   => [static::className() . '.Create'],
                     ],
                     [
                         'actions' => ['delete'],
