@@ -77,7 +77,7 @@ class m190124_110200_add_verification_token_column_to_user_table extends Migrati
     public function down()
     {
         $auth = Yii::$app->authManager;
-        foreach ($this->_permissionsForRemove as $permissionData) {
+        foreach ($this->_permissionsForAdd as $permissionData) {
             $permission = $auth->getPermission($permissionData['name']);
             if ($permission) {
                 $auth->remove($permission);

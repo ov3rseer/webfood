@@ -3,7 +3,7 @@
 use common\components\mysql\Migration;
 use yii\rbac\Permission;
 
-class m190709_130748_add_doc_preliminary_request extends Migration
+class m190711_084046_add_doc_preliminary_request extends Migration
 {
     private $_permissionsForAdd = [
         [
@@ -165,7 +165,7 @@ class m190709_130748_add_doc_preliminary_request extends Migration
     public function safeDown()
     {
         $auth = Yii::$app->authManager;
-        foreach ($this->_permissionsForRemove as $permissionData) {
+        foreach ($this->_permissionsForAdd as $permissionData) {
             $permission = $auth->getPermission($permissionData['name']);
             if ($permission) {
                 $auth->remove($permission);
