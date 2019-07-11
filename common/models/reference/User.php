@@ -61,8 +61,8 @@ class User extends Reference implements IdentityInterface
         return array_merge(parent::rules(), [
             [['username'], 'string'],
             [['email'], 'filter', 'filter' => 'trim'],
-            [['email', 'name', 'surname'], 'string', 'max' => 255],
-            [['email', 'username', 'name', 'surname'], 'required'],
+            [['email', 'surname'], 'string', 'max' => 255],
+            [['email', 'username', 'surname'], 'required'],
             [['email'], 'unique', 'message' => 'Этот email-адрес уже зарегистрирован.'],
             [['password'], 'string'],
         ]);

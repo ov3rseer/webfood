@@ -51,7 +51,7 @@ class m190124_110200_add_verification_token_column_to_user_table extends Migrati
             'description' => 'Роли: Удалить',
         ],
         [
-            'name' => 'backend\controllers\reference\RoleController.Restore',
+            'name' => 'backend\controllers\system\RoleController.Restore',
             'description' => 'Роли: Восстановить',
         ],
     ];
