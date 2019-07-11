@@ -47,7 +47,16 @@ AppAsset::register($this);
             ],
             [
                 'label' => 'Документы',
-                'items' => [],
+                'items' => [
+                    [
+                        'label' => 'Предварительная заявка',
+                        'url' => ['/document/preliminary_request/index'],
+                    ],
+                    [
+                        'label' => 'Корректировка заявки',
+                        'url' => ['/document/correction_request/index'],
+                    ],
+                ],
             ],
             [
                 'label' => 'Справочники',
@@ -55,6 +64,14 @@ AppAsset::register($this);
                     [
                         'label' => 'Пользователи',
                         'url' => ['/reference/user/index'],
+                    ],
+                    [
+                        'label' => 'Единицы измерения',
+                        'url' => ['/reference/unit/index'],
+                    ],
+                    [
+                        'label' => 'Продукты',
+                        'url' => ['/reference/product/index'],
                     ],
                 ],
             ],
