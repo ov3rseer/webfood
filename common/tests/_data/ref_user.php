@@ -5,6 +5,7 @@ return [
         'username' => 'bayer.hudson',
         'surname' => 'bayer.hudson',
         'name' => 'bayer.hudson',
+        'is_active' => true,
         'auth_key' => 'HP187Mvq7Mmm3CTU80dLkGmni_FUH_lR',
         //password_0
         'password_hash' => '$2y$13$EjaPFBnZOQsHdGuHI.xvhuDp1fHpo8hKRSk6yshqa9c5EG8s3C3lO',

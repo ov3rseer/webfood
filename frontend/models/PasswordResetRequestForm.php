@@ -13,8 +13,8 @@ use yii\base\Model;
  */
 class PasswordResetRequestForm extends Model
 {
-    public $email;
 
+    public $email;
 
     /**
      * {@inheritdoc}
@@ -30,6 +30,16 @@ class PasswordResetRequestForm extends Model
                 'message' => 'There is no user with this email address.'
             ],
         ];
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function attributeLabels()
+    {
+        return array_merge(parent::attributeLabels(), [
+            'email' => 'Email',
+        ]);
     }
 
     /**

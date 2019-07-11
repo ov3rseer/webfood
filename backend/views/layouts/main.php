@@ -41,7 +41,14 @@ AppAsset::register($this);
         $menuItems[] = ['label' => 'Вход', 'url' => ['/site/login']];
     } else {
         $menuItems = [
-            ['label' => 'Главная', 'url' => ['/site/index']],
+            [
+                'label' => 'Главная',
+                'url' => ['/site/index']
+            ],
+            [
+                'label' => 'Документы',
+                'items' => [],
+            ],
             [
                 'label' => 'Справочники',
                 'items' => [
@@ -51,11 +58,20 @@ AppAsset::register($this);
                     ],
                 ],
             ],
+            [
+                'label' => 'Администрирование',
+                'items' => [
+                    [
+                        'label' => 'Права доступа',
+                        'url' => ['/system/role/index'],
+                    ],
+                ],
+            ],
         ];
         $menuItems[] = '<li>'
             . Html::beginForm(['/site/logout'], 'post')
             . Html::submitButton(
-                'Logout (' . Yii::$app->user->identity->username . ')',
+                'Выход (' . Yii::$app->user->identity->username . ')',
                 ['class' => 'btn btn-link logout']
             )
             . Html::endForm()

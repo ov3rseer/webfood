@@ -10,11 +10,35 @@ use common\models\reference\User;
  */
 class SignupForm extends Model
 {
+    /**
+     * @var string
+     */
     public $username;
+
+    /**
+     * @var string
+     */
     public $surname;
+
+    /**
+     * @var string
+     */
     public $name;
+
+    /**
+     * @var string
+     */
     public $email;
+
+    /**
+     * @var string
+     */
     public $password;
+
+    /**
+     * @var string
+     */
+    public $password_repeat;
 
     /**
      * {@inheritdoc}
@@ -41,9 +65,25 @@ class SignupForm extends Model
             ['email', 'string', 'max' => 255],
             ['email', 'unique', 'targetClass' => '\common\models\reference\User', 'message' => 'This email address has already been taken.'],
 
-            ['password', 'required'],
-            ['password', 'string', 'min' => 6],
+            [['password', 'password_repeat'], 'required'],
+            [['password', 'password_repeat'], 'string', 'min' => 6],
+            ['password_repeat', 'compare', 'compareAttribute' => 'password', 'message' => 'Пароли не совпадают'],
         ];
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function attributeLabels()
+    {
+        return array_merge(parent::attributeLabels(), [
+            'username'          => 'Логин',
+            'surname'           => 'Фамилия',
+            'name'              => 'Имя',
+            'email'             => 'Email',
+            'password'          => 'Пароль',
+            'password_repeat'   => 'Повторите пароль',
+        ]);
     }
 
     /**
@@ -63,6 +103,7 @@ class SignupForm extends Model
         $user->email = $this->email;
         $user->name = $this->name;
         $user->surname = $this->surname;
+        $user->is_active = false;
         $user->setPassword($this->password);
         $user->generateAuthKey();
         $user->generateEmailVerificationToken();

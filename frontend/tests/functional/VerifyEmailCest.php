@@ -42,7 +42,7 @@ class VerifyEmailCest
     {
         $I->amOnRoute('site/verify-email');
         $I->canSee('Bad Request', 'h1');
-        $I->canSee('Missing required parameters: token');
+        $I->canSee('Отсутствуют обязательные параметры: token');
     }
 
     public function checkAlreadyActivatedToken(FunctionalTester $I)
@@ -55,9 +55,10 @@ class VerifyEmailCest
     public function checkSuccessVerification(FunctionalTester $I)
     {
         $I->amOnRoute('site/verify-email', ['token' => '4ch0qbfhvWwkcuWqjN8SWRq72SOw1KYT_1548675330']);
-        $I->canSee('Your email has been confirmed!');
-        $I->canSee('Congratulations!', 'h1');
-        $I->see('Logout (test.test)', 'form button[type=submit]');
+        $I->canSee('Ваш email был подтвержден!');
+        $I->seeLink('Предварительная заявка');
+        $I->seeLink('Корректировка заявки');
+        $I->see('Выход (test.test)', 'form button[type=submit]');
 
         $I->seeRecord('common\models\reference\User', [
            'username' => 'test.test',

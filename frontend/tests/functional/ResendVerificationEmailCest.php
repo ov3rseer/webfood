@@ -41,20 +41,20 @@ class ResendVerificationEmailCest
 
     public function checkPage(FunctionalTester $I)
     {
-        $I->see('Resend verification email', 'h1');
-        $I->see('Please fill out your email. A verification email will be sent there.');
+        $I->see('Отправить письмо с подтверждением', 'h1');
+        $I->see('Пожалуйста, заполните вашу электронную почту. Письмо с подтверждением будет отправлено туда');
     }
 
     public function checkEmptyField(FunctionalTester $I)
     {
         $I->submitForm($this->formId, $this->formParams(''));
-        $I->seeValidationError('Email cannot be blank.');
+        $I->seeValidationError('Необходимо заполнить «Email».');
     }
 
     public function checkWrongEmailFormat(FunctionalTester $I)
     {
         $I->submitForm($this->formId, $this->formParams('abcd.com'));
-        $I->seeValidationError('Email is not a valid email address.');
+        $I->seeValidationError('Значение «Email» не является правильным email адресом');
     }
 
     public function checkWrongEmail(FunctionalTester $I)

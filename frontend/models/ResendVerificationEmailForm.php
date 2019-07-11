@@ -31,6 +31,16 @@ class ResendVerificationEmailForm extends Model
     }
 
     /**
+     * @inheritdoc
+     */
+    public function attributeLabels()
+    {
+        return array_merge(parent::attributeLabels(), [
+            'email' => 'Email',
+        ]);
+    }
+
+    /**
      * Sends confirmation email to user
      *
      * @return bool whether the email was sent

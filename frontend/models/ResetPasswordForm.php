@@ -11,7 +11,15 @@ use common\models\reference\User;
  */
 class ResetPasswordForm extends Model
 {
+    /**
+     * @var string
+     */
     public $password;
+
+    /**
+     * @var string
+     */
+    public $password_repeat;
 
     /**
      * @var User
@@ -44,9 +52,21 @@ class ResetPasswordForm extends Model
     public function rules()
     {
         return [
-            ['password', 'required'],
-            ['password', 'string', 'min' => 6],
+            [['password','password_repeat'], 'required'],
+            [['password','password_repeat'], 'string', 'min' => 6],
+            ['password_repeat', 'compare', 'compareAttribute' => 'password', 'message' => 'Пароли не совпадают'],
         ];
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function attributeLabels()
+    {
+        return array_merge(parent::attributeLabels(), [
+            'password' => 'Пароль',
+            'password_repeat' => 'Повторите пароль',
+        ]);
     }
 
     /**

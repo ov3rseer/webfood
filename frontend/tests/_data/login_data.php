@@ -4,6 +4,7 @@ return [
         'username' => 'erau',
         'surname' => 'erau',
         'name' => 'erau',
+        'is_active' => true,
         'auth_key' => 'tUu1qHcde0diwUol3xeI-18MuHkkprQI',
         // password_0
         'password_hash' => '$2y$13$nJ1WDlBaGcbCdbNC5.5l4.sgy.OMEKCqtDQOdQ2OWpgiKRWYyzzne',
@@ -14,6 +15,7 @@ return [
         'username' => 'test.test',
         'surname' => 'test.test',
         'name' => 'test.test',
+        'is_active' => false,
         'auth_key' => 'O87GkY3_UfmMHYkyezZ7QLfmkKNsllzT',
         // Test1234
         'password_hash' => '$2y$13$d17z0w/wKC4LFwtzBcmx6up4jErQuandJqhzKGKczfWuiEhLBtQBK',
