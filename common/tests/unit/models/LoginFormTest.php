@@ -31,10 +31,13 @@ class LoginFormTest extends Unit
         ];
     }
 
+    /**
+     * @throws \yii\base\InvalidConfigException
+     */
     public function testLoginNoUser()
     {
         $model = new LoginForm([
-            'username' => 'not_existing_username',
+            'login' => 'not_existing_username',
             'password' => 'not_existing_password',
         ]);
 
@@ -42,10 +45,13 @@ class LoginFormTest extends Unit
         expect('user should not be logged in', Yii::$app->user->isGuest)->true();
     }
 
+    /**
+     * @throws \yii\base\InvalidConfigException
+     */
     public function testLoginWrongPassword()
     {
         $model = new LoginForm([
-            'username' => 'bayer.hudson',
+            'login' => 'bayer.hudson',
             'password' => 'wrong_password',
         ]);
 
@@ -54,10 +60,13 @@ class LoginFormTest extends Unit
         expect('user should not be logged in', Yii::$app->user->isGuest)->true();
     }
 
+    /**
+     * @throws \yii\base\InvalidConfigException
+     */
     public function testLoginCorrect()
     {
         $model = new LoginForm([
-            'username' => 'bayer.hudson',
+            'login' => 'bayer.hudson',
             'password' => 'password_0',
         ]);
 

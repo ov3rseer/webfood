@@ -10,12 +10,11 @@ use yii\base\Model;
  */
 class LoginForm extends Model
 {
-    public $username;
+    public $login;
     public $password;
     public $rememberMe = true;
 
     private $_user;
-
 
     /**
      * {@inheritdoc}
@@ -24,7 +23,7 @@ class LoginForm extends Model
     {
         return [
             // username and password are both required
-            [['username', 'password'], 'required'],
+            [['login', 'password'], 'required'],
             // rememberMe must be a boolean value
             ['rememberMe', 'boolean'],
             // password is validated by validatePassword()
@@ -38,7 +37,7 @@ class LoginForm extends Model
     public function attributeLabels()
     {
         return array_merge(parent::attributeLabels(), [
-            'username'      => 'Логин',
+            'login'         => 'Логин',
             'password'      => 'Пароль',
             'rememberMe'    => 'Запомнить меня'
         ]);
@@ -48,13 +47,14 @@ class LoginForm extends Model
      * Validates the password.
      * This method serves as the inline validation for password.
      * @param $attribute
+     * @throws \yii\base\InvalidConfigException
      */
     public function validatePassword($attribute)
     {
         if (!$this->hasErrors()) {
             $user = $this->getUser();
             if (!$user || !$user->validatePassword($this->password)) {
-                $this->addError($attribute, 'Incorrect username or password.');
+                $this->addError($attribute, 'Неверный логин или пароль.');
             }
         }
     }
@@ -63,6 +63,7 @@ class LoginForm extends Model
      * Logs in a user using the provided username and password.
      *
      * @return bool whether the user is logged in successfully
+     * @throws \yii\base\InvalidConfigException
      */
     public function login()
     {
@@ -77,13 +78,15 @@ class LoginForm extends Model
      * Finds user by [[username]]
      *
      * @return User|null
+     * @throws \yii\base\InvalidConfigException
      */
     protected function getUser()
     {
+        $userByUsername = null;
+        $userByEmail = null;
         if ($this->_user === null) {
-            $this->_user = User::findByUsername($this->username);
+            $this->_user = User::findByUsernameOrEmail($this->login);
         }
-
         return $this->_user;
     }
 }

@@ -3,6 +3,9 @@
 
 namespace common\models\document;
 
+use common\models\enum\TypeRequest;
+use common\models\tablepart\PreliminaryRequestProduct;
+use yii\db\ActiveQuery;
 
 class PreliminaryRequest extends Document
 {
@@ -28,9 +31,8 @@ class PreliminaryRequest extends Document
     public function rules()
     {
         return array_merge(parent::rules(), [
-            [['product_id', 'type_request_id'], 'integer'],
-            [['product_id', 'type_request_id'], 'required'],
-            [['quantity'], 'number'],
+            [['type_request_id'], 'integer'],
+            [['type_request_id'], 'required'],
         ]);
     }
 
@@ -40,9 +42,35 @@ class PreliminaryRequest extends Document
     public function attributeLabels()
     {
         return array_merge(parent::attributeLabels(), [
-            'product_id' => 'Продукт',
-            'type_request_id' => 'Тип заявки',
-            'quantity' => 'Количество',
+            'type_request_id'            => 'Тип заявки',
+            'preliminaryRequestProducts' => 'Продукты'
         ]);
+    }
+
+    /**
+     * @return ActiveQuery
+     */
+    public function getTypeRequest()
+    {
+        return $this->hasOne(TypeRequest::className(), ['id' => 'type_request_id']);
+    }
+
+    /**
+     * @return ActiveQuery
+     */
+    public function getPreliminaryRequestProducts()
+    {
+        return $this->hasMany(PreliminaryRequestProduct::className(), ['parent_id' => 'id'])
+            ->orderBy('id ASC');
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getTableParts()
+    {
+        return array_merge([
+            'preliminaryRequestProducts' => PreliminaryRequestProduct::className(),
+        ], parent::getTableParts());
     }
 }

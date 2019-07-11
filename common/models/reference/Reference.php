@@ -108,6 +108,7 @@ abstract class Reference extends ActiveRecord
     public function attributeLabels()
     {
         return array_merge(parent::attributeLabels(), [
+            'name'           => 'Наименование',
             'is_active'      => 'Активен',
             'create_date'    => 'Дата создания',
             'update_date'    => 'Дата изменения',

@@ -5,7 +5,7 @@ use yii\rbac\Permission;
 
 class m190711_084046_add_doc_preliminary_request extends Migration
 {
-    private $_permissionsForAdd = [
+    private $_permissionsForUnit = [
         [
             'name' => 'backend\controllers\reference\UnitController.Index',
             'description' => 'Единицы измерения: Журнал',
@@ -29,7 +29,10 @@ class m190711_084046_add_doc_preliminary_request extends Migration
         [
             'name' => 'backend\controllers\reference\UnitController.Restore',
             'description' => 'Единицы измерения: Восстановить',
-        ],
+        ]
+    ];
+
+    private $_permissionsForProduct = [
         [
             'name' => 'backend\controllers\reference\ProductController.Index',
             'description' => 'Продукты: Журнал',
@@ -53,54 +56,59 @@ class m190711_084046_add_doc_preliminary_request extends Migration
         [
             'name' => 'backend\controllers\reference\ProductController.Restore',
             'description' => 'Продукты: Восстановить',
-        ],
-        [
-            'name' => 'backend\controllers\document\PreliminaryRequestController.Index',
-            'description' => 'Единицы измерения: Журнал',
-        ],
+        ]
+    ];
+
+    private $_permissionsForPreliminaryRequest = [[
+        'name' => 'backend\controllers\document\PreliminaryRequestController.Index',
+        'description' => 'Предварительные заявки: Журнал',
+    ],
         [
             'name' => 'backend\controllers\document\PreliminaryRequestController.View',
-            'description' => 'Единицы измерения: Просмотр',
+            'description' => 'Предварительные заявки: Просмотр',
         ],
         [
             'name' => 'backend\controllers\document\PreliminaryRequestController.Create',
-            'description' => 'Единицы измерения: Создать',
+            'description' => 'Предварительные заявки: Создать',
         ],
         [
             'name' => 'backend\controllers\document\PreliminaryRequestController.Update',
-            'description' => 'Единицы измерения: Изменить',
+            'description' => 'Предварительные заявки: Изменить',
         ],
         [
             'name' => 'backend\controllers\document\PreliminaryRequestController.Delete',
-            'description' => 'Единицы измерения: Удалить',
+            'description' => 'Предварительные заявки: Удалить',
         ],
         [
             'name' => 'backend\controllers\document\PreliminaryRequestController.Restore',
-            'description' => 'Единицы измерения: Восстановить',
-        ],
+            'description' => 'Предварительные заявки: Восстановить',
+        ]
+    ];
+
+    private $_permissionsForCorrectionRequest = [
         [
             'name' => 'backend\controllers\document\CorrectionRequestController.Index',
-            'description' => 'Продукты: Журнал',
+            'description' => 'Корректировки заявок: Журнал',
         ],
         [
             'name' => 'backend\controllers\document\CorrectionRequestController.View',
-            'description' => 'Продукты: Просмотр',
+            'description' => 'Корректировки заявок: Просмотр',
         ],
         [
             'name' => 'backend\controllers\document\CorrectionRequestController.Create',
-            'description' => 'Продукты: Создать',
+            'description' => 'Корректировки заявок: Создать',
         ],
         [
             'name' => 'backend\controllers\document\CorrectionRequestController.Update',
-            'description' => 'Продукты: Изменить',
+            'description' => 'Корректировки заявок: Изменить',
         ],
         [
             'name' => 'backend\controllers\document\CorrectionRequestController.Delete',
-            'description' => 'Продукты: Удалить',
+            'description' => 'Корректировки заявок: Удалить',
         ],
         [
             'name' => 'backend\controllers\document\CorrectionRequestController.Restore',
-            'description' => 'Продукты: Восстановить',
+            'description' => 'Корректировки заявок: Восстановить',
         ],
     ];
 
@@ -144,19 +152,28 @@ class m190711_084046_add_doc_preliminary_request extends Migration
 
         $this->createReferenceTable('{{%ref_product}}', [
             'product_code' => $this->integer(9)->notNull()->unsigned(),
-            'unit_id' => $this->integer()->notNull()->indexed()->foreignKey('{{%ref_unit}}', 'id'),
         ]);
 
         $this->createDocumentTable('{{%doc_preliminary_request}}', [
-            'product_id' => $this->integer()->notNull()->indexed()->foreignKey('{{%ref_product}}', 'id'),
             'type_request_id' => $this->integer()->notNull()->indexed()->foreignKey('{{%enum_type_request}}', 'id'),
-            'quantity' => $this->float()
+        ]);
+
+        $this->createTablePartTable('{{%tab_preliminary_request_product}}', '{{%doc_preliminary_request}}', [
+            'product_id' => $this->integer()->notNull()->indexed()->foreignKey('{{%ref_product}}', 'id'),
+            'unit_id' => $this->integer()->notNull()->indexed()->foreignKey('{{%ref_unit}}', 'id'),
+            'quantity' => $this->decimal(10, 2)->notNull(),
         ]);
 
         $this->createDocumentTable('{{%doc_correction_request}}');
 
+        $permissionForAdd = array_merge(
+            $this->_permissionsForUnit,
+            $this->_permissionsForProduct,
+            $this->_permissionsForPreliminaryRequest,
+            $this->_permissionsForCorrectionRequest
+        );
         $auth = Yii::$app->authManager;
-        foreach ($this->_permissionsForAdd as $permissionData) {
+        foreach ($permissionForAdd as $permissionData) {
             $permission = new Permission($permissionData);
             $auth->add($permission);
         }
@@ -164,8 +181,14 @@ class m190711_084046_add_doc_preliminary_request extends Migration
 
     public function safeDown()
     {
+        $permissionForDelete = array_merge(
+            $this->_permissionsForUnit,
+            $this->_permissionsForProduct,
+            $this->_permissionsForPreliminaryRequest,
+            $this->_permissionsForCorrectionRequest
+        );
         $auth = Yii::$app->authManager;
-        foreach ($this->_permissionsForAdd as $permissionData) {
+        foreach ($permissionForDelete as $permissionData) {
             $permission = $auth->getPermission($permissionData['name']);
             if ($permission) {
                 $auth->remove($permission);
@@ -173,6 +196,7 @@ class m190711_084046_add_doc_preliminary_request extends Migration
         }
 
         $this->dropTable('{{%doc_correction_request}}');
+        $this->dropTable('{{%tab_preliminary_request_product}}');
         $this->dropTable('{{%doc_preliminary_request}}');
         $this->dropTable('{{%ref_product}}');
         $this->dropTable('{{%ref_unit}}');

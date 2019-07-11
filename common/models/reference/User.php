@@ -113,6 +113,30 @@ class User extends Reference implements IdentityInterface
     }
 
     /**
+     * Finds user by username
+     *
+     * @param string $username
+     * @return array|User|null
+     * @throws yii\base\InvalidConfigException
+     */
+    public static function findByUsername($username)
+    {
+        return static::find()->active()->andWhere(['username' => $username])->one();
+    }
+
+    /**
+     * Finds user by username or email
+     *
+     * @param string $username
+     * @return array|User|null
+     * @throws yii\base\InvalidConfigException
+     */
+    public static function findByUsernameOrEmail($login)
+    {
+        return static::find()->active()->andWhere(['OR', ['username' => $login], ['email' => $login]])->one();
+    }
+
+    /**
      * @inheritdoc
      */
     public function getId()
@@ -165,18 +189,6 @@ class User extends Reference implements IdentityInterface
     {
         $this->_password = $password;
         $this->password_hash = Yii::$app->security->generatePasswordHash($this->_password);
-    }
-
-
-    /**
-     * Finds user by username
-     *
-     * @param string $username
-     * @return User|null
-     */
-    public static function findByUsername($username)
-    {
-        return static::findOne(['username' => $username, 'is_active' => true]);
     }
 
     /**

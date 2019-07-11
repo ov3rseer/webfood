@@ -20,14 +20,14 @@ abstract class DocumentController extends ModelController
     {
         return array_merge(parent::actions(), [
             'create' => [
-                'class' => 'backend\actions\base\CreateAction',
+                'class' => 'backend\actions\document\base\CreateAction',
                 'modelClass' => $this->modelClass,
-                'viewPath' => '@backend/views/base/update',
+                'viewPath' => '@backend/views/document/base/update',
             ],
             'update' => [
-                'class' => 'backend\actions\base\UpdateAction',
+                'class' => 'backend\actions\document\base\UpdateAction',
                 'modelClass' => $this->modelClass,
-                'viewPath' => '@backend/views/base/update',
+                'viewPath' => '@backend/views/document/base/update',
             ],
             'view' => [
                 'class' => 'backend\actions\base\ViewAction',

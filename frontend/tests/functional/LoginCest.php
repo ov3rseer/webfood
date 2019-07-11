@@ -32,7 +32,7 @@ class LoginCest
     protected function formParams($login, $password)
     {
         return [
-            'LoginForm[username]' => $login,
+            'LoginForm[login]' => $login,
             'LoginForm[password]' => $password,
         ];
     }
@@ -47,13 +47,13 @@ class LoginCest
     public function checkWrongPassword(FunctionalTester $I)
     {
         $I->submitForm('#login-form', $this->formParams('admin', 'wrong'));
-        $I->seeValidationError('Incorrect username or password.');
+        $I->seeValidationError('Неверный логин или пароль.');
     }
 
     public function checkInactiveAccount(FunctionalTester $I)
     {
         $I->submitForm('#login-form', $this->formParams('test.test', 'Test123'));
-        $I->seeValidationError('Incorrect username or password');
+        $I->seeValidationError('Неверный логин или пароль.');
     }
 
     public function checkValidLogin(FunctionalTester $I)

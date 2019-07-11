@@ -50,11 +50,11 @@ AppAsset::register($this);
                     'items' => [
                         [
                             'label' => 'Предварительная заявка',
-                            'url' => ['/document/preliminary_request/index'],
+                            'url' => ['/document/preliminary-request/index'],
                         ],
                         [
                             'label' => 'Корректировка заявки',
-                            'url' => ['/document/correction_request/index'],
+                            'url' => ['/document/correction-request/index'],
                         ],
                     ],
                 ],

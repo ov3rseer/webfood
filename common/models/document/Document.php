@@ -22,11 +22,8 @@ use yii\helpers\Url;
 /**
  * Базовая модель документа
  *
- * @property string   $guid
  * @property DateTime $date
  * @property integer  $status_id
- * @property integer  $organization_id
- * @property string   $comment
  * @property integer  $create_user_id
  * @property integer  $update_user_id
  * @property DateTime $create_date
@@ -199,8 +196,6 @@ abstract class Document extends ActiveRecord
     {
         if ($this->_fieldsOptions === []) {
             parent::getFieldsOptions();
-            $this->_fieldsOptions['id']['displayType'] = ActiveField::HIDDEN;
-            $this->_fieldsOptions['guid']['displayType'] = ActiveField::HIDDEN;
             $this->_fieldsOptions['create_user_id']['displayType'] = ActiveField::READONLY;
             $this->_fieldsOptions['update_user_id']['displayType'] = ActiveField::READONLY;
             $this->_fieldsOptions['date']['displayType'] = ActiveField::DATETIME;
