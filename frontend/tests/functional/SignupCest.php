@@ -66,6 +66,6 @@ class SignupCest
         ]);
 
         $I->seeEmailIsSent();
-        $I->see('Thank you for registration. Please check your inbox for verification email.');
+        $I->see('Спасибо за регистрацию. Пожалуйста, проверьте свой email для подтверждения регистрации.');
     }
 }

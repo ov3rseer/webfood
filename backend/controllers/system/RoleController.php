@@ -196,7 +196,7 @@ class RoleController extends SystemController
                             ]
                         );
                     },
-                    'header' => 'Список<br />'
+                    'header' => 'Журнал<br />'
                         . Html::checkbox(
                             Html::getInputName($model, 'assigned_all[]'),
                             false,

@@ -43,7 +43,7 @@ class Role extends ActiveRecord
     public function rules()
     {
         return array_merge(parent::rules(), [
-            [['description'], 'string', 'max' => 255],
+            [['description', 'name'], 'string', 'max' => 255],
             [['assigned'], 'safe'],
         ]);
     }
@@ -54,8 +54,8 @@ class Role extends ActiveRecord
     public function attributeLabels()
     {
         return array_merge(parent::attributeLabels(), [
-            'name'        => 'ID',
-            'description' => 'Наименование',
+            'name'        => 'Наименование',
+            'description' => 'Описание',
         ]);
     }
 

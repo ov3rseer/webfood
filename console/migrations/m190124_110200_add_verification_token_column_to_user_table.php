@@ -8,7 +8,11 @@ class m190124_110200_add_verification_token_column_to_user_table extends Migrati
     private $_permissionsForAdd = [
         [
             'name' => 'backend\controllers\reference\UserController.Index',
-            'description' => 'Пользователи: Список',
+            'description' => 'Пользователи: Журнал',
+        ],
+        [
+            'name' => 'backend\controllers\reference\UserController.View',
+            'description' => 'Пользователи: Просмотр',
         ],
         [
             'name' => 'backend\controllers\reference\UserController.Create',
@@ -21,6 +25,30 @@ class m190124_110200_add_verification_token_column_to_user_table extends Migrati
         [
             'name' => 'backend\controllers\reference\UserController.Delete',
             'description' => 'Пользователи: Удалить',
+        ],
+        [
+            'name' => 'backend\controllers\reference\UserController.Restore',
+            'description' => 'Пользователи: Восстановить',
+        ],
+        [
+            'name' => 'backend\controllers\system\RoleController.Index',
+            'description' => 'Роли: Журнал',
+        ],
+        [
+            'name' => 'backend\controllers\system\RoleController.View',
+            'description' => 'Роли: Просмотр',
+        ],
+        [
+            'name' => 'backend\controllers\system\RoleController.Create',
+            'description' => 'Роли: Создать',
+        ],
+        [
+            'name' => 'backend\controllers\system\RoleController.Update',
+            'description' => 'Роли: Изменить',
+        ],
+        [
+            'name' => 'backend\controllers\system\RoleController.Delete',
+            'description' => 'Роли: Удалить',
         ],
     ];
 
