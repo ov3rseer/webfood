@@ -1,9 +1,10 @@
 <?php
 
-
 namespace backend\controllers\reference;
 
-
+/**
+ * Контроллер для справочника "Контрагенты"
+ */
 class ContractorController extends ReferenceController
 {
     /**

@@ -15,8 +15,8 @@ class m190712_072430_add_ref_contractor extends Migration
      */
     public function setPermissions()
     {
-        $this->_permissionsForContract   = $this->getPermissions('backend\controllers\reference\ContractController', 'Единицы измерения', 63);
-        $this->_permissionsForContractor = $this->getPermissions('backend\controllers\reference\ContractorController', 'Единицы измерения', 63);
+        $this->_permissionsForContract = $this->getPermissions('backend\controllers\reference\ContractController', 'Контракты', 63);
+        $this->_permissionsForContractor = $this->getPermissions('backend\controllers\reference\ContractorController', 'Контрагенты', 63);
     }
 
     /**
