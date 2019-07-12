@@ -200,14 +200,14 @@ class m190711_084046_add_doc_preliminary_request extends Migration
             }
         }
 
-        $this->insert('{{%sys_entity%}}', ['class_name' => 'common\models\document\CorrectionRequest']);
+        $this->delete('{{%sys_entity%}}', ['class_name' => 'common\models\document\CorrectionRequest']);
         $this->dropTable('{{%doc_correction_request}}');
         $this->dropTable('{{%tab_preliminary_request_product}}');
-        $this->insert('{{%sys_entity%}}', ['class_name' => 'common\models\document\PreliminaryRequest']);
+        $this->delete('{{%sys_entity%}}', ['class_name' => 'common\models\document\PreliminaryRequest']);
         $this->dropTable('{{%doc_preliminary_request}}');
-        $this->insert('{{%sys_entity%}}', ['class_name' => 'common\models\reference\Product']);
+        $this->delete('{{%sys_entity%}}', ['class_name' => 'common\models\reference\Product']);
         $this->dropTable('{{%ref_product}}');
-        $this->insert('{{%sys_entity%}}', ['class_name' => 'common\models\reference\Unit']);
+        $this->delete('{{%sys_entity%}}', ['class_name' => 'common\models\reference\Unit']);
         $this->dropTable('{{%ref_unit}}');
         $this->dropTable('{{%enum_type_request}}');
     }
