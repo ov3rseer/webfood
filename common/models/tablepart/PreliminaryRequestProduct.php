@@ -3,9 +3,24 @@
 
 namespace common\models\tablepart;
 
+
+use common\models\document\PreliminaryRequest;
 use common\models\reference\Product;
 use common\models\reference\Unit;
 
+/**
+ * Модель строки табличной части "Производитель" документа "Сертификат соответствия"
+ *
+ * Свойства:
+ * @property integer $product_id
+ * @property integer $unit_id
+ * @property float   $quantity
+ *
+ * Отношения:
+ * @property PreliminaryRequest    $parent
+ * @property Product               $nomenclature
+ * @property Unit                  $unit
+ */
 class PreliminaryRequestProduct extends TablePart
 {
     /**
@@ -30,6 +45,14 @@ class PreliminaryRequestProduct extends TablePart
             'unit_id'       => 'Единица измерения',
             'quantity'      => 'Количество',
         ]);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getParent()
+    {
+        return $this->hasOne(PreliminaryRequest::className(), ['id' => 'parent_id']);
     }
 
     /**

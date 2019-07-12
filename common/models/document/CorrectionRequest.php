@@ -1,9 +1,10 @@
 <?php
 
-
 namespace common\models\document;
 
-
+/**
+ * Модель документа "Корректировка заявки"
+ */
 class CorrectionRequest extends Document
 {
     /**

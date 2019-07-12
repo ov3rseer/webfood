@@ -1,9 +1,12 @@
 <?php
 
-
 namespace common\models\reference;
 
-
+/**
+ * Модель "Продукт"
+ *
+ * @property string  $product_code
+ */
 class Product extends Reference
 {
     /**
@@ -28,8 +31,8 @@ class Product extends Reference
     public function rules()
     {
         return array_merge(parent::rules(), [
-            [['unit_id', 'product_code'], 'integer'],
-            [['product_code', 'unit_id'], 'required'],
+            [['product_code'], 'integer'],
+            [['product_code'], 'required'],
 
         ]);
     }
@@ -40,7 +43,6 @@ class Product extends Reference
     public function attributeLabels()
     {
         return array_merge(parent::attributeLabels(), [
-            'unit_id' => 'Единица измерения',
             'product_code' => 'Код продукта',
         ]);
     }

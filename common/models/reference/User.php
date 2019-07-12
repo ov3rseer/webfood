@@ -11,7 +11,6 @@ use yii\web\IdentityInterface;
 /**
  * Модель "Пользователь"
  *
- * @property integer $id
  * @property string $email
  * @property string $password_hash
  * @property string $auth_key
@@ -302,7 +301,6 @@ class User extends Reference implements IdentityInterface
     {
         if ($this->_fieldsOptions === []) {
             parent::getFieldsOptions();
-            $this->_fieldsOptions['is_active']['displayType'] = ActiveField::BOOL;
             $this->_fieldsOptions['password_hash']['displayType'] = ActiveField::IGNORE;
             $this->_fieldsOptions['auth_key']['displayType'] = ActiveField::IGNORE;
             $this->_fieldsOptions['verification_token']['displayType'] = ActiveField::IGNORE;

@@ -97,6 +97,7 @@ abstract class Document extends ActiveRecord
     public function attributeLabels()
     {
         return array_merge(parent::attributeLabels(), [
+            'id'                => 'Номер',
             'date'              => 'Дата',
             'status_id'         => 'Статус',
             'create_date'       => 'Дата создания',

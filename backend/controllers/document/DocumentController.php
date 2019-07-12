@@ -6,7 +6,6 @@ use backend\controllers\ModelController;
 use common\models\ActiveRecord;
 use common\models\register\registerAccumulate\RegisterAccumulate;
 use yii\data\ArrayDataProvider;
-use yii\helpers\ArrayHelper;
 
 /**
  * Базовый класс контроллера для моделей документов
@@ -30,7 +29,7 @@ abstract class DocumentController extends ModelController
                 'viewPath' => '@backend/views/document/base/update',
             ],
             'view' => [
-                'class' => 'backend\actions\base\ViewAction',
+                'class' => 'backend\actions\document\base\ViewAction',
                 'modelClass' => $this->modelClass,
                 'viewPath' => '@backend/views/document/base/view',
             ],
@@ -38,28 +37,6 @@ abstract class DocumentController extends ModelController
                 'class' => 'backend\actions\base\SearchAction',
                 'modelClass' => $this->modelClass,
                 'searchFields' => ['id'],
-            ],
-            'restore' => [
-                'class' => 'backend\actions\base\RestoreAction',
-                'modelClass' => $this->modelClass,
-            ],
-        ]);
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function behaviors()
-    {
-        return ArrayHelper::merge(parent::behaviors(), [
-            'access' => [
-                'rules' => [
-                    [
-                        'actions' => ['restore'],
-                        'allow' => true,
-                        'roles' => [static::className() . '.Restore'],
-                    ],
-                ],
             ],
         ]);
     }
@@ -149,15 +126,6 @@ abstract class DocumentController extends ModelController
         unset($result['document_basis_type_id']);
         unset($result['create_date']);
         unset($result['update_date']);
-        $result = array_merge([
-            [
-                'attribute' => 'id',
-                'label' => 'Номер',
-                'headerOptions' => [
-                    'style' => 'width: 100px;',
-                ],
-            ]
-        ], $result);
         return $result;
     }
 }

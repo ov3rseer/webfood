@@ -3,7 +3,9 @@
 
 namespace backend\controllers\document;
 
-
+/**
+ * Контроллер для документов "Корректировки заявок"
+ */
 class CorrectionRequestController extends DocumentController
 {
     /**

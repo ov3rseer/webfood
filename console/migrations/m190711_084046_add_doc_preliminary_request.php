@@ -125,12 +125,12 @@ class m190711_084046_add_doc_preliminary_request extends Migration
             2 => 'Сотрудники'
         ]);
 
+
         $this->createReferenceTable('{{%ref_unit}}', [
             'name_full' => $this->string()->notNull()->indexed(),
             'code' => $this->string(3)->notNull()->indexed()->unsigned(),
             'international_abbreviation' => $this->string(3)->notNull()->indexed(),
         ]);
-
         $units = [
             ['мм',   'миллиметр',        '003', 'MMT'],
             ['см',   'сантиметр',        '004', 'CMT'],
@@ -147,16 +147,20 @@ class m190711_084046_add_doc_preliminary_request extends Migration
             ['шт',   'штука',            '796', 'PCE'],
             ['упак', 'упаковка',         '778', 'NMP'],
         ];
-
         $this->batchInsert('{{%ref_unit}}', ['name', 'name_full', 'code', 'international_abbreviation'], $units);
+        $this->insert('{{%sys_entity%}}', ['class_name' => 'common\models\reference\Unit']);
+
 
         $this->createReferenceTable('{{%ref_product}}', [
             'product_code' => $this->integer(9)->notNull()->unsigned(),
         ]);
+        $this->insert('{{%sys_entity%}}', ['class_name' => 'common\models\reference\Product']);
+
 
         $this->createDocumentTable('{{%doc_preliminary_request}}', [
             'type_request_id' => $this->integer()->notNull()->indexed()->foreignKey('{{%enum_type_request}}', 'id'),
         ]);
+        $this->insert('{{%sys_entity%}}', ['class_name' => 'common\models\document\PreliminaryRequest']);
 
         $this->createTablePartTable('{{%tab_preliminary_request_product}}', '{{%doc_preliminary_request}}', [
             'product_id' => $this->integer()->notNull()->indexed()->foreignKey('{{%ref_product}}', 'id'),
@@ -165,6 +169,7 @@ class m190711_084046_add_doc_preliminary_request extends Migration
         ]);
 
         $this->createDocumentTable('{{%doc_correction_request}}');
+        $this->insert('{{%sys_entity%}}', ['class_name' => 'common\models\document\CorrectionRequest']);
 
         $permissionForAdd = array_merge(
             $this->_permissionsForUnit,
@@ -195,10 +200,14 @@ class m190711_084046_add_doc_preliminary_request extends Migration
             }
         }
 
+        $this->insert('{{%sys_entity%}}', ['class_name' => 'common\models\document\CorrectionRequest']);
         $this->dropTable('{{%doc_correction_request}}');
         $this->dropTable('{{%tab_preliminary_request_product}}');
+        $this->insert('{{%sys_entity%}}', ['class_name' => 'common\models\document\PreliminaryRequest']);
         $this->dropTable('{{%doc_preliminary_request}}');
+        $this->insert('{{%sys_entity%}}', ['class_name' => 'common\models\reference\Product']);
         $this->dropTable('{{%ref_product}}');
+        $this->insert('{{%sys_entity%}}', ['class_name' => 'common\models\reference\Unit']);
         $this->dropTable('{{%ref_unit}}');
         $this->dropTable('{{%enum_type_request}}');
     }

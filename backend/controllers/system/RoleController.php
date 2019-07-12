@@ -16,7 +16,7 @@ use yii\web\HttpException;
 use yii\web\Response;
 
 /**
- * Контроллер для управления операциями
+ * Контроллер для управления правами доступа
  */
 class RoleController extends SystemController
 {

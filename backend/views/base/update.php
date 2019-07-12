@@ -116,9 +116,6 @@ foreach ($model->getFieldsOptions() as $field => $fieldOptions) {
                     ['target' => '_blank', 'data-pjax' => 0]) . '</div>';
         }
     }
-    if ($model instanceof Reference && $field == 'name') {
-        echo $form->field($model, 'is_active')->readonly();
-    }
 }
 
 $tabs = [];

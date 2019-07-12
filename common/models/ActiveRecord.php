@@ -141,15 +141,7 @@ abstract class ActiveRecord extends yii\db\ActiveRecord
         return $result;
     }
 
-    /**
-     * @inheritdoc
-     */
-    public function attributeLabels()
-    {
-        return array_merge(parent::attributeLabels(), [
-            'id' => 'ID',
-        ]);
-    }
+
 
     /**
      * Получение публичных свойств класса

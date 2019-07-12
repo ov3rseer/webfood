@@ -1,9 +1,10 @@
 <?php
 
-
 namespace common\models\enum;
 
-
+/**
+ * Статус заявки
+ */
 class TypeRequest extends Enum
 {
     /**

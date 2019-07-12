@@ -1,12 +1,14 @@
 <?php
 
-
 namespace common\models\document;
 
 use common\models\enum\TypeRequest;
 use common\models\tablepart\PreliminaryRequestProduct;
 use yii\db\ActiveQuery;
 
+/**
+ * Модель документа "Предварительная заявка"
+ */
 class PreliminaryRequest extends Document
 {
     /**

@@ -92,6 +92,10 @@ abstract class ModelController extends Controller
                 'modelClass' => $this->modelClass,
                 'viewPath' => '@backend/views/base/select',
             ],
+            'restore' => [
+                'class' => 'backend\actions\base\RestoreAction',
+                'modelClass' => $this->modelClass,
+            ],
         ]);
     }
 
@@ -107,7 +111,7 @@ abstract class ModelController extends Controller
                     [
                         'actions' => ['index'],
                         'allow' => true,
-                        'roles' => ['@'],
+                        'roles' => [static::class . '.Index'],
                     ],
                     [
                         'actions' => ['search', 'select'],
@@ -122,12 +126,22 @@ abstract class ModelController extends Controller
                     [
                         'actions' => ['update'],
                         'allow' => true,
-                        'roles' => ['@'],
+                        'roles' => [static::class . '.Update'],
+                    ],
+                    [
+                        'actions' => ['view'],
+                        'allow' => true,
+                        'roles' => [static::class . '.View'],
                     ],
                     [
                         'actions' => ['delete', 'delete-checked'],
                         'allow' => true,
                         'roles' => [static::class . '.Delete'],
+                    ],
+                    [
+                        'actions' => ['restore'],
+                        'allow' => true,
+                        'roles' => [static::class . '.Restore'],
                     ],
                 ],
 

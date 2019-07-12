@@ -16,7 +16,6 @@ use yii\helpers\Url;
 /**
  * Базовая модель элемента справочника
  *
- * @property string   $guid
  * @property string   $name
  * @property boolean  $is_active
  * @property integer  $create_user_id
@@ -63,7 +62,6 @@ abstract class Reference extends ActiveRecord
                 'update_date',
             ]
         );
-        $result[self::SCENARIO_DEFAULT][] = '!is_active';
         return $result;
     }
 
@@ -179,8 +177,9 @@ abstract class Reference extends ActiveRecord
     {
         if ($this->_fieldsOptions === []) {
             parent::getFieldsOptions();
+            $this->_fieldsOptions['id']['displayType'] = ActiveField::HIDDEN;
+            $this->_fieldsOptions['is_active']['displayType'] = ActiveField::BOOL;
             if ($this->scenario != self::SCENARIO_SEARCH) {
-                $this->_fieldsOptions['is_active']['displayType'] = ActiveField::BOOL;
                 $this->_fieldsOptions['create_user_id']['displayType'] = ActiveField::READONLY;
                 $this->_fieldsOptions['update_user_id']['displayType'] = ActiveField::READONLY;
                 $this->_fieldsOptions['create_date']['displayType'] = ActiveField::READONLY;

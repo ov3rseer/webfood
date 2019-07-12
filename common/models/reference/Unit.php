@@ -4,6 +4,14 @@
 namespace common\models\reference;
 
 
+/**
+ * Модель "Единица измерения"
+ *
+ * @property string $name_full
+ * @property string $code
+ * @property string $international_abbreviation
+ * @property string $auth_key
+ */
 class Unit extends Reference
 {
     /**
@@ -41,9 +49,9 @@ class Unit extends Reference
     public function attributeLabels()
     {
         return array_merge(parent::attributeLabels(), [
-            'name' => 'Краткое наименование',
+            'name'      => 'Краткое наименование',
             'name_full' => 'Полное наименование',
-            'code' => 'Код',
+            'code'      => 'Код',
             'international_abbreviation' => 'Международное сокращение',
         ]);
     }

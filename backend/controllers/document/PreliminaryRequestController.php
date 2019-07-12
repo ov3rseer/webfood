@@ -3,7 +3,9 @@
 
 namespace backend\controllers\document;
 
-
+/**
+ * Контроллер для документов "Предварительные заявки"
+ */
 class PreliminaryRequestController extends DocumentController
 {
     /**

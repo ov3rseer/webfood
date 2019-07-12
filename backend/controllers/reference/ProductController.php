@@ -3,7 +3,9 @@
 
 namespace backend\controllers\reference;
 
-
+/**
+ * Контроллер для справочника "Продукты"
+ */
 class ProductController extends ReferenceController
 {
     /**
