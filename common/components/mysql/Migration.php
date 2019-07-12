@@ -1,6 +1,8 @@
 <?php
 
 namespace common\components\mysql;
+use Yii;
+use yii\rbac\Permission;
 
 /**
  * Расширенный класс миграции
@@ -413,5 +415,70 @@ class Migration extends \yii\db\Migration
             'id' => $this->primaryKey(),
         ];
         $this->createTable($table, array_merge($columnsBefore, $specificColumns));
+    }
+
+    /**
+     * Получение массива прав
+     * @param integer $permissionCode Десятичное представление комбинации назначаемых прав
+     * @param string $controllerPath
+     * @param string $descriptionTitle
+     * @return array
+     * @throws \Exception
+     */
+    protected function getPermissions($controllerPath, $descriptionTitle, $permissionCode = 0)
+    {
+        $permissionArray = [];
+        $permissionList  = [
+            'Index'   => 'Журнал',
+            'View'    => 'Просмотр',
+            'Create'  => 'Создать',
+            'Update'  => 'Изменить',
+            'Delete'  => 'Удалить',
+            'Restore' => 'Восстановить',
+        ];
+
+        $binPermissionCode = strrev(decbin($permissionCode));
+
+        $i = 0;
+        foreach ($permissionList as $name => $description) {
+            if ($binPermissionCode[$i]) {
+                $permissionArray[] = [
+                    'name' => $controllerPath.'.'.$name,
+                    'description' => $descriptionTitle.': '.$description,
+                ];
+            }
+        }
+
+        return $permissionArray;
+    }
+
+    /**
+     * Добавление прав
+     * @param array $permissionForAdd
+     * @throws \Exception
+     */
+    protected function addPermissions($permissionForAdd = [])
+    {
+        $auth = Yii::$app->authManager;
+        foreach ($permissionForAdd as $permissionData) {
+            $permission = new Permission($permissionData);
+            $auth->add($permission);
+        }
+    }
+
+    /**
+     * Удаление прав
+     * @param array $permissionForDelete
+     * @throws \Exception
+     */
+    protected function deletePermissions($permissionForDelete = [])
+    {
+        $auth = Yii::$app->authManager;
+        foreach ($permissionForDelete as $permissionData) {
+            $permission = $auth->getPermission($permissionData['name']);
+            if ($permission) {
+                $auth->remove($permission);
+            }
+        }
     }
 }

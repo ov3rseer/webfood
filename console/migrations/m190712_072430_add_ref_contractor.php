@@ -1,63 +1,23 @@
 <?php
 
 use common\components\mysql\Migration;
-use yii\rbac\Permission;
 
 class m190712_072430_add_ref_contractor extends Migration
 {
-    private $_permissionsForContract = [
-        [
-            'name' => 'backend\controllers\reference\ContractController.Index',
-            'description' => 'Единицы измерения: Журнал',
-        ],
-        [
-            'name' => 'backend\controllers\reference\ContractController.View',
-            'description' => 'Единицы измерения: Просмотр',
-        ],
-        [
-            'name' => 'backend\controllers\reference\ContractController.Create',
-            'description' => 'Единицы измерения: Создать',
-        ],
-        [
-            'name' => 'backend\controllers\reference\ContractController.Update',
-            'description' => 'Единицы измерения: Изменить',
-        ],
-        [
-            'name' => 'backend\controllers\reference\ContractController.Delete',
-            'description' => 'Единицы измерения: Удалить',
-        ],
-        [
-            'name' => 'backend\controllers\reference\ContractController.Restore',
-            'description' => 'Единицы измерения: Восстановить',
-        ]
-    ];
 
-    private $_permissionsForContractor = [
-        [
-            'name' => 'backend\controllers\reference\ContractorController.Index',
-            'description' => 'Единицы измерения: Журнал',
-        ],
-        [
-            'name' => 'backend\controllers\reference\ContractorController.View',
-            'description' => 'Единицы измерения: Просмотр',
-        ],
-        [
-            'name' => 'backend\controllers\reference\ContractorController.Create',
-            'description' => 'Единицы измерения: Создать',
-        ],
-        [
-            'name' => 'backend\controllers\reference\ContractorController.Update',
-            'description' => 'Единицы измерения: Изменить',
-        ],
-        [
-            'name' => 'backend\controllers\reference\ContractorController.Delete',
-            'description' => 'Единицы измерения: Удалить',
-        ],
-        [
-            'name' => 'backend\controllers\reference\ContractorController.Restore',
-            'description' => 'Единицы измерения: Восстановить',
-        ]
-    ];
+    private $_permissionsForContract;
+    private $_permissionsForContractor;
+
+    /**
+     * m190712_072430_add_ref_contractor constructor.
+     * @param array $config
+     * @throws Exception
+     */
+    public function setPermissions()
+    {
+        $this->_permissionsForContract   = $this->getPermissions('backend\controllers\reference\ContractController', 'Единицы измерения', 63);
+        $this->_permissionsForContractor = $this->getPermissions('backend\controllers\reference\ContractorController', 'Единицы измерения', 63);
+    }
 
     /**
      * @return bool|void
@@ -76,30 +36,26 @@ class m190712_072430_add_ref_contractor extends Migration
         ]);
         $this->insert('{{%sys_entity%}}', ['class_name' => 'common\models\reference\Contract']);
 
+        $this->setPermissions();
         $permissionForAdd = array_merge(
             $this->_permissionsForContract,
             $this->_permissionsForContractor
         );
-        $auth = Yii::$app->authManager;
-        foreach ($permissionForAdd as $permissionData) {
-            $permission = new Permission($permissionData);
-            $auth->add($permission);
-        }
+        $this->addPermissions($permissionForAdd);
     }
 
+    /**
+     * @return bool|void
+     * @throws Exception
+     */
     public function safeDown()
     {
+        $this->setPermissions();
         $permissionForDelete = array_merge(
             $this->_permissionsForContract,
             $this->_permissionsForContractor
         );
-        $auth = Yii::$app->authManager;
-        foreach ($permissionForDelete as $permissionData) {
-            $permission = $auth->getPermission($permissionData['name']);
-            if ($permission) {
-                $auth->remove($permission);
-            }
-        }
+        $this->deletePermissions($permissionForDelete);
 
         $this->dropTable('{{%ref_contract}}');
         $this->delete('{{%sys_entity%}}', ['class_name' => 'common\models\reference\Contract']);
