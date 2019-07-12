@@ -5,7 +5,7 @@ return [
             'class' => 'yii\db\Connection',
             'schemaMap' => ['mysql' => 'common\components\mysql\Schema'],
             'charset' => 'utf8',
-            'dsn' => 'mysql:host=localhost;dbname=webfood',
+            'dsn' => 'mysql:host=127.0.0.1;dbname=webfood',
             'username' => 'root',
             'password' => '1234',
             'enableSchemaCache' => true,

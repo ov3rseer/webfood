@@ -73,6 +73,14 @@ AppAsset::register($this);
                             'label' => 'Продукты',
                             'url' => ['/reference/product/index'],
                         ],
+                        [
+                            'label' => 'Контрагенты',
+                            'url' => ['/reference/contractor/index'],
+                        ],
+                        [
+                            'label' => 'Договоры с контрагентами',
+                            'url' => ['/reference/contract/index'],
+                        ],
                     ],
                 ],
                 [
