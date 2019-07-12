@@ -1,116 +1,26 @@
 <?php
 
 use common\components\mysql\Migration;
-use yii\rbac\Permission;
 
 class m190711_084046_add_doc_preliminary_request extends Migration
 {
-    private $_permissionsForUnit = [
-        [
-            'name' => 'backend\controllers\reference\UnitController.Index',
-            'description' => 'Единицы измерения: Журнал',
-        ],
-        [
-            'name' => 'backend\controllers\reference\UnitController.View',
-            'description' => 'Единицы измерения: Просмотр',
-        ],
-        [
-            'name' => 'backend\controllers\reference\UnitController.Create',
-            'description' => 'Единицы измерения: Создать',
-        ],
-        [
-            'name' => 'backend\controllers\reference\UnitController.Update',
-            'description' => 'Единицы измерения: Изменить',
-        ],
-        [
-            'name' => 'backend\controllers\reference\UnitController.Delete',
-            'description' => 'Единицы измерения: Удалить',
-        ],
-        [
-            'name' => 'backend\controllers\reference\UnitController.Restore',
-            'description' => 'Единицы измерения: Восстановить',
-        ]
-    ];
+    private $_permissionsForUnit;
+    private $_permissionsForProduct;
+    private $_permissionsForPreliminaryRequest;
+    private $_permissionsForCorrectionRequest;
 
-    private $_permissionsForProduct = [
-        [
-            'name' => 'backend\controllers\reference\ProductController.Index',
-            'description' => 'Продукты: Журнал',
-        ],
-        [
-            'name' => 'backend\controllers\reference\ProductController.View',
-            'description' => 'Продукты: Просмотр',
-        ],
-        [
-            'name' => 'backend\controllers\reference\ProductController.Create',
-            'description' => 'Продукты: Создать',
-        ],
-        [
-            'name' => 'backend\controllers\reference\ProductController.Update',
-            'description' => 'Продукты: Изменить',
-        ],
-        [
-            'name' => 'backend\controllers\reference\ProductController.Delete',
-            'description' => 'Продукты: Удалить',
-        ],
-        [
-            'name' => 'backend\controllers\reference\ProductController.Restore',
-            'description' => 'Продукты: Восстановить',
-        ]
-    ];
-
-    private $_permissionsForPreliminaryRequest = [[
-        'name' => 'backend\controllers\document\PreliminaryRequestController.Index',
-        'description' => 'Предварительные заявки: Журнал',
-    ],
-        [
-            'name' => 'backend\controllers\document\PreliminaryRequestController.View',
-            'description' => 'Предварительные заявки: Просмотр',
-        ],
-        [
-            'name' => 'backend\controllers\document\PreliminaryRequestController.Create',
-            'description' => 'Предварительные заявки: Создать',
-        ],
-        [
-            'name' => 'backend\controllers\document\PreliminaryRequestController.Update',
-            'description' => 'Предварительные заявки: Изменить',
-        ],
-        [
-            'name' => 'backend\controllers\document\PreliminaryRequestController.Delete',
-            'description' => 'Предварительные заявки: Удалить',
-        ],
-        [
-            'name' => 'backend\controllers\document\PreliminaryRequestController.Restore',
-            'description' => 'Предварительные заявки: Восстановить',
-        ]
-    ];
-
-    private $_permissionsForCorrectionRequest = [
-        [
-            'name' => 'backend\controllers\document\CorrectionRequestController.Index',
-            'description' => 'Корректировки заявок: Журнал',
-        ],
-        [
-            'name' => 'backend\controllers\document\CorrectionRequestController.View',
-            'description' => 'Корректировки заявок: Просмотр',
-        ],
-        [
-            'name' => 'backend\controllers\document\CorrectionRequestController.Create',
-            'description' => 'Корректировки заявок: Создать',
-        ],
-        [
-            'name' => 'backend\controllers\document\CorrectionRequestController.Update',
-            'description' => 'Корректировки заявок: Изменить',
-        ],
-        [
-            'name' => 'backend\controllers\document\CorrectionRequestController.Delete',
-            'description' => 'Корректировки заявок: Удалить',
-        ],
-        [
-            'name' => 'backend\controllers\document\CorrectionRequestController.Restore',
-            'description' => 'Корректировки заявок: Восстановить',
-        ],
-    ];
+    /**
+     * m190711_084046_add_doc_preliminary_request constructor.
+     * @param array $config
+     * @throws Exception
+     */
+    public function setPermissions()
+    {
+        $this->_permissionsForUnit = $this->getPermissions('backend\controllers\reference\UnitController', 'Единицы измерения', 63);
+        $this->_permissionsForProduct = $this->getPermissions('backend\controllers\reference\ProductController', 'Продукты', 63);
+        $this->_permissionsForPreliminaryRequest = $this->getPermissions('backend\controllers\document\PreliminaryRequestController', 'Предварительные заявки', 63);
+        $this->_permissionsForCorrectionRequest = $this->getPermissions('backend\controllers\document\CorrectionRequestController', 'Корректировки заявок', 63);
+    }
 
     /**
      * @return bool|void
@@ -171,34 +81,30 @@ class m190711_084046_add_doc_preliminary_request extends Migration
         $this->createDocumentTable('{{%doc_correction_request}}');
         $this->insert('{{%sys_entity%}}', ['class_name' => 'common\models\document\CorrectionRequest']);
 
+        $this->setPermissions();
         $permissionForAdd = array_merge(
             $this->_permissionsForUnit,
             $this->_permissionsForProduct,
             $this->_permissionsForPreliminaryRequest,
             $this->_permissionsForCorrectionRequest
         );
-        $auth = Yii::$app->authManager;
-        foreach ($permissionForAdd as $permissionData) {
-            $permission = new Permission($permissionData);
-            $auth->add($permission);
-        }
+        $this->addPermissions($permissionForAdd);
     }
 
+    /**
+     * @return bool|void
+     * @throws Exception
+     */
     public function safeDown()
     {
+        $this->setPermissions();
         $permissionForDelete = array_merge(
             $this->_permissionsForUnit,
             $this->_permissionsForProduct,
             $this->_permissionsForPreliminaryRequest,
             $this->_permissionsForCorrectionRequest
         );
-        $auth = Yii::$app->authManager;
-        foreach ($permissionForDelete as $permissionData) {
-            $permission = $auth->getPermission($permissionData['name']);
-            if ($permission) {
-                $auth->remove($permission);
-            }
-        }
+        $this->deletePermissions($permissionForDelete);
 
         $this->delete('{{%sys_entity%}}', ['class_name' => 'common\models\document\CorrectionRequest']);
         $this->dropTable('{{%doc_correction_request}}');
