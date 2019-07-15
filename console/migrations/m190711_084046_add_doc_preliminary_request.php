@@ -30,7 +30,7 @@ class m190711_084046_add_doc_preliminary_request extends Migration
      */
     public function safeUp()
     {
-        $this->createEnumTable('{{%enum_type_request}}', [
+        $this->createEnumTable('{{%enum_contract_type}}', [
             1 => 'Дети',
             2 => 'Сотрудники'
         ]);
@@ -58,9 +58,7 @@ class m190711_084046_add_doc_preliminary_request extends Migration
         ]);
         $this->insert('{{%sys_entity}}', ['class_name' => 'common\models\reference\Product']);
 
-        $this->createDocumentTable('{{%doc_preliminary_request}}', [
-            'type_request_id' => $this->integer()->notNull()->indexed()->foreignKey('{{%enum_type_request}}', 'id'),
-        ]);
+        $this->createDocumentTable('{{%doc_preliminary_request}}');
         $this->insert('{{%sys_entity}}', ['class_name' => 'common\models\document\PreliminaryRequest']);
 
         $this->createTablePartTable('{{%tab_preliminary_request_product}}', '{{%doc_preliminary_request}}', [
@@ -105,6 +103,6 @@ class m190711_084046_add_doc_preliminary_request extends Migration
         $this->dropTable('{{%ref_product}}');
         $this->delete('{{%sys_entity}}', ['class_name' => 'common\models\reference\Unit']);
         $this->dropTable('{{%ref_unit}}');
-        $this->dropTable('{{%enum_type_request}}');
+        $this->dropTable('{{%enum_contract_type}}');
     }
 }

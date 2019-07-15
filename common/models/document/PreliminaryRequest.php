@@ -2,7 +2,7 @@
 
 namespace common\models\document;
 
-use common\models\enum\TypeRequest;
+use common\models\enum\ContractType;
 use common\models\tablepart\PreliminaryRequestProduct;
 use yii\db\ActiveQuery;
 
@@ -59,7 +59,7 @@ class PreliminaryRequest extends Document
      */
     public function getTypeRequest()
     {
-        return $this->hasOne(TypeRequest::className(), ['id' => 'type_request_id']);
+        return $this->hasOne(ContractType::className(), ['id' => 'type_request_id']);
     }
 
     /**

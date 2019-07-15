@@ -3,9 +3,9 @@
 namespace common\models\enum;
 
 /**
- * Тип заявки
+ * Тип договора с контрагентом
  */
-class TypeRequest extends Enum
+class ContractType extends Enum
 {
     /**
      * Дети
