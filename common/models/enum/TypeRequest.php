@@ -3,7 +3,7 @@
 namespace common\models\enum;
 
 /**
- * Статус заявки
+ * Тип заявки
  */
 class TypeRequest extends Enum
 {

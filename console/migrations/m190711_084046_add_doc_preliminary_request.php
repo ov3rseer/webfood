@@ -35,51 +35,41 @@ class m190711_084046_add_doc_preliminary_request extends Migration
             2 => 'Сотрудники'
         ]);
 
-
         $this->createReferenceTable('{{%ref_unit}}', [
-            'name_full' => $this->string()->notNull()->indexed(),
             'code' => $this->string(3)->notNull()->indexed()->unsigned(),
             'international_abbreviation' => $this->string(3)->notNull()->indexed(),
         ]);
         $units = [
-            ['мм',   'миллиметр',        '003', 'MMT'],
-            ['см',   'сантиметр',        '004', 'CMT'],
-            ['м',    'метр',             '006', 'MTR'],
-
             ['г',    'грамм',            '163', 'GRM'],
             ['кг',   'килограмм',        '166', 'KGM'],
-            ['т',    'тонна',            '168', 'TNE'],
 
             ['л',    'литр',             '112', 'LTR'],
             ['м3',   'кубический метр',  '113', 'MTQ'],
 
-            ['боб',  'бобина (бухта)',   '616', 'NBB'],
             ['шт',   'штука',            '796', 'PCE'],
             ['упак', 'упаковка',         '778', 'NMP'],
         ];
         $this->batchInsert('{{%ref_unit}}', ['name', 'name_full', 'code', 'international_abbreviation'], $units);
-        $this->insert('{{%sys_entity%}}', ['class_name' => 'common\models\reference\Unit']);
-
+        $this->insert('{{%sys_entity}}', ['class_name' => 'common\models\reference\Unit']);
 
         $this->createReferenceTable('{{%ref_product}}', [
-            'product_code' => $this->integer(9)->notNull()->unsigned(),
+            'code' => $this->integer(9)->notNull()->unsigned(),
+            'unit_id' => $this->integer()->notNull()->indexed()->foreignKey('{{%ref_unit}}', 'id'),
         ]);
-        $this->insert('{{%sys_entity%}}', ['class_name' => 'common\models\reference\Product']);
-
+        $this->insert('{{%sys_entity}}', ['class_name' => 'common\models\reference\Product']);
 
         $this->createDocumentTable('{{%doc_preliminary_request}}', [
             'type_request_id' => $this->integer()->notNull()->indexed()->foreignKey('{{%enum_type_request}}', 'id'),
         ]);
-        $this->insert('{{%sys_entity%}}', ['class_name' => 'common\models\document\PreliminaryRequest']);
+        $this->insert('{{%sys_entity}}', ['class_name' => 'common\models\document\PreliminaryRequest']);
 
         $this->createTablePartTable('{{%tab_preliminary_request_product}}', '{{%doc_preliminary_request}}', [
             'product_id' => $this->integer()->notNull()->indexed()->foreignKey('{{%ref_product}}', 'id'),
-            'unit_id' => $this->integer()->notNull()->indexed()->foreignKey('{{%ref_unit}}', 'id'),
             'quantity' => $this->decimal(10, 2)->notNull(),
         ]);
 
         $this->createDocumentTable('{{%doc_correction_request}}');
-        $this->insert('{{%sys_entity%}}', ['class_name' => 'common\models\document\CorrectionRequest']);
+        $this->insert('{{%sys_entity}}', ['class_name' => 'common\models\document\CorrectionRequest']);
 
         $this->setPermissions();
         $permissionForAdd = array_merge(
@@ -106,14 +96,14 @@ class m190711_084046_add_doc_preliminary_request extends Migration
         );
         $this->deletePermissions($permissionForDelete);
 
-        $this->delete('{{%sys_entity%}}', ['class_name' => 'common\models\document\CorrectionRequest']);
+        $this->delete('{{%sys_entity}}', ['class_name' => 'common\models\document\CorrectionRequest']);
         $this->dropTable('{{%doc_correction_request}}');
         $this->dropTable('{{%tab_preliminary_request_product}}');
-        $this->delete('{{%sys_entity%}}', ['class_name' => 'common\models\document\PreliminaryRequest']);
+        $this->delete('{{%sys_entity}}', ['class_name' => 'common\models\document\PreliminaryRequest']);
         $this->dropTable('{{%doc_preliminary_request}}');
-        $this->delete('{{%sys_entity%}}', ['class_name' => 'common\models\reference\Product']);
+        $this->delete('{{%sys_entity}}', ['class_name' => 'common\models\reference\Product']);
         $this->dropTable('{{%ref_product}}');
-        $this->delete('{{%sys_entity%}}', ['class_name' => 'common\models\reference\Unit']);
+        $this->delete('{{%sys_entity}}', ['class_name' => 'common\models\reference\Unit']);
         $this->dropTable('{{%ref_unit}}');
         $this->dropTable('{{%enum_type_request}}');
     }

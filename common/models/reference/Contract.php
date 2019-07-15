@@ -1,18 +1,17 @@
 <?php
 
-
 namespace common\models\reference;
 
-
 use common\components\DateTime;
+use common\models\tablepart\ContractProduct;
+use yii\db\ActiveQuery;
 
 /**
- * Модель справочник "Договор"
+ * Модель справочника "Договоры"
  *
- * @property integer  $contract_number
+ * @property integer  $contract_code
  * @property DateTime $date_from
  * @property DateTime $date_to
- * @property integer  $contractor_id
 */
 class Contract extends Reference
 {
@@ -38,9 +37,9 @@ class Contract extends Reference
     public function rules()
     {
         return array_merge(parent::rules(), [
-            [['contract_number', 'contractor_id'], 'integer'],
+            [['contract_code'], 'integer'],
             [['date_from', 'date_to'], 'date', 'format' => 'php:' . DateTime::DB_DATE_FORMAT],
-            [['contract_number', 'contractor_id', 'date_from', 'date_to'], 'required'],
+            [['contract_number', 'date_from', 'date_to'], 'required'],
         ]);
     }
 
@@ -50,18 +49,29 @@ class Contract extends Reference
     public function attributeLabels()
     {
         return array_merge(parent::attributeLabels(), [
-            'contract_number' => 'Номер договора',
-            'date_from' => 'Дата начала',
-            'date_to' => 'Срок действия',
-            'contractor_id' => 'Ссылка на контрагента',
+            'contract_code'   => 'Номер договора',
+            'date_from'         => 'Дата начала',
+            'date_to'           => 'Срок действия',
+            'contractProducts'  => 'Продукты',
         ]);
     }
 
     /**
-     * @return \yii\db\ActiveQuery
+     * @return ActiveQuery
      */
-    public function getContractor()
+    public function getContractProducts()
     {
-        return $this->hasOne(Contractor::className(), ['id' => 'contractor_id']);
+        return $this->hasMany(ContractProduct::className(), ['parent_id' => 'id'])
+            ->orderBy('id ASC');
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getTableParts()
+    {
+        return array_merge([
+            'contractProducts' => ContractProduct::className(),
+        ], parent::getTableParts());
     }
 }

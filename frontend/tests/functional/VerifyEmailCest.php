@@ -61,7 +61,7 @@ class VerifyEmailCest
         $I->see('Выход (test.test)', 'form button[type=submit]');
 
         $I->seeRecord('common\models\reference\User', [
-           'username' => 'test.test',
+           'name' => 'test.test',
            'email' => 'test@mail.com',
         ]);
     }

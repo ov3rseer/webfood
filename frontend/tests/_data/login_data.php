@@ -1,9 +1,9 @@
 <?php
 return [
     [
-        'username' => 'erau',
-        'surname' => 'erau',
         'name' => 'erau',
+        'surname' => 'erau',
+        'forename' => 'erau',
         'is_active' => true,
         'auth_key' => 'tUu1qHcde0diwUol3xeI-18MuHkkprQI',
         // password_0
@@ -12,9 +12,9 @@ return [
         'email' => 'sfriesen@jenkins.info',
     ],
     [
-        'username' => 'test.test',
-        'surname' => 'test.test',
         'name' => 'test.test',
+        'surname' => 'test.test',
+        'forename' => 'test.test',
         'is_active' => false,
         'auth_key' => 'O87GkY3_UfmMHYkyezZ7QLfmkKNsllzT',
         // Test1234

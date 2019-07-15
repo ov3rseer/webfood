@@ -8,8 +8,6 @@ class m190124_110200_add_verification_token_column_to_user_table extends Migrati
     private $_permissionsForRole;
 
     /**
-     * m190124_110200_add_verification_token_column_to_user_table constructor.
-     * @param array $config
      * @throws Exception
      */
     public function setPermissions()

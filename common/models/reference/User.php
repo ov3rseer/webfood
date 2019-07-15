@@ -3,21 +3,23 @@
 namespace common\models\reference;
 
 use backend\widgets\ActiveField;
+use common\models\enum\UserType;
 use yii;
 use yii\base\Exception;
 use yii\base\NotSupportedException;
 use yii\web\IdentityInterface;
 
 /**
- * Модель "Пользователь"
+ * Модель спарвочника "Пользователи"
  *
  * @property string $email
  * @property string $password_hash
  * @property string $auth_key
  * @property string $password
  * @property string $name
+ * @property string $forename
  * @property string $surname
- * @property string $username
+ * @property integer $user_type_id
  * @property string $password_reset_token
  * @property string $verification_token
  */
@@ -49,7 +51,7 @@ class User extends Reference implements IdentityInterface
      */
     public function __toString()
     {
-        return $this->isNewRecord ? '(новый)' : ($this->surname ? $this->surname . ' ' . $this->name : $this->name);
+        return $this->isNewRecord ? '(новый)' : ($this->surname ? $this->surname . ' ' . $this->forename : $this->name);
     }
 
     /**
@@ -58,12 +60,12 @@ class User extends Reference implements IdentityInterface
     public function rules()
     {
         return array_merge(parent::rules(), [
-            [['username'], 'string'],
             [['email'], 'filter', 'filter' => 'trim'],
-            [['email', 'surname'], 'string', 'max' => 255],
-            [['email', 'username', 'surname'], 'required'],
+            [['email', 'forename', 'surname'], 'string', 'max' => 255],
+            [['email',], 'required'],
             [['email'], 'unique', 'message' => 'Этот email-адрес уже зарегистрирован.'],
             [['password'], 'string'],
+            [['user_type_id'], 'integer'],
         ]);
     }
 
@@ -73,11 +75,12 @@ class User extends Reference implements IdentityInterface
     public function attributeLabels()
     {
         return array_merge(parent::attributeLabels(), [
-            'username'  => 'Логин',
-            'name'      => 'Имя',
-            'surname'   => 'Фамилия',
+            'name'      => 'Логин',
             'email'     => 'Email',
             'password'  => 'Пароль',
+            'forename'  => 'Имя',
+            'surname'   => 'Фамилия',
+            'user_type_id' => 'Тип пользователя',
         ]);
     }
 
@@ -112,27 +115,27 @@ class User extends Reference implements IdentityInterface
     }
 
     /**
-     * Finds user by username
+     * Finds user by name
      *
-     * @param string $username
+     * @param string $name
      * @return array|User|null
      * @throws yii\base\InvalidConfigException
      */
-    public static function findByUsername($username)
+    public static function findByName($name)
     {
-        return static::find()->active()->andWhere(['username' => $username])->one();
+        return static::find()->active()->andWhere(['name' => $name])->one();
     }
 
     /**
-     * Finds user by username or email
+     * Finds user by name or email
      *
-     * @param string $username
-     * @return array|User|null
+     * @param $login
+     * @return array|yii\db\ActiveRecord|null
      * @throws yii\base\InvalidConfigException
      */
-    public static function findByUsernameOrEmail($login)
+    public static function findByNameOrEmail($login)
     {
-        return static::find()->active()->andWhere(['OR', ['username' => $login], ['email' => $login]])->one();
+        return static::find()->active()->andWhere(['OR', ['name' => $login], ['email' => $login]])->one();
     }
 
     /**
@@ -168,6 +171,14 @@ class User extends Reference implements IdentityInterface
     public function validatePassword($password)
     {
         return Yii::$app->security->validatePassword($password, $this->password_hash);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getUserType()
+    {
+        return $this->hasOne(UserType::className(), ['id' => 'user_type_id']);
     }
 
     /**

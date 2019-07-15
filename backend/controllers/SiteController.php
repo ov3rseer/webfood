@@ -67,6 +67,7 @@ class SiteController extends Controller
      * Login action.
      *
      * @return string
+     * @throws \yii\base\InvalidConfigException
      */
     public function actionLogin()
     {

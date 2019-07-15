@@ -32,9 +32,9 @@ class SignupCest
     {
         $I->submitForm(
             $this->formId, [
-                'SignupForm[username]' => 'tester',
-                'SignupForm[surname]' => 'tester',
                 'SignupForm[name]' => 'tester',
+                'SignupForm[surname]' => 'tester',
+                'SignupForm[forename]' => 'tester',
                 'SignupForm[email]' => 'ttttt',
                 'SignupForm[password]' => 'tester_password',
                 'SignupForm[password_repeat]' => 'tester_password',
@@ -52,16 +52,16 @@ class SignupCest
     public function signupSuccessfully(FunctionalTester $I)
     {
         $I->submitForm($this->formId, [
-            'SignupForm[username]' => 'tester',
-            'SignupForm[surname]' => 'tester',
             'SignupForm[name]' => 'tester',
+            'SignupForm[surname]' => 'tester',
+            'SignupForm[forename]' => 'tester',
             'SignupForm[email]' => 'tester.email@example.com',
             'SignupForm[password]' => 'tester_password',
             'SignupForm[password_repeat]' => 'tester_password',
         ]);
 
         $I->seeRecord('common\models\reference\User', [
-            'username' => 'tester',
+            'name' => 'tester',
             'email' => 'tester.email@example.com',
         ]);
 

@@ -77,15 +77,13 @@ class LoginForm extends Model
     /**
      * Finds user by [[username]]
      *
-     * @return User|null
+     * @return array|User|null
      * @throws \yii\base\InvalidConfigException
      */
     protected function getUser()
     {
-        $userByUsername = null;
-        $userByEmail = null;
         if ($this->_user === null) {
-            $this->_user = User::findByUsernameOrEmail($this->login);
+            $this->_user = User::findByNameOrEmail($this->login);
         }
         return $this->_user;
     }

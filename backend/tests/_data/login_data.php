@@ -1,9 +1,9 @@
 <?php
 return [
     [
-        'username' => 'erau',
-        'surname' => 'erau',
         'name' => 'erau',
+        'surname' => 'erau',
+        'forename' => 'erau',
         'is_active' => true,
         'auth_key' => 'tUu1qHcde0diwUol3xeI-18MuHkkprQI',
         // password_0

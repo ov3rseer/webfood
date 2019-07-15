@@ -1,11 +1,9 @@
 <?php
 
-
 namespace common\models\reference;
 
-
 /**
- * Модель "Единица измерения"
+ * Модель справочника "Единицы измерения"
  *
  * @property string $name_full
  * @property string $code

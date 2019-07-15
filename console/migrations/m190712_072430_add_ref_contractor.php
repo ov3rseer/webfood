@@ -4,6 +4,9 @@ use common\components\mysql\Migration;
 
 class m190712_072430_add_ref_contractor extends Migration
 {
+    private $_userTypes = [
+        2 => 'Контрагент'
+    ];
 
     private $_permissionsForContract;
     private $_permissionsForContractor;
@@ -25,16 +28,34 @@ class m190712_072430_add_ref_contractor extends Migration
      */
     public function safeUp()
     {
-        $this->createReferenceTable('{{%ref_contractor}}');
-        $this->insert('{{%sys_entity%}}', ['class_name' => 'common\models\reference\Contractor']);
+        $rows = [];
+        foreach ($this->_userTypes as $id => $name) {
+            $rows[] = ['id' => $id, 'name' => $name];
+        }
+        $this->batchInsert('{{%enum_user_type}}', ['id', 'name'], $rows);
+        $this->resetSequence('{{%enum_user_type}}');
+
+        $this->createReferenceTable('{{%ref_contractor}}', [
+            'contractor_code' => $this->integer()->notNull()->unsigned()->unique(),
+            'address' => $this->string(),
+        ]);
+        $this->insert('{{%sys_entity}}', ['class_name' => 'common\models\reference\Contractor']);
 
         $this->createReferenceTable('{{%ref_contract}}', [
-            'contract_number' => $this->integer()->notNull(),
+            'contract_code' => $this->integer()->notNull()->unsigned()->unique(),
             'date_from' => $this->date(),
             'date_to' => $this->date(),
-            'contractor_id' => $this->integer()->notNull()->indexed()->foreignKey('{{%ref_contractor}}', 'id'),
         ]);
-        $this->insert('{{%sys_entity%}}', ['class_name' => 'common\models\reference\Contract']);
+        $this->insert('{{%sys_entity}}', ['class_name' => 'common\models\reference\Contract']);
+
+        $this->createTablePartTable('{{%tab_contract_product}}', '{{%ref_contract}}', [
+            'product_id' => $this->integer()->notNull()->indexed()->foreignKey('{{%ref_product}}', 'id'),
+            'quantity' => $this->decimal(10, 2)->notNull(),
+        ]);
+
+        $this->createTablePartTable('{{%tab_contractor_contract}}', '{{%ref_contractor}}', [
+            'contract_id' => $this->integer()->notNull()->indexed()->foreignKey('{{%ref_contract}}', 'id'),
+        ]);
 
         $this->setPermissions();
         $permissionForAdd = array_merge(
@@ -57,9 +78,12 @@ class m190712_072430_add_ref_contractor extends Migration
         );
         $this->deletePermissions($permissionForDelete);
 
+        $this->dropTable('{{%tab_contractor_contract}}');
+        $this->dropTable('{{%tab_contract_product}}');
         $this->dropTable('{{%ref_contract}}');
-        $this->delete('{{%sys_entity%}}', ['class_name' => 'common\models\reference\Contract']);
+        $this->delete('{{%sys_entity}}', ['class_name' => 'common\models\reference\Contract']);
         $this->dropTable('{{%ref_contractor}}');
-        $this->delete('{{%sys_entity%}}', ['class_name' => 'common\models\reference\Contractor']);
+        $this->delete('{{%sys_entity}}', ['class_name' => 'common\models\reference\Contractor']);
+        $this->delete('{{%enum_user_type}}', ['id' => array_keys($this->_userTypes)]);
     }
 }

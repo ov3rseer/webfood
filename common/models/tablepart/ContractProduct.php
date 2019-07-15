@@ -2,21 +2,21 @@
 
 namespace common\models\tablepart;
 
-use common\models\document\PreliminaryRequest;
+use common\models\reference\Contract;
 use common\models\reference\Product;
 
 /**
- * Модель строки табличной части "Продукты" документа "Предварительная заявка"
+ * Модель строки табличной части "Продукты" справочника "Контракты"
  *
  * Свойства:
  * @property integer $product_id
  * @property float   $quantity
  *
  * Отношения:
- * @property PreliminaryRequest    $parent
- * @property Product               $product
+ * @property Contract    $parent
+ * @property Product     $product
  */
-class PreliminaryRequestProduct extends TablePart
+class ContractProduct extends TablePart
 {
     /**
      * @inheritdoc
@@ -24,7 +24,7 @@ class PreliminaryRequestProduct extends TablePart
     public function rules()
     {
         return array_merge(parent::rules(), [
-            [['product_id'], 'required'],
+            [['product_id', 'quantity'], 'required'],
             [['product_id'], 'integer'],
             [['quantity'], 'number', 'min' => 0],
         ]);
@@ -46,7 +46,7 @@ class PreliminaryRequestProduct extends TablePart
      */
     public function getParent()
     {
-        return $this->hasOne(PreliminaryRequest::className(), ['id' => 'parent_id']);
+        return $this->hasOne(Contract::className(), ['id' => 'parent_id']);
     }
 
     /**

@@ -13,8 +13,6 @@ use yii\filters\AccessControl;
 use common\models\LoginForm;
 use frontend\models\PasswordResetRequestForm;
 use frontend\models\ResetPasswordForm;
-use frontend\models\SignupForm;
-use frontend\models\ContactForm;
 
 /**
  * Site controller
@@ -85,6 +83,7 @@ class SiteController extends Controller
      * Logs in a user.
      *
      * @return mixed
+     * @throws \yii\base\InvalidConfigException
      */
     public function actionLogin()
     {
@@ -116,47 +115,47 @@ class SiteController extends Controller
         return $this->goHome();
     }
 
-    /**
-     * Displays contact page.
-     *
-     * @return mixed
-     */
-    public function actionContact()
-    {
-        $model = new ContactForm();
-        if ($model->load(Yii::$app->request->post()) && $model->validate()) {
-            if ($model->sendEmail(Yii::$app->params['adminEmail'])) {
-                Yii::$app->session->setFlash('success', 'Благодарим вас за обращение. Мы ответим вам как можно скорее.');
-            } else {
-                Yii::$app->session->setFlash('error', 'There was an error sending your message.');
-            }
+//    /**
+//     * Displays contact page.
+//     *
+//     * @return mixed
+//     */
+//    public function actionContact()
+//    {
+//        $model = new ContactForm();
+//        if ($model->load(Yii::$app->request->post()) && $model->validate()) {
+//            if ($model->sendEmail(Yii::$app->params['adminEmail'])) {
+//                Yii::$app->session->setFlash('success', 'Благодарим вас за обращение. Мы ответим вам как можно скорее.');
+//            } else {
+//                Yii::$app->session->setFlash('error', 'There was an error sending your message.');
+//            }
+//
+//            return $this->refresh();
+//        } else {
+//            return $this->render('contact', [
+//                'model' => $model,
+//            ]);
+//        }
+//    }
 
-            return $this->refresh();
-        } else {
-            return $this->render('contact', [
-                'model' => $model,
-            ]);
-        }
-    }
-
-    /**
-     * Signs user up.
-     *
-     * @return mixed
-     * @throws \yii\base\Exception
-     */
-    public function actionSignup()
-    {
-        $model = new SignupForm();
-        if ($model->load(Yii::$app->request->post()) && $model->signup()) {
-            Yii::$app->session->setFlash('success', 'Спасибо за регистрацию. Пожалуйста, проверьте свой email для подтверждения регистрации.');
-            return $this->goHome();
-        }
-
-        return $this->render('signup', [
-            'model' => $model,
-        ]);
-    }
+//    /**
+//     * Signs user up.
+//     *
+//     * @return mixed
+//     * @throws \yii\base\Exception
+//     */
+//    public function actionSignup()
+//    {
+//        $model = new SignupForm();
+//        if ($model->load(Yii::$app->request->post()) && $model->signup()) {
+//            Yii::$app->session->setFlash('success', 'Спасибо за регистрацию. Пожалуйста, проверьте свой email для подтверждения регистрации.');
+//            return $this->goHome();
+//        }
+//
+//        return $this->render('signup', [
+//            'model' => $model,
+//        ]);
+//    }
 
     /**
      * Requests password reset.

@@ -8,6 +8,11 @@ use yii\db\ActiveQuery;
 
 /**
  * Модель документа "Предварительная заявка"
+ *
+ * @property integer $type_request_id
+ *
+ * Отношения:
+ * @property PreliminaryRequestProduct $preliminaryRequestProducts
  */
 class PreliminaryRequest extends Document
 {

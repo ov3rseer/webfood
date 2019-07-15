@@ -2,9 +2,9 @@
 
 return [
     [
-        'username' => 'bayer.hudson',
-        'surname' => 'bayer.hudson',
         'name' => 'bayer.hudson',
+        'surname' => 'bayer.hudson',
+        'forename' => 'bayer.hudson',
         'is_active' => true,
         'auth_key' => 'HP187Mvq7Mmm3CTU80dLkGmni_FUH_lR',
         //password_0

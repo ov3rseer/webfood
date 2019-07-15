@@ -3,9 +3,10 @@
 namespace common\models\reference;
 
 /**
- * Модель "Продукт"
+ * Модель справочника "Продукты"
  *
- * @property string  $product_code
+ * @property string   $code
+ * @property integer  $unit_id
  */
 class Product extends Reference
 {
@@ -31,8 +32,8 @@ class Product extends Reference
     public function rules()
     {
         return array_merge(parent::rules(), [
-            [['product_code'], 'integer'],
-            [['product_code'], 'required'],
+            [['code', 'unit_id'], 'integer'],
+            [['code'], 'required'],
 
         ]);
     }
@@ -43,7 +44,16 @@ class Product extends Reference
     public function attributeLabels()
     {
         return array_merge(parent::attributeLabels(), [
-            'product_code' => 'Код продукта',
+            'code'    => 'Код продукта',
+            'unit_id' => 'Единица измерения',
         ]);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getUnit()
+    {
+        return $this->hasOne(Unit::className(), ['id' => 'unit_id']);
     }
 }
