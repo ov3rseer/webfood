@@ -4,6 +4,7 @@
 /* @var $content string */
 
 use backend\assets\AppAsset;
+use backend\controllers\report\TasksController;
 use yii\helpers\Html;
 use yii\bootstrap\Nav;
 use yii\bootstrap\NavBar;
@@ -86,6 +87,11 @@ AppAsset::register($this);
                 [
                     'label' => 'Администрирование',
                     'items' => [
+                        [
+                            'label' => 'Задачи',
+                            'url'   => ['/report/tasks'],
+                            'visible' => Yii::$app->user->can(TasksController::className() . '.Index'),
+                        ],
                         [
                             'label' => 'Права доступа',
                             'url' => ['/system/role/index'],

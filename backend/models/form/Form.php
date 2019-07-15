@@ -16,6 +16,11 @@ use yii\web\UploadedFile;
 class Form extends Model
 {
     /**
+     * Сценарий для поиска моделей в журналах (для совместимости с ActiveForm)
+     */
+    const SCENARIO_SEARCH = 'search';
+
+    /**
      * @var array массив настроек полей модели
      */
     protected $_fieldsOptions = [];

@@ -26,7 +26,7 @@ class m190715_104919_add_console_task extends Migration
             'status_id' => $this->integer()->notNull()->indexed()->foreignKey('{{%enum_console_task_status}}', 'id'),
             'params' => $this->text(),
             'start_date' => $this->timestamp()->notNull(),
-            'finish_date' => $this->timestamp(),
+            'finish_date' => $this->timestamp()->null(),
             'is_repeatable' => $this->boolean()->notNull()->defaultValue(false),
             'repeat_interval' => $this->integer(),
             'result_text' => $this->text(),
