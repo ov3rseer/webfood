@@ -13,7 +13,7 @@ class m190124_110200_add_verification_token_column_to_user_table extends Migrati
     public function setPermissions()
     {
         $this->_permissionsForUser = $this->getPermissions('backend\controllers\reference\UserController', 'Пользователи', 63);
-        $this->_permissionsForRole = $this->getPermissions('backend\controllers\system\RoleController', 'Роли', 63);
+        $this->_permissionsForRole = $this->getPermissions('backend\controllers\system\RoleController', 'Роли', 46);
     }
 
     /**

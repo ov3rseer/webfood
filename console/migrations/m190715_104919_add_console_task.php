@@ -4,10 +4,23 @@ use common\components\mysql\Migration;
 
 class m190715_104919_add_console_task extends Migration
 {
+    private $_permissionsForTasks;
+
+    /**
+     * m190712_072430_add_ref_contractor constructor.
+     * @param array $config
+     * @throws Exception
+     */
+    public function setPermissions()
+    {
+        $this->_permissionsForTasks = $this->getPermissions('backend\controllers\report\TasksController', 'Задачи', 32);
+    }
+
     /**
      * @return bool|void
      * @throws \yii\base\NotSupportedException
      * @throws \yii\db\Exception
+     * @throws Exception
      */
     public function safeUp()
     {
@@ -32,10 +45,26 @@ class m190715_104919_add_console_task extends Migration
             'result_text' => $this->text(),
             'result_data' => $this->text(),
         ]);
+
+        $this->setPermissions();
+        $permissionForAdd = array_merge(
+            $this->_permissionsForTasks
+        );
+        $this->addPermissions($permissionForAdd);
     }
 
+    /**
+     * @return bool|void
+     * @throws Exception
+     */
     public function safeDown()
     {
+        $this->setPermissions();
+        $permissionForDelete = array_merge(
+            $this->_permissionsForTasks
+        );
+        $this->deletePermissions($permissionForDelete);
+
         $this->dropTable('{{%ref_console_task}}');
         $this->dropTable('{{%enum_console_task_type}}');
         $this->dropTable('{{%enum_console_task_status}}');
