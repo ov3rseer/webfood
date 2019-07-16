@@ -21,7 +21,7 @@ abstract class ReferenceController extends ModelController
                 'viewPath' => '@backend/views/reference/base/index',
             ],
             'search' => [
-                'class' => 'backend\actions\base\SearchAction',
+                'class' => 'backend\actions\reference\base\SearchAction',
                 'modelClass' => $this->modelClass,
                 'searchFields' => ['name'],
             ],

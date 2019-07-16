@@ -2,7 +2,7 @@
 return [
     'components' => [
         'db' => [
-            'class' => 'yii\db\Connection',
+            'class' => 'common\components\mysql\Connection',
             'schemaMap' => ['mysql' => 'common\components\mysql\Schema'],
             'charset' => 'utf8',
             'dsn' => 'mysql:host=127.0.0.1;dbname=webfood',

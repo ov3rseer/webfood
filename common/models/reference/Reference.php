@@ -17,6 +17,7 @@ use yii\helpers\Url;
  * Базовая модель элемента справочника
  *
  * @property string   $name
+ * @property string   $name_full
  * @property boolean  $is_active
  * @property integer  $create_user_id
  * @property integer  $update_user_id

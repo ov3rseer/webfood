@@ -23,6 +23,7 @@
         "bower-asset/vis": "4.19.1",
         "bower-asset/jstree": "^3.3@dev",
         "bower-asset/bootstrap-daterangepicker": "^2.1",
+        "imagine/imagine": "0.6.3",
         "box/spout": "2.7.3",
         "phpoffice/phpspreadsheet": "*",
         "ext-dom": "*",
