@@ -67,6 +67,10 @@ AppAsset::register($this);
                             'url' => ['/reference/user/index'],
                         ],
                         [
+                            'label' => 'Файлы',
+                            'url' => ['/reference/file/index']
+                        ],
+                        [
                             'label' => 'Единицы измерения',
                             'url' => ['/reference/unit/index'],
                         ],
