@@ -45,7 +45,7 @@ class ImportContractorAndContractForm extends SystemForm
     public function rules()
     {
         return array_merge(parent::rules(), [
-            [['uploadedFile'], 'file', 'extensions' => 'xls, xlsx, csv', 'when' => function () {
+            [['uploadedFile'], 'file', 'extensions' => 'xml', 'when' => function () {
                 if (!$this->file_id) {
                     return true;
                 }

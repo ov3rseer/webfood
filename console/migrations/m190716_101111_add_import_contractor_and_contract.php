@@ -2,7 +2,7 @@
 
 use common\components\mysql\Migration;
 
-class m190716_101111_add_import_nomenclature_and extends Migration
+class m190716_101111_add_import_contractor_and_contract extends Migration
 {
     private $_permissionsForImportContractorAndContract;
 
