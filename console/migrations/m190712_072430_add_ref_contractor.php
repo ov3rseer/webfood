@@ -12,7 +12,6 @@ class m190712_072430_add_ref_contractor extends Migration
     private $_permissionsForContractor;
 
     /**
-     * m190712_072430_add_ref_contractor constructor.
      * @param array $config
      * @throws Exception
      */
@@ -44,8 +43,8 @@ class m190712_072430_add_ref_contractor extends Migration
         $this->createReferenceTable('{{%ref_contract}}', [
             'contract_code' => $this->integer()->notNull()->unsigned()->unique(),
             'contract_type_id' => $this->integer()->notNull()->indexed()->foreignKey('{{%enum_contract_type}}', 'id'),
-            'date_from' => $this->date(),
-            'date_to' => $this->date(),
+//            'date_from' => $this->date(),
+//            'date_to' => $this->date(),
         ]);
         $this->insert('{{%sys_entity}}', ['class_name' => 'common\models\reference\Contract']);
 

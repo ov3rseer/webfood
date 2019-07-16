@@ -7,7 +7,6 @@ class m190715_104919_add_console_task extends Migration
     private $_permissionsForTasks;
 
     /**
-     * m190712_072430_add_ref_contractor constructor.
      * @param array $config
      * @throws Exception
      */
