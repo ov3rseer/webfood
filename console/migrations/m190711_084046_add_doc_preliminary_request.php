@@ -10,7 +10,6 @@ class m190711_084046_add_doc_preliminary_request extends Migration
     private $_permissionsForCorrectionRequest;
 
     /**
-     * m190711_084046_add_doc_preliminary_request constructor.
      * @param array $config
      * @throws Exception
      */

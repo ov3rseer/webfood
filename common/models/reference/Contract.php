@@ -38,8 +38,8 @@ class Contract extends Reference
     {
         return array_merge(parent::rules(), [
             [['contract_code'], 'integer'],
-            [['date_from', 'date_to'], 'date', 'format' => 'php:' . DateTime::DB_DATE_FORMAT],
-            [['contract_number', 'date_from', 'date_to'], 'required'],
+       //     [['date_from', 'date_to'], 'date', 'format' => 'php:' . DateTime::DB_DATE_FORMAT],
+            [['contract_number', /*'date_from', 'date_to'*/], 'required'],
         ]);
     }
 
@@ -50,8 +50,8 @@ class Contract extends Reference
     {
         return array_merge(parent::attributeLabels(), [
             'contract_code'   => 'Номер договора',
-            'date_from'         => 'Дата начала',
-            'date_to'           => 'Срок действия',
+//            'date_from'         => 'Дата начала',
+//            'date_to'           => 'Срок действия',
             'contractProducts'  => 'Продукты',
         ]);
     }

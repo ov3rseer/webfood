@@ -7,7 +7,6 @@ class m190716_080556_add_ref_attached_files extends Migration
     private $_permissionsForFiles;
 
     /**
-     * m190712_072430_add_ref_contractor constructor.
      * @param array $config
      * @throws Exception
      */
