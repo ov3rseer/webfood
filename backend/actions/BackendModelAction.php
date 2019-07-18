@@ -2,7 +2,7 @@
 
 namespace backend\actions;
 
-use backend\controllers\ModelController;
+use backend\controllers\BackendModelController;
 use backend\models\form\Form;
 use common\models\ActiveRecord;
 use yii\base\Action;
@@ -11,7 +11,7 @@ use yii\base\InvalidConfigException;
 /**
  * Базовый класс для действий с моделями
  */
-abstract class ModelAction extends Action
+abstract class BackendModelAction extends Action
 {
     /**
      * @var ActiveRecord имя класса модели
@@ -19,7 +19,7 @@ abstract class ModelAction extends Action
     public $modelClass;
 
     /**
-     * @var ModelController
+     * @var BackendModelController
      */
     public $controller;
 

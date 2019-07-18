@@ -2,14 +2,14 @@
 
 namespace backend\controllers\system;
 
-use backend\controllers\ModelController;
+use backend\controllers\BackendModelController;
 use common\helpers\ArrayHelper;
 use yii\filters\AccessControl;
 
 /**
  * Базовый класс контроллера для системных моделей
  */
-abstract class SystemController extends ModelController
+abstract class SystemController extends BackendModelController
 {
     /**
      * @var string имя класса модели

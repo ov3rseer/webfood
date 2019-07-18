@@ -38,6 +38,7 @@ AppAsset::register($this);
     ]);
     $menuItems = [
         ['label' => 'Главная', 'url' => ['/site/index']],
+        ['label' => 'Предварительная заявка', 'url' => ['/form/preliminary-request-form/index']],
       //  ['label' => 'Техподдержка', 'url' => ['/site/contact']],
     ];
     if (Yii::$app->user->isGuest) {

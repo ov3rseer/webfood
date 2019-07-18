@@ -2,8 +2,8 @@
 
 namespace backend\actions\base;
 
-use backend\actions\ModelAction;
-use backend\controllers\ModelController;
+use backend\actions\BackendModelAction;
+use backend\controllers\BackendModelController;
 use backend\widgets\ActiveForm;
 use common\components\DateTime;
 use common\helpers\StringHelper;
@@ -19,10 +19,10 @@ use yii\web\Response;
 /**
  * Действие для вывода/сохранения связанных записей из кросс-таблицы
  */
-class CrossTableAction extends ModelAction
+class CrossTableAction extends BackendModelAction
 {
     /**
-     * @var ModelController
+     * @var BackendModelController
      */
     public $controller;
 

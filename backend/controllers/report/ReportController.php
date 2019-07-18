@@ -2,14 +2,14 @@
 
 namespace backend\controllers\report;
 
-use backend\controllers\ModelController;
+use backend\controllers\BackendModelController;
 use common\helpers\ArrayHelper;
 use yii\filters\AccessControl;
 
 /**
  * Базовый контроллер для отчетов
  */
-class ReportController extends ModelController
+class ReportController extends BackendModelController
 {
     /**
      * @var string имя класса модели

@@ -2,7 +2,7 @@
 
 namespace backend\controllers\document;
 
-use backend\controllers\ModelController;
+use backend\controllers\BackendModelController;
 use common\models\ActiveRecord;
 use common\models\register\registerAccumulate\RegisterAccumulate;
 use yii\data\ArrayDataProvider;
@@ -10,7 +10,7 @@ use yii\data\ArrayDataProvider;
 /**
  * Базовый класс контроллера для моделей документов
  */
-abstract class DocumentController extends ModelController
+abstract class DocumentController extends BackendModelController
 {
     /**
      * @inheritdoc

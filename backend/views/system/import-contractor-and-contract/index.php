@@ -40,7 +40,7 @@ $form = ActiveForm::begin(
                     <div class="alert alert-info" role="alert">
                         <ul>
                             <li>
-                                <strong>Формат файла:</strong> Excel (*.xls, *.xlsx), CSV (*.csv)
+                                <strong>Формат файла:</strong> XML (*.xml)
                             </li>
                             <li>
                                 <strong>Колонки файла:</strong>

@@ -1,8 +1,8 @@
 <?php
 
-namespace backend\actions\system\base;
+namespace frontend\actions\form\base;
 
-use backend\actions\BackendModelAction;
+use frontend\actions\FrontendModelAction;
 use backend\models\form\SystemForm;
 use backend\widgets\ActiveForm;
 use Yii;
@@ -11,7 +11,7 @@ use yii\web\Response;
 /**
  * Действие для вывода формы
  */
-class IndexAction extends BackendModelAction
+class IndexAction extends FrontendModelAction
 {
     /**
      * @inheritdoc

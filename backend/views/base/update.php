@@ -1,7 +1,7 @@
 <?php
 
 use backend\actions\base\UpdateAction;
-use backend\controllers\ModelController;
+use backend\controllers\BackendModelController;
 use backend\widgets\ActiveField;
 use common\models\document\Document;
 use common\models\enum\DocumentStatus;
@@ -16,7 +16,7 @@ use yii\widgets\Pjax;
 /* @var common\models\ActiveRecord $model */
 /* @var string|null $activeTabRelation */
 
-/** @var ModelController $controller */
+/** @var BackendModelController $controller */
 $controller = $this->context;
 
 /** @var UpdateAction $action */

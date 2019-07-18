@@ -8,9 +8,8 @@ $this->title = 'WebFood';
 
     <div class="jumbotron">
 
-        <p><a class="btn btn-lg btn-success" href="http://www.yiiframework.com">Предварительная заявка</a></p>
-
-        <p><a class="btn btn-lg btn-success" href="http://www.yiiframework.com">Корректировка заявки</a></p>
+        <p><?= \yii\helpers\Html::a('Предварительная заявка', ['form/preliminary-request-form/index'], ['class' => 'btn btn-lg btn-success', 'style' =>'width:300px;']) ?></p>
+        <p><?= \yii\helpers\Html::a('Корректировка заявки', ['form/correction-request-form/index'], ['class' => 'btn btn-lg btn-success', 'style' =>'width:300px;']) ?></p>
 
     </div>
 

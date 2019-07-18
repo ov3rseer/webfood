@@ -2,7 +2,7 @@
 
 namespace backend\actions\base;
 
-use backend\actions\ModelAction;
+use backend\actions\BackendModelAction;
 use common\models\ActiveRecord;
 use common\queries\ActiveQuery;
 use yii\base\NotSupportedException;
@@ -11,7 +11,7 @@ use yii\web\Response;
 /**
  * Действие для быстрого поиска моделей по ключевой фразе
  */
-class SearchAction extends ModelAction
+class SearchAction extends BackendModelAction
 {
     /**
      * @var array поля модели, по которым осуществляется поиск

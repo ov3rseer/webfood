@@ -2,13 +2,13 @@
 
 namespace backend\actions\base;
 
-use backend\actions\ModelAction;
+use backend\actions\BackendModelAction;
 use common\models\ActiveRecord;
 
 /**
  * Действие для вывода формы просмотра существующей модели
  */
-class ViewAction extends ModelAction
+class ViewAction extends BackendModelAction
 {
     /**
      * @var string путь к файлу представления для вкладок

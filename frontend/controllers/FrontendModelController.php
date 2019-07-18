@@ -1,14 +1,14 @@
 <?php
 
-namespace backend\controllers;
+namespace frontend\controllers;
 
-use backend\models\form\Form;
 use backend\widgets\ActiveField;
 use backend\widgets\ActiveForm;
 use common\helpers\ArrayHelper;
 use common\models\ActiveRecord;
 use common\models\cross\CrossTable;
 use common\models\tablepart\TablePart;
+use frontend\models\form\FrontendForm;
 use Yii;
 use yii\base\Action;
 use yii\base\InvalidConfigException;
@@ -21,10 +21,7 @@ use yii\web\ForbiddenHttpException;
 use yii\web\NotFoundHttpException;
 use yii\web\Response;
 
-/**
- * Базовый класс контроллера для моделей
- */
-abstract class ModelController extends Controller
+class FrontendModelController extends Controller
 {
     /**
      * @var string имя класса модели
@@ -42,7 +39,7 @@ abstract class ModelController extends Controller
             throw new InvalidConfigException(get_class($this) . '::$modelClass не указан.');
         }
         if (!is_subclass_of($this->modelClass, ActiveRecord::class, true) &&
-            !is_subclass_of($this->modelClass, Form::class, true)) {
+            !is_subclass_of($this->modelClass, FrontendForm::class, true)) {
             throw new InvalidConfigException(get_class($this) . '::$modelClass не является подклассом ' .
                 ActiveRecord::class . '.');
         }
@@ -55,46 +52,9 @@ abstract class ModelController extends Controller
     {
         return array_merge(parent::actions(), [
             'index' => [
-                'class' => 'backend\actions\base\IndexAction',
+                'class' => 'frontend\actions\base\IndexAction',
                 'modelClass' => $this->modelClass,
-                'viewPath' => '@backend/views/base/index',
-            ],
-            'create' => [
-                'class' => 'backend\actions\base\CreateAction',
-                'modelClass' => $this->modelClass,
-                'viewPath' => '@backend/views/base/update',
-            ],
-            'update' => [
-                'class' => 'backend\actions\base\UpdateAction',
-                'modelClass' => $this->modelClass,
-                'viewPath' => '@backend/views/base/update',
-            ],
-            'view' => [
-                'class' => 'backend\actions\base\ViewAction',
-                'modelClass' => $this->modelClass,
-                'viewPath' => '@backend/views/base/view',
-            ],
-            'delete' => [
-                'class' => 'backend\actions\base\DeleteAction',
-                'modelClass' => $this->modelClass,
-            ],
-            'delete-checked' => [
-                'class' => 'backend\actions\base\DeleteCheckedAction',
-                'modelClass' => $this->modelClass,
-            ],
-            'search' => [
-                'class' => 'backend\actions\base\SearchAction',
-                'modelClass' => $this->modelClass,
-                'searchFields' => ['id'],
-            ],
-            'select' => [
-                'class' => 'backend\actions\base\IndexAction',
-                'modelClass' => $this->modelClass,
-                'viewPath' => '@backend/views/base/select',
-            ],
-            'restore' => [
-                'class' => 'backend\actions\base\RestoreAction',
-                'modelClass' => $this->modelClass,
+                'viewPath' => '@frontend/views/base/index',
             ],
         ]);
     }

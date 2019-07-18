@@ -1,6 +1,6 @@
 <?php
 
-use backend\controllers\ModelController;
+use backend\controllers\BackendModelController;
 use backend\widgets\GridView\GridViewWithToolbar;
 
 /* @var yii\web\View $this */
@@ -10,7 +10,7 @@ use backend\widgets\GridView\GridViewWithToolbar;
 /* @var string $relation */
 /* @var string $relationClass */
 
-/** @var ModelController $controller */
+/** @var BackendModelController $controller */
 $controller = $this->context;
 
 $formId = $form->id;

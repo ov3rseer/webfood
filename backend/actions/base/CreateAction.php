@@ -2,7 +2,7 @@
 
 namespace backend\actions\base;
 
-use backend\actions\ModelAction;
+use backend\actions\BackendModelAction;
 use common\models\ActiveRecord;
 use Yii;
 use yii\web\Response;
@@ -11,7 +11,7 @@ use yii\widgets\ActiveForm;
 /**
  * Действие для вывода формы создания новой модели
  */
-class CreateAction extends ModelAction
+class CreateAction extends BackendModelAction
 {
     /**
      * @var string путь к файлу представления для вкладок

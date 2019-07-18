@@ -2,7 +2,7 @@
 
 namespace backend\actions\report\base;
 
-use backend\actions\ModelAction;
+use backend\actions\BackendModelAction;
 use backend\models\report\Report;
 use backend\widgets\ActiveForm;
 use yii;
@@ -11,7 +11,7 @@ use yii\web\Response;
 /**
  * Действие для вывода отчета
  */
-class IndexAction extends ModelAction
+class IndexAction extends BackendModelAction
 {
     /**
      * @inheritdoc

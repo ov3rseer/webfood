@@ -2,7 +2,7 @@
 
 namespace backend\actions\reference\file;
 
-use backend\actions\ModelAction;
+use backend\actions\BackendModelAction;
 use backend\models\form\UploadFileForm;
 use yii;
 use yii\web\Response;
@@ -11,7 +11,7 @@ use yii\widgets\ActiveForm;
 /**
  * Действие для вывода формы загрузки нового файла
  */
-class CreateAction extends ModelAction
+class CreateAction extends BackendModelAction
 {
     /**
      * @inheritdoc

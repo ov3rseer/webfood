@@ -2,14 +2,14 @@
 
 namespace backend\actions\reference\file;
 
-use backend\actions\ModelAction;
+use backend\actions\BackendModelAction;
 use common\models\reference\File;
 use yii\web\ForbiddenHttpException;
 
 /**
  * Действие для скачивания файла по ID
  */
-class DownloadAction extends ModelAction
+class DownloadAction extends BackendModelAction
 {
     /**
      * @inheritdoc

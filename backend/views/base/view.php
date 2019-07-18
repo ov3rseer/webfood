@@ -1,7 +1,7 @@
 <?php
 
 use backend\actions\base\UpdateAction;
-use backend\controllers\ModelController;
+use backend\controllers\BackendModelController;
 use backend\widgets\ActiveField;
 use common\models\reference\Reference;
 use yii\bootstrap\Tabs;
@@ -12,7 +12,7 @@ use yii\widgets\Pjax;
 /* @var yii\web\View $this */
 /* @var common\models\ActiveRecord $model */
 
-/** @var ModelController $controller */
+/** @var BackendModelController $controller */
 $controller = $this->context;
 
 /** @var UpdateAction $action */

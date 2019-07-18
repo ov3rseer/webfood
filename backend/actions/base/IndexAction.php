@@ -2,7 +2,7 @@
 
 namespace backend\actions\base;
 
-use backend\actions\ModelAction;
+use backend\actions\BackendModelAction;
 use backend\widgets\ActiveForm;
 use common\models\ActiveRecord;
 use Yii;
@@ -11,7 +11,7 @@ use yii\web\Response;
 /**
  * Действие для вывода списка моделей
  */
-class IndexAction extends ModelAction
+class IndexAction extends BackendModelAction
 {
     /**
      * @var ActiveRecord имя класса модели для фильтрации

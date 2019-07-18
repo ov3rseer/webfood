@@ -1,6 +1,6 @@
 <?php
 
-use backend\controllers\ModelController;
+use backend\controllers\BackendModelController;
 use backend\widgets\GridView\GridViewWithToolbar;
 
 /* @var yii\web\View $this */
@@ -11,7 +11,7 @@ use backend\widgets\GridView\GridViewWithToolbar;
 $this->title = $model->getPluralName();
 $this->params['breadcrumbs'][] = $this->title;
 
-/** @var ModelController $controller */
+/** @var BackendModelController $controller */
 $controller = $this->context;
 
 $gridOptions = [

@@ -1,6 +1,6 @@
 <?php
 
-use backend\controllers\ModelController;
+use backend\controllers\BackendModelController;
 use backend\widgets\GridView\GridView;
 use backend\widgets\GridView\GridViewToolbar;
 use backend\widgets\IframeDialog\IframeDialogAsset;
@@ -16,7 +16,7 @@ use yii\widgets\Pjax;
 $this->title = $model->getPluralName();
 $this->params['breadcrumbs'][] = $this->title;
 
-/** @var ModelController $controller */
+/** @var BackendModelController $controller */
 $controller = $this->context;
 
 echo Html::beginTag('div', ['class' => 'reference-select']);

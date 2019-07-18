@@ -1,6 +1,7 @@
 <?php
 
-use backend\controllers\ModelController;
+
+use backend\controllers\BackendModelController;
 use backend\widgets\GridView\GridViewWithToolbar;
 use yii\bootstrap\ButtonDropdown;
 use yii\helpers\Html;
@@ -12,7 +13,7 @@ use yii\helpers\Html;
 /* @var string $relation */
 /* @var string $relationClass */
 
-/** @var ModelController $controller */
+/** @var BackendModelController $controller */
 $controller = $this->context;
 
 $formId = $form->id;

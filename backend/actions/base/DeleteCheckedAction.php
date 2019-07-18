@@ -2,7 +2,7 @@
 
 namespace backend\actions\base;
 
-use backend\actions\ModelAction;
+use backend\actions\BackendModelAction;
 use common\models\ActiveRecord;
 use common\models\document\Document;
 use common\models\enum\DocumentStatus;
@@ -11,7 +11,7 @@ use common\models\reference\Reference;
 /**
  * Действие для удаления нескольких моделей
  */
-class DeleteCheckedAction extends ModelAction
+class DeleteCheckedAction extends BackendModelAction
 {
     /**
      * @inheritdoc

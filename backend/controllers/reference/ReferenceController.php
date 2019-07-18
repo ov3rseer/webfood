@@ -2,12 +2,12 @@
 
 namespace backend\controllers\reference;
 
-use backend\controllers\ModelController;
+use backend\controllers\BackendModelController;
 
 /**
  * Базовый класс контроллера для моделей справочников
  */
-abstract class ReferenceController extends ModelController
+abstract class ReferenceController extends BackendModelController
 {
     /**
      * @inheritdoc
