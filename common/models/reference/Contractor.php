@@ -2,6 +2,7 @@
 
 namespace common\models\reference;
 
+use common\models\tablepart\ContractorAddress;
 use common\models\tablepart\ContractorContract;
 use yii\db\ActiveQuery;
 
@@ -9,11 +10,13 @@ use yii\db\ActiveQuery;
  * Модель справочника "Контрагенты"
  *
  * @property integer  $contractor_code
- * @property integer  $address
+ * @property integer  $user_id
  * @property integer  $type_request_id
  *
  * Отношения:
- * @property ContractorContract $contractorContracts
+ * @property User               $user
+ * @property ContractorContract $contractorContract
+ * @property ContractorAddress  $contractorAddresses
  */
 class Contractor extends Reference
 {
@@ -39,9 +42,8 @@ class Contractor extends Reference
     public function rules()
     {
         return array_merge(parent::rules(), [
-            [['contractor_code'], 'integer'],
-            [['address'], 'string'],
-            [['contractor_code'], 'required'],
+            [['contractor_code', 'user_id'], 'integer'],
+            [['contractor_code', 'user_id'], 'required'],
         ]);
     }
 
@@ -52,9 +54,18 @@ class Contractor extends Reference
     {
         return array_merge(parent::attributeLabels(), [
             'contractor_code'       => 'Номер договора',
-            'address'               => 'Адрес',
-            'contractorContracts'   => 'Договора'
+            'user_id'               => 'Прикреплённый пользователь',
+            'contractorContracts'   => 'Договора',
+            'addresses'             => 'Адреса',
         ]);
+    }
+
+    /**
+     * @return ActiveQuery
+     */
+    public function getUser()
+    {
+        return $this->hasOne(User::class, ['id' => 'user_id']);
     }
 
     /**
@@ -67,12 +78,22 @@ class Contractor extends Reference
     }
 
     /**
+     * @return ActiveQuery
+     */
+    public function getContractorAddresses()
+    {
+        return $this->hasMany(ContractorAddress::className(), ['parent_id' => 'id'])
+            ->orderBy('id ASC');
+    }
+
+    /**
      * @inheritdoc
      */
     public function getTableParts()
     {
         return array_merge([
             'contractorContracts' => ContractorContract::className(),
+            'contractorAddresses' => ContractorAddress::className(),
         ], parent::getTableParts());
     }
 }

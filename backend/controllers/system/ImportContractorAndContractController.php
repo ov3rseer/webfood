@@ -10,7 +10,7 @@ class ImportContractorAndContractController extends SystemController
     /**
      * @inheritdoc
      */
-    public $modelClass = 'backend\models\form\import\ImportContractorAndContractForm';
+    public $modelClass = 'backend\models\system\ImportContractorAndContractForm';
 
     /**
      * @inheritdoc

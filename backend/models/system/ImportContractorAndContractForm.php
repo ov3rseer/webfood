@@ -1,6 +1,6 @@
 <?php
 
-namespace backend\models\form\import;
+namespace backend\models\system;
 
 use backend\models\form\SystemForm;
 use backend\widgets\ActiveField;

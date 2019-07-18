@@ -11,7 +11,7 @@ use yii\web\IdentityInterface;
 
 /**
  * Модель спарвочника "Пользователи"
- *
+ * @property string $name_full
  * @property string $email
  * @property string $password_hash
  * @property string $auth_key
@@ -60,8 +60,9 @@ class User extends Reference implements IdentityInterface
     public function rules()
     {
         return array_merge(parent::rules(), [
-            [['email'], 'filter', 'filter' => 'trim'],
+            [['email', 'name_full'], 'filter', 'filter' => 'trim'],
             [['email', 'forename', 'surname'], 'string', 'max' => 255],
+            [['name_full'], 'string', 'max' => 1024],
             [['email',], 'required'],
             [['email'], 'unique', 'message' => 'Этот email-адрес уже зарегистрирован.'],
             [['password'], 'string'],
@@ -76,6 +77,7 @@ class User extends Reference implements IdentityInterface
     {
         return array_merge(parent::attributeLabels(), [
             'name'      => 'Логин',
+            'name_full' => 'Полное имя',
             'email'     => 'Email',
             'password'  => 'Пароль',
             'forename'  => 'Имя',

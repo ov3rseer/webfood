@@ -1,6 +1,7 @@
 <?php
 namespace backend\controllers;
 
+use common\models\reference\User;
 use Yii;
 use yii\web\Controller;
 use yii\filters\VerbFilter;
@@ -30,6 +31,11 @@ class SiteController extends Controller
                         'allow' => true,
                         'roles' => ['@'],
                     ],
+                    [
+                        'actions' => ['export-contractors-authorization-data'],
+                        'allow' => true,
+                        'roles' => [User::class . '.Index'],
+                    ],
                 ],
             ],
             'verbs' => [
@@ -49,6 +55,9 @@ class SiteController extends Controller
         return [
             'error' => [
                 'class' => 'yii\web\ErrorAction',
+            ],
+            'export-contractors-authorization-data' => [
+                'class' => 'backend\actions\system\export\ExportContractorsAuthorizationDataAction',
             ],
         ];
     }

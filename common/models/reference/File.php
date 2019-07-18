@@ -15,10 +15,11 @@ use yii\web\UploadedFile;
 /**
  * Модель "Файл"
  *
+ * @property string                             $name_full
  * @property string                             $path       путь для хранения файла
  * @property string                             $extension  расширение файла
- * @property UploadedFile|PathFile|BinaryFile   $uploadFile
  * @property string                             $comment
+ * @property UploadedFile|PathFile|BinaryFile   $uploadFile
  */
 class File extends Reference
 {
@@ -53,7 +54,7 @@ class File extends Reference
         return array_merge(parent::rules(), [
             [['extension'], 'required'],
             [['extension'], 'string', 'max' => 10],
-            [['comment'], 'string'],
+            [['comment', 'name_full'], 'string'],
             [['extension'], 'filter', 'filter' => function($ext) { return mb_strtolower(trim($ext)); }],
             [['path'], 'default', 'value' => ''],
             [['uploadFile'], 'required', 'when' => function() { return $this->isNewRecord; }],

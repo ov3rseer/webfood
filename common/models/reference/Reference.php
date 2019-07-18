@@ -17,7 +17,6 @@ use yii\helpers\Url;
  * Базовая модель элемента справочника
  *
  * @property string   $name
- * @property string   $name_full
  * @property boolean  $is_active
  * @property integer  $create_user_id
  * @property integer  $update_user_id
@@ -42,9 +41,8 @@ abstract class Reference extends ActiveRecord
     {
         return array_merge(parent::rules(), [
             [['id'], 'integer'],
-            [['name', 'name_full'], 'filter', 'filter' => 'trim'],
+            [['name'], 'filter', 'filter' => 'trim'],
             [['name'], 'string', 'max' => 256],
-            [['name_full'], 'string', 'max' => 1024],
             [['is_active'], 'boolean'],
             [['is_active'], 'default', 'value' => true],
         ]);
@@ -109,7 +107,6 @@ abstract class Reference extends ActiveRecord
     {
         return array_merge(parent::attributeLabels(), [
             'name'           => 'Наименование',
-            'name_full'      => 'Полное наименование',
             'is_active'      => 'Активен',
             'create_date'    => 'Дата создания',
             'update_date'    => 'Дата изменения',
