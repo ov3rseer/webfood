@@ -53,10 +53,10 @@ class Contractor extends Reference
     public function attributeLabels()
     {
         return array_merge(parent::attributeLabels(), [
-            'contractor_code'       => 'Номер договора',
+            'contractor_code'       => 'Номер контрагента',
             'user_id'               => 'Прикреплённый пользователь',
             'contractorContracts'   => 'Договора',
-            'addresses'             => 'Адреса',
+            'contractorAddresses'   => 'Адреса',
         ]);
     }
 
