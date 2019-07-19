@@ -1,6 +1,6 @@
 <?php
 
-use common\components\mysql\Migration;
+use common\components\pgsql\Migration;
 
 class m190716_101111_add_import_contractor_and_contract extends Migration
 {

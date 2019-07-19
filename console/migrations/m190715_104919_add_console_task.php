@@ -1,6 +1,6 @@
 <?php
 
-use common\components\mysql\Migration;
+use common\components\pgsql\Migration;
 
 class m190715_104919_add_console_task extends Migration
 {

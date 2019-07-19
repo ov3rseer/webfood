@@ -4,7 +4,7 @@ namespace common\models\reference;
 
 use common\components\DateTime;
 use common\components\DbManager;
-use common\components\TaskProcessorInterface;
+use common\components\import\TaskProcessorInterface;
 use common\models\enum\ConsoleTaskStatus;
 use common\models\enum\ConsoleTaskType;
 use Yii;
@@ -116,6 +116,7 @@ class ConsoleTask extends Reference
 
     /**
      * Установка новой даты запуска (для повторяющихся задач)
+     * @throws \Exception
      */
     public function setNewStartDate()
     {
@@ -128,6 +129,7 @@ class ConsoleTask extends Reference
      * Получение новой даты выполнения задачи
      * @param DateTime $curDate
      * @return DateTime|null
+     * @throws \Exception
      */
     public function getNewStartDate($curDate = null)
     {
@@ -226,6 +228,7 @@ class ConsoleTask extends Reference
      * Выполнение задачи
      * @throws InvalidConfigException
      * @throws \yii\base\Exception
+     * @throws \Exception
      */
     public function execute()
     {

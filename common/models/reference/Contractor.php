@@ -43,7 +43,7 @@ class Contractor extends Reference
     {
         return array_merge(parent::rules(), [
             [['contractor_code', 'user_id'], 'integer'],
-            [['contractor_code', 'user_id'], 'required'],
+            [['contractor_code'], 'required'],
         ]);
     }
 

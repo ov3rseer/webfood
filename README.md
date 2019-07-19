@@ -54,29 +54,29 @@
 
 `sudo a2ensite backend.webfood.local.conf webfood.local.conf`
 
-#### Настройка MySql:
+#### Настройка PostgreSQL:
+
+`sudo apt-get install postgresql postgresql-contrib`
 
 После установки mysql выполняем команды:
 
-`sudo mysql -u root`
+`sudo -u postgres psql`
 
-`ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY '1234';`
+`ALTER USER postgres WITH PASSWORD 'new_password';`
 
-`FLUSH PRIVILEGES;`
+`CREATE DATABASE webfood ENCODING 'UTF-8' LC_COLLATE 'ru_RU.UTF-8' LC_CTYPE 'ru_RU.UTF-8';`
 
-`CREATE DATABASE webfood CHARACTER SET utf8 COLLATE utf8_general_ci;`
-
-`FLUSH PRIVILEGES;`
+`GRANT ALL PRIVILEGES ON DATABASE  webfood TO postgres;`
 
 Данные для подключения: 
 
 хост: `localhost`
 
-порт: `3306`
+порт: `5432`
 
 база: `webfood`
 
-юзер: `root`
+юзер: `postgres`
 
 пароль: `1234`
 

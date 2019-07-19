@@ -15,7 +15,6 @@ use yii\web\IdentityInterface;
  * @property string $email
  * @property string $password_hash
  * @property string $auth_key
- * @property string $password
  * @property string $name
  * @property string $forename
  * @property string $surname
@@ -28,7 +27,7 @@ class User extends Reference implements IdentityInterface
     /**
      * @var string
      */
-    protected $_password;
+    protected $_password = 'VERY_BAD_CUSTOMER';
 
     /**
      * @inheritdoc
@@ -65,7 +64,6 @@ class User extends Reference implements IdentityInterface
             [['name_full'], 'string', 'max' => 1024],
             [['email',], 'required'],
             [['email'], 'unique', 'message' => 'Этот email-адрес уже зарегистрирован.'],
-            [['password'], 'string'],
             [['user_type_id'], 'integer'],
         ]);
     }
@@ -79,7 +77,6 @@ class User extends Reference implements IdentityInterface
             'name'      => 'Логин',
             'name_full' => 'Полное имя',
             'email'     => 'Email',
-            'password'  => 'Пароль',
             'forename'  => 'Имя',
             'surname'   => 'Фамилия',
             'user_type_id' => 'Тип пользователя',
@@ -186,9 +183,9 @@ class User extends Reference implements IdentityInterface
     /**
      * @return string
      */
-    public function getPassword()
+    public function getContractorPassword()
     {
-        return $this->_password;
+        return Yii::$app->getSecurity()->decryptByPassword($this->password_hash, $this->_password);
     }
 
     /**
@@ -199,10 +196,21 @@ class User extends Reference implements IdentityInterface
      */
     public function setPassword($password)
     {
-        $this->_password = $password;
-        $this->password_hash = Yii::$app->security->generatePasswordHash($this->_password);
+        $this->password_hash = Yii::$app->security->generatePasswordHash($password);
     }
 
+
+
+    /**
+     * Generates password hash from password and sets it to the model
+     *
+     * @param string $password
+     * @throws yii\base\Exception
+     */
+    public function setContractorPassword($password)
+    {
+        $this->password_hash = Yii::$app->getSecurity()->encryptByPassword($password, $this->_password);
+    }
     /**
      * Finds user by password reset token
      *

@@ -1,6 +1,6 @@
 <?php
 
-use common\components\mysql\Migration;
+use common\components\pgsql\Migration;
 
 class m190711_084046_add_doc_preliminary_request extends Migration
 {

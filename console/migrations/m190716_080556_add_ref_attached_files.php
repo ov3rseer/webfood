@@ -1,6 +1,6 @@
 <?php
 
-use common\components\mysql\Migration;
+use common\components\pgsql\Migration;
 
 class m190716_080556_add_ref_attached_files extends Migration
 {

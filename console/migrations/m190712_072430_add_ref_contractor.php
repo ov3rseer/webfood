@@ -1,6 +1,6 @@
 <?php
 
-use common\components\mysql\Migration;
+use common\components\pgsql\Migration;
 
 class m190712_072430_add_ref_contractor extends Migration
 {
@@ -36,7 +36,7 @@ class m190712_072430_add_ref_contractor extends Migration
 
         $this->createReferenceTable('{{%ref_contractor}}', [
             'contractor_code' => $this->integer()->notNull()->unsigned()->unique(),
-            'user_id' => $this->integer()->notNull()->indexed()->foreignKey('{{%ref_user}}', 'id'),
+            'user_id' => $this->integer()->indexed()->foreignKey('{{%ref_user}}', 'id'),
         ]);
         $this->insert('{{%sys_entity}}', ['class_name' => 'common\models\reference\Contractor']);
 
@@ -83,7 +83,7 @@ class m190712_072430_add_ref_contractor extends Migration
         $this->deletePermissions($permissionForDelete);
 
         $this->dropTable('{{%tab_contractor_contract}}');
-        $this->dropTable('{{%tab_contractor_addresses}}');
+        $this->dropTable('{{%tab_contractor_address}}');
         $this->dropTable('{{%tab_contract_product}}');
         $this->dropTable('{{%ref_contract}}');
         $this->delete('{{%sys_entity}}', ['class_name' => 'common\models\reference\Contract']);

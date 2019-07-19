@@ -2,11 +2,11 @@
 return [
     'components' => [
         'db' => [
-            'class' => 'common\components\mysql\Connection',
-            'schemaMap' => ['mysql' => 'common\components\mysql\Schema'],
+            'class' => 'common\components\pgsql\Connection',
+            'schemaMap' => ['pgsql' => 'common\components\pgsql\Schema'],
             'charset' => 'utf8',
-            'dsn' => 'mysql:host=127.0.0.1;dbname=webfood',
-            'username' => 'root',
+            'dsn' => 'pgsql:host=127.0.0.1;dbname=webfood',
+            'username' => 'postgres',
             'password' => '1234',
             'enableSchemaCache' => true,
             'schemaCache' => 'schemaCache',

@@ -1,6 +1,6 @@
 <?php
 
-namespace common\components\mysql;
+namespace common\components\pgsql;
 
 /**
  * Расширенный класс построителя схемы колонок

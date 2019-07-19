@@ -1,11 +1,11 @@
 <?php
 
-namespace common\components\mysql;
+namespace common\components\pgsql;
 
 /**
  * Расширенный класс схемы БД
  */
-class Schema extends \yii\db\mysql\Schema
+class Schema extends \yii\db\pgsql\Schema
 {
     const TYPE_DATETIME = 'timestamp (0) with time zone';
     const TYPE_TIMESTAMP = 'timestamp (0) with time zone';

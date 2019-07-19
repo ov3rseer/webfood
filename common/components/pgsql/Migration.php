@@ -1,6 +1,7 @@
 <?php
 
-namespace common\components\mysql;
+namespace common\components\pgsql;
+
 use Yii;
 use yii\rbac\Permission;
 

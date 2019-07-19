@@ -25,6 +25,9 @@ return [
             'templateFile' => '@console/migrations/template.php.txt',
             'migrationTable' => '{{%sys_migration}}',
         ],
+        'task' => [
+            'class' => 'console\controllers\TaskController',
+        ],
     ],
     'components' => [
         'log' => [
