@@ -60,6 +60,10 @@
 
 После установки mysql выполняем команды:
 
+`sudo systemctl enable postgresql`
+
+`sudo systemctl start postgresql`
+
 `sudo -u postgres psql`
 
 `ALTER USER postgres WITH PASSWORD 'new_password';`
