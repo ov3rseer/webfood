@@ -54,6 +54,7 @@
 
 `sudo a2ensite backend.webfood.local.conf webfood.local.conf`
 
+
 #### Настройка PostgreSQL:
 
 `sudo apt-get install postgresql postgresql-contrib`
@@ -66,23 +67,11 @@
 
 `sudo -u postgres psql`
 
-`ALTER USER postgres WITH PASSWORD 'new_password';`
+`ALTER USER postgres WITH PASSWORD '1234';`
 
 `CREATE DATABASE webfood ENCODING 'UTF-8' LC_COLLATE 'ru_RU.UTF-8' LC_CTYPE 'ru_RU.UTF-8';`
 
 `GRANT ALL PRIVILEGES ON DATABASE  webfood TO postgres;`
-
-Данные для подключения: 
-
-хост: `localhost`
-
-порт: `5432`
-
-база: `webfood`
-
-юзер: `postgres`
-
-пароль: `1234`
 
 
 #### Настройка локалей, если возникает ошибка при создании базы:
@@ -98,7 +87,17 @@
 
 #### Подключение к db в PhpStorm:
 
-`jdbc:mysql://localhost:3306/webfood?useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC`
+хост:   `localhost`
+
+порт:   `5432`
+
+база:   `webfood`
+
+юзер:   `postgres`
+
+пароль: `1234`
+
+`jdbc:mysql://localhost:5432/webfood?useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC`
 
 
 ### **Как скачать проект:**
