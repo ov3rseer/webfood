@@ -62,7 +62,7 @@ class User extends Reference implements IdentityInterface
             [['email', 'name_full'], 'filter', 'filter' => 'trim'],
             [['email', 'forename', 'surname'], 'string', 'max' => 255],
             [['name_full'], 'string', 'max' => 1024],
-            [['email',], 'required'],
+            //[['email',], 'required'],
             [['email'], 'unique', 'message' => 'Этот email-адрес уже зарегистрирован.'],
             [['user_type_id'], 'integer'],
         ]);
