@@ -73,7 +73,6 @@
 
 `GRANT ALL PRIVILEGES ON DATABASE  webfood TO postgres;`
 
-
 #### Настройка локалей, если возникает ошибка при создании базы:
 
 `sudo systemctl stop postgresql@9.5-main`
@@ -83,7 +82,6 @@
 `sudo pg_createcluster --locale ru_RU.UTF-8 --start 9.5 main`
 
 `sudo systemctl start postgresql@9.5-main`
-
 
 #### Подключение к db в PhpStorm:
 
