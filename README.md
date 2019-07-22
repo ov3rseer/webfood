@@ -54,36 +54,48 @@
 
 `sudo a2ensite backend.webfood.local.conf webfood.local.conf`
 
+
 #### Настройка PostgreSQL:
 
 `sudo apt-get install postgresql postgresql-contrib`
 
 После установки mysql выполняем команды:
 
+`sudo systemctl enable postgresql`
+
+`sudo systemctl start postgresql`
+
 `sudo -u postgres psql`
 
-`ALTER USER postgres WITH PASSWORD 'new_password';`
+`ALTER USER postgres WITH PASSWORD '1234';`
 
 `CREATE DATABASE webfood ENCODING 'UTF-8' LC_COLLATE 'ru_RU.UTF-8' LC_CTYPE 'ru_RU.UTF-8';`
 
 `GRANT ALL PRIVILEGES ON DATABASE  webfood TO postgres;`
 
-Данные для подключения: 
 
-хост: `localhost`
+#### Настройка локалей, если возникает ошибка при создании базы:
 
-порт: `5432`
+`sudo systemctl stop postgresql@9.5-main`
 
-база: `webfood`
+`sudo pg_dropcluster --stop 9.5 main`
 
-юзер: `postgres`
+`sudo pg_createcluster --locale ru_RU.UTF-8 --start 9.5 main`
 
-пароль: `1234`
+`sudo systemctl start postgresql@9.5-main`
+
 
 #### Подключение к db в PhpStorm:
 
-`jdbc:mysql://localhost:3306/webfood?useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC`
+хост:   `localhost`
 
+порт:   `5432`
+
+база:   `webfood`
+
+юзер:   `postgres`
+
+пароль: `1234`
 
 ### **Как скачать проект:**
 
