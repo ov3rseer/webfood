@@ -9,10 +9,9 @@ $this->title = 'Admin WebFood';
     <div class="jumbotron">
 
         <p><?= \yii\helpers\Html::a('Импорт контрагентов и договоров',
-                ['/system/import-contractor-and-contract/index'], ['class' => 'btn btn-lg btn-success', 'style' => 'width:520px;']) ?></p>
-        <p><?= \yii\helpers\Html::a('Экспорт авторизационных данных контрагентов',
-                ['export-contractors-authorization-data'], ['class' => 'btn btn-lg btn-success', 'style' => 'width:520px;']) ?></p>
-
+                ['/system/import-contractor-and-contract/index'], ['class' => 'btn btn-lg btn-success', 'style' => 'width:600px;']) ?></p>
+        <p><?= \yii\helpers\Html::a('Экспорт авторизационных данных новых контрагентов',
+                ['export-contractors-authorization-data'], ['class' => 'btn btn-lg btn-success', 'style' => 'width:600px;']) ?></p>
 
     </div>
 

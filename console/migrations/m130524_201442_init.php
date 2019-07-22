@@ -19,7 +19,7 @@ class m130524_201442_init extends Migration
             'forename' => $this->string(256),
             'surname' => $this->string(256),
             'user_type_id'  => $this->integer()->notNull()->indexed()->foreignKey('{{%enum_user_type}}', 'id'),
-            'email' => $this->string()->notNull()->unique(),
+            'email' => $this->string()->notNull(),
             'auth_key' => $this->string(32),
             'password_hash' => $this->string()->notNull(),
             'password_reset_token' => $this->string()->unique(),

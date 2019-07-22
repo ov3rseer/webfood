@@ -35,13 +35,13 @@ class m190712_072430_add_ref_contractor extends Migration
         $this->resetSequence('{{%enum_user_type}}');
 
         $this->createReferenceTable('{{%ref_contractor}}', [
-            'contractor_code' => $this->integer()->notNull()->unsigned()->unique(),
+            'contractor_code' => $this->string(9)->notNull()->unique(),
             'user_id' => $this->integer()->indexed()->foreignKey('{{%ref_user}}', 'id'),
         ]);
         $this->insert('{{%sys_entity}}', ['class_name' => 'common\models\reference\Contractor']);
 
         $this->createReferenceTable('{{%ref_contract}}', [
-            'contract_code' => $this->integer()->notNull()->unsigned()->unique(),
+            'contract_code' => $this->string(9)->notNull()->unique(),
             'contract_type_id' => $this->integer()->notNull()->indexed()->foreignKey('{{%enum_contract_type}}', 'id'),
             'date_from' => $this->date(),
             'date_to' => $this->date(),
@@ -89,6 +89,8 @@ class m190712_072430_add_ref_contractor extends Migration
         $this->delete('{{%sys_entity}}', ['class_name' => 'common\models\reference\Contract']);
         $this->dropTable('{{%ref_contractor}}');
         $this->delete('{{%sys_entity}}', ['class_name' => 'common\models\reference\Contractor']);
+
+        $this->delete('{{%ref_user}}', ['user_type_id' => array_keys($this->_userTypes)]);
         $this->delete('{{%enum_user_type}}', ['id' => array_keys($this->_userTypes)]);
     }
 }

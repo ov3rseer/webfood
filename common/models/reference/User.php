@@ -27,7 +27,7 @@ class User extends Reference implements IdentityInterface
     /**
      * @var string
      */
-    protected $_password = 'VERY_BAD_CUSTOMER';
+    protected $_password;
 
     /**
      * @inheritdoc
@@ -59,10 +59,10 @@ class User extends Reference implements IdentityInterface
     public function rules()
     {
         return array_merge(parent::rules(), [
+            [['name'], 'unique', 'message' => 'Такой пользователь уже существует'],
             [['email', 'name_full'], 'filter', 'filter' => 'trim'],
             [['email', 'forename', 'surname'], 'string', 'max' => 255],
             [['name_full'], 'string', 'max' => 1024],
-            [['email',], 'required'],
             [['email'], 'unique', 'message' => 'Этот email-адрес уже зарегистрирован.'],
             [['user_type_id'], 'integer'],
         ]);
@@ -74,12 +74,12 @@ class User extends Reference implements IdentityInterface
     public function attributeLabels()
     {
         return array_merge(parent::attributeLabels(), [
-            'name'      => 'Логин',
-            'name_full' => 'Полное имя',
-            'email'     => 'Email',
-            'forename'  => 'Имя',
-            'surname'   => 'Фамилия',
-            'user_type_id' => 'Тип пользователя',
+            'name'          => 'Логин',
+            'name_full'     => 'Полное имя',
+            'email'         => 'Email',
+            'forename'      => 'Имя',
+            'surname'       => 'Фамилия',
+            'user_type_id'  => 'Тип пользователя',
         ]);
     }
 
@@ -183,9 +183,9 @@ class User extends Reference implements IdentityInterface
     /**
      * @return string
      */
-    public function getContractorPassword()
+    public function getPassword()
     {
-        return Yii::$app->getSecurity()->decryptByPassword($this->password_hash, $this->_password);
+        return $this->_password;
     }
 
     /**
@@ -196,21 +196,10 @@ class User extends Reference implements IdentityInterface
      */
     public function setPassword($password)
     {
-        $this->password_hash = Yii::$app->security->generatePasswordHash($password);
+        $this->_password = $password;
+        $this->password_hash = Yii::$app->security->generatePasswordHash($this->_password);
     }
 
-
-
-    /**
-     * Generates password hash from password and sets it to the model
-     *
-     * @param string $password
-     * @throws yii\base\Exception
-     */
-    public function setContractorPassword($password)
-    {
-        $this->password_hash = Yii::$app->getSecurity()->encryptByPassword($password, $this->_password);
-    }
     /**
      * Finds user by password reset token
      *

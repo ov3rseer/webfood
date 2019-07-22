@@ -97,10 +97,10 @@ class SignupForm extends Model
         if (!$this->validate()) {
             return null;
         }
-        
         $user = new User();
         $user->email = $this->email;
         $user->name = $this->name;
+        $user->name_full = $this->surname . ' ' . $this->forename;
         $user->forename = $this->forename;
         $user->surname = $this->surname;
         $user->is_active = false;
