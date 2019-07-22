@@ -97,9 +97,6 @@
 
 пароль: `1234`
 
-`jdbc:mysql://localhost:5432/webfood?useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC`
-
-
 ### **Как скачать проект:**
 
 В папке где будет находиться проект нужно выполнить команду:
