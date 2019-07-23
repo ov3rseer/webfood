@@ -5,7 +5,7 @@ namespace common\models\reference;
 /**
  * Модель справочника "Продукты"
  *
- * @property string   $code
+ * @property string   $product_code
  * @property integer  $unit_id
  */
 class Product extends Reference
@@ -32,8 +32,8 @@ class Product extends Reference
     public function rules()
     {
         return array_merge(parent::rules(), [
-            [['code', 'unit_id'], 'integer'],
-            [['code'], 'required'],
+            [['product_code', 'unit_id'], 'integer'],
+            [['product_code'], 'required'],
 
         ]);
     }
@@ -44,7 +44,7 @@ class Product extends Reference
     public function attributeLabels()
     {
         return array_merge(parent::attributeLabels(), [
-            'code'    => 'Код продукта',
+            'product_code'    => 'Код продукта',
             'unit_id' => 'Единица измерения',
         ]);
     }

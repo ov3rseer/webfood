@@ -24,7 +24,7 @@ if ($model->result_text) {
     echo $model->result_text;
 }
 
-if (in_array($model->status_id, [ConsoleTaskStatus::PLANNED ,ConsoleTaskStatus::IN_PROGRESS])) {
+if (in_array($model->status_id, [ConsoleTaskStatus::PLANNED, ConsoleTaskStatus::IN_PROGRESS])) {
     echo '<hr>';
     echo '<p>Данная страница будет обновляться автоматически до выполнения задачи.</p>';
     echo '<p>Сохраняейте спокойствие.</p>';

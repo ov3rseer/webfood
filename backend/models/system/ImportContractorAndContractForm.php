@@ -95,6 +95,7 @@ class ImportContractorAndContractForm extends SystemForm
      */
     public function proceed()
     {
+        $files_id = [];
         $this->uploadedFiles = UploadedFile::getInstances($this, 'uploadedFiles');
         foreach ($this->uploadedFiles as $uploadedFile) {
             if (!$uploadedFile->error) {
@@ -102,23 +103,24 @@ class ImportContractorAndContractForm extends SystemForm
                 $file->setUploadFile($uploadedFile);
                 $file->path = 'contractor-and-contract';
                 $file->save();
-                $consoleTaskType = ConsoleTaskType::findOne(ConsoleTaskType::IMPORT_CONTRACTOR_AND_CONTRACT);
-                if ($consoleTaskType) {
-                    $consoleTask = new ConsoleTask();
-                    $consoleTask->type_id = $consoleTaskType->id;
-                    $consoleTask->is_repeatable = false;
-                    $consoleTask->name = (string)$consoleTaskType;
-                    $consoleTask->status_id = ConsoleTaskStatus::PLANNED;
-                    $consoleTask->params = Json::encode([
-                        'file_id' => $file->id,
-                    ]);
-                    $consoleTask->start_date = new DateTime('now +1 min');
-                    $consoleTask->save();
-                    Yii::$app->session->setFlash('success',
-                        'Файл будет загружен в ближайшее время. Статус загрузки можно просмотреть в отчете ' . Html::a('Задачи', ['/report/tasks'], ['target' => '_blank']) . '.'
-                    );
-                }
+                $files_id[] = $file->id;
             }
+        }
+        $consoleTaskType = ConsoleTaskType::findOne(ConsoleTaskType::IMPORT_CONTRACTOR_AND_CONTRACT);
+        if (!empty($files_id) && $consoleTaskType) {
+            $consoleTask = new ConsoleTask();
+            $consoleTask->type_id = $consoleTaskType->id;
+            $consoleTask->is_repeatable = false;
+            $consoleTask->name = (string)$consoleTaskType;
+            $consoleTask->status_id = ConsoleTaskStatus::PLANNED;
+            $consoleTask->params = Json::encode([
+                'files_id' => $files_id,
+            ]);
+            $consoleTask->start_date = new DateTime('now');
+            $consoleTask->save();
+            Yii::$app->session->setFlash('success',
+                'Файл будет загружен в ближайшее время. Статус загрузки можно просмотреть в отчете ' . Html::a('Задачи', ['/report/tasks'], ['target' => '_blank']) . '.'
+            );
         }
     }
 }

@@ -2,7 +2,6 @@
 
 namespace common\models\reference;
 
-use common\models\tablepart\ContractorAddress;
 use common\models\tablepart\ContractorContract;
 use yii\db\ActiveQuery;
 
@@ -16,7 +15,6 @@ use yii\db\ActiveQuery;
  * Отношения:
  * @property User               $user
  * @property ContractorContract $contractorContract
- * @property ContractorAddress  $contractorAddresses
  */
 class Contractor extends Reference
 {
@@ -56,7 +54,6 @@ class Contractor extends Reference
             'contractor_code'       => 'Номер контрагента',
             'user_id'               => 'Прикреплённый пользователь',
             'contractorContracts'   => 'Договора',
-            'contractorAddresses'   => 'Адреса',
         ]);
     }
 
@@ -78,22 +75,12 @@ class Contractor extends Reference
     }
 
     /**
-     * @return ActiveQuery
-     */
-    public function getContractorAddresses()
-    {
-        return $this->hasMany(ContractorAddress::className(), ['parent_id' => 'id'])
-            ->orderBy('id ASC');
-    }
-
-    /**
      * @inheritdoc
      */
     public function getTableParts()
     {
         return array_merge([
             'contractorContracts' => ContractorContract::className(),
-            'contractorAddresses' => ContractorAddress::className(),
         ], parent::getTableParts());
     }
 }

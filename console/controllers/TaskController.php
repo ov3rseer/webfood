@@ -30,6 +30,7 @@ class TaskController extends Controller
      * Проверка и запуск запланированных задач
      * @throws \yii\base\InvalidConfigException
      * @throws \yii\base\UserException
+     * @throws \Exception
      */
     public function actionIndex()
     {
