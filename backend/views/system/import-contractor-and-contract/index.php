@@ -5,7 +5,7 @@ use yii\helpers\Html;
 use backend\widgets\ActiveForm;
 
 /* @var yii\web\View $this */
-/* @var backend\models\form\import\ImportContractorAndContractForm $model */
+/* @var backend\models\system\ImportContractorAndContractForm $model */
 
 /** @var SystemController $controller */
 $controller = $this->context;

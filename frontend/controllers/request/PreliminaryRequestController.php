@@ -1,16 +1,18 @@
 <?php
 
-namespace frontend\controllers\form;
+namespace frontend\controllers\request;
 
 use frontend\controllers\FrontendModelController;
 
-
-class PreliminaryRequestFormController extends FrontendModelController
+/**
+ * Контроллер для формы "Предварительная заявка"
+ */
+class PreliminaryRequestController extends FrontendModelController
 {
     /**
      * @var string имя класса модели
      */
-    public $modelClass = 'frontend\models\form\PreliminaryRequestForm';
+    public $modelClass = 'frontend\models\request\PreliminaryRequest';
 
     /**
      * @inheritdoc
@@ -21,7 +23,7 @@ class PreliminaryRequestFormController extends FrontendModelController
             'index' => [
                 'class' => 'frontend\actions\form\base\IndexAction',
                 'modelClass' => $this->modelClass,
-                'viewPath' => '@frontend/views/form/preliminary-request/index',
+                'viewPath' => '@frontend/views/request/preliminary-request/index',
             ],
         ]);
     }

@@ -4,7 +4,7 @@ namespace frontend\actions;
 
 use common\models\ActiveRecord;
 use frontend\controllers\FrontendModelController;
-use frontend\models\form\FrontendForm;
+use frontend\models\FrontendForm;
 use yii\base\Action;
 use yii\base\InvalidConfigException;
 

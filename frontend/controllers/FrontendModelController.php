@@ -8,7 +8,7 @@ use common\helpers\ArrayHelper;
 use common\models\ActiveRecord;
 use common\models\cross\CrossTable;
 use common\models\tablepart\TablePart;
-use frontend\models\form\FrontendForm;
+use frontend\models\FrontendForm;
 use Yii;
 use yii\base\Action;
 use yii\base\InvalidConfigException;

@@ -1,6 +1,6 @@
 <?php
 
-namespace frontend\models\form;
+namespace frontend\models;
 
 use backend\widgets\ActiveField;
 use common\models\enum\Enum;
