@@ -2,7 +2,7 @@
 
 namespace common\models\enum;
 
-use backend\models\system\ImportContractorAndContractForm;
+use common\components\import\ImportContractorAndContract;
 
 class ConsoleTaskType extends Enum
 {
@@ -20,7 +20,7 @@ class ConsoleTaskType extends Enum
     {
         switch ($taskTypeId) {
             case self::IMPORT_CONTRACTOR_AND_CONTRACT:
-                return ImportContractorAndContractForm::className();
+                return ImportContractorAndContract::className();
         }
         return false;
     }

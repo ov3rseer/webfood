@@ -18,15 +18,15 @@ use yii\web\UploadedFile;
  * Форма для импорта контрагентов и договоров
  *
  * @property File           $file
- * @property UploadedFile   $uploadedFile
+ * @property UploadedFile[] $uploadedFiles
  * @property integer        $file_id
  */
 class ImportContractorAndContractForm extends SystemForm
 {
     /**
-     * @var UploadedFile загружаемый файл
+     * @var UploadedFile[] загружаемый файл
      */
-    public $uploadedFile;
+    public $uploadedFiles;
 
     /**
      * @var integer id загруженного файла
@@ -47,7 +47,7 @@ class ImportContractorAndContractForm extends SystemForm
     public function rules()
     {
         return array_merge(parent::rules(), [
-            [['uploadedFile'], 'file', 'extensions' => 'xml', 'when' => function () {
+            [['uploadedFiles'], 'file', 'maxFiles' => 0, 'extensions' => 'xml', 'when' => function () {
                 if (!$this->file_id) {
                     return true;
                 }
@@ -63,7 +63,7 @@ class ImportContractorAndContractForm extends SystemForm
     public function attributeLabels()
     {
         return array_merge(parent::attributeLabels(), [
-            'uploadedFile' => 'Файл для загрузки',
+            'uploadedFiles' => 'Файлы для загрузки',
         ]);
     }
 
@@ -75,7 +75,7 @@ class ImportContractorAndContractForm extends SystemForm
         if ($this->_fieldsOptions === []) {
             parent::getFieldsOptions();
             $this->_fieldsOptions['file_id']['displayType'] = ActiveField::HIDDEN;
-            $this->_fieldsOptions['uploadedFile']['displayType'] = ActiveField::FILE;
+            $this->_fieldsOptions['uploadedFiles']['displayType'] = ActiveField::FILE;
         }
         return $this->_fieldsOptions;
     }
@@ -95,27 +95,32 @@ class ImportContractorAndContractForm extends SystemForm
      */
     public function proceed()
     {
-        if ($this->uploadedFile && !$this->uploadedFile->error) {
-            $file = new File();
-            $file->setUploadFile($this->uploadedFile);
-            $file->path = 'articles_numbers';
-            $file->save();
-            $consoleTaskType = ConsoleTaskType::findOne(ConsoleTaskType::IMPORT_CONTRACTOR_AND_CONTRACT);
-            if ($consoleTaskType) {
-                $consoleTask = new ConsoleTask();
-                $consoleTask->type_id = $consoleTaskType->id;
-                $consoleTask->is_repeatable = false;
-                $consoleTask->name = (string)$consoleTaskType;
-                $consoleTask->status_id = ConsoleTaskStatus::PLANNED;
-                $consoleTask->params = Json::encode([
-                    'file_id' => $file->id,
-                ]);
-                $consoleTask->start_date = new DateTime('now +1 min');
-                $consoleTask->save();
-                Yii::$app->session->setFlash('success',
-                    'Файл будет загружен в ближайшее время. Статус загрузки можно просмотреть в отчете ' . Html::a('Задачи', ['/report/tasks'], ['target' => '_blank']) . '.'
-                );
+        $files_id = [];
+        $this->uploadedFiles = UploadedFile::getInstances($this, 'uploadedFiles');
+        foreach ($this->uploadedFiles as $uploadedFile) {
+            if (!$uploadedFile->error) {
+                $file = new File();
+                $file->setUploadFile($uploadedFile);
+                $file->path = 'contractor-and-contract';
+                $file->save();
+                $files_id[] = $file->id;
             }
+        }
+        $consoleTaskType = ConsoleTaskType::findOne(ConsoleTaskType::IMPORT_CONTRACTOR_AND_CONTRACT);
+        if (!empty($files_id) && $consoleTaskType) {
+            $consoleTask = new ConsoleTask();
+            $consoleTask->type_id = $consoleTaskType->id;
+            $consoleTask->is_repeatable = false;
+            $consoleTask->name = (string)$consoleTaskType;
+            $consoleTask->status_id = ConsoleTaskStatus::PLANNED;
+            $consoleTask->params = Json::encode([
+                'files_id' => $files_id,
+            ]);
+            $consoleTask->start_date = new DateTime('now');
+            $consoleTask->save();
+            Yii::$app->session->setFlash('success',
+                'Файл будет загружен в ближайшее время. Статус загрузки можно просмотреть в отчете ' . Html::a('Задачи', ['/report/tasks'], ['target' => '_blank']) . '.'
+            );
         }
     }
 }

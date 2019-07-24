@@ -10,6 +10,7 @@ use common\models\reference\Contractor;
  *
  * Свойства:
  * @property integer $contract_id
+ * @property string  $address
  *
  * Отношения:
  * @property Contractor    $parent
@@ -24,7 +25,8 @@ class ContractorContract extends TablePart
     {
         return array_merge(parent::rules(), [
             [['contract_id'], 'integer'],
-            [['contract_id'], 'required'],
+            [['contract_id', 'address'], 'required'],
+            [['address'], 'string'],
         ]);
     }
 
@@ -35,6 +37,7 @@ class ContractorContract extends TablePart
     {
         return array_merge(parent::attributeLabels(), [
             'contract_id'    => 'Договор с контрагентом',
+            'address'        => 'Адрес',
         ]);
     }
 

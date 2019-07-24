@@ -53,12 +53,9 @@ class m190712_072430_add_ref_contractor extends Migration
             'quantity' => $this->decimal(10, 2)->notNull(),
         ]);
 
-        $this->createTablePartTable('{{%tab_contractor_address}}', '{{%ref_contractor}}', [
-            'address' => $this->string()->notNull(),
-        ]);
-
         $this->createTablePartTable('{{%tab_contractor_contract}}', '{{%ref_contractor}}', [
             'contract_id' => $this->integer()->notNull()->indexed()->foreignKey('{{%ref_contract}}', 'id'),
+            'address' => $this->string()->notNull(),
         ]);
 
         $this->setPermissions();
@@ -83,7 +80,6 @@ class m190712_072430_add_ref_contractor extends Migration
         $this->deletePermissions($permissionForDelete);
 
         $this->dropTable('{{%tab_contractor_contract}}');
-        $this->dropTable('{{%tab_contractor_address}}');
         $this->dropTable('{{%tab_contract_product}}');
         $this->dropTable('{{%ref_contract}}');
         $this->delete('{{%sys_entity}}', ['class_name' => 'common\models\reference\Contract']);

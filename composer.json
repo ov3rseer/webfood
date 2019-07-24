@@ -27,7 +27,9 @@
         "box/spout": "2.7.3",
         "phpoffice/phpspreadsheet": "*",
         "ext-dom": "*",
-        "ext-ftp": "*"
+        "ext-ftp": "*",
+      "ext-simplexml": "*",
+      "ext-json": "*"
     },
     "require-dev": {
         "yiisoft/yii2-debug": "*",

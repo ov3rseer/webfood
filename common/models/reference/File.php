@@ -83,6 +83,7 @@ class File extends Reference
         if ($this->uploadFile !== $value) {
             if ($value instanceof UploadedFile || $value instanceof PathFile || $value instanceof BinaryFile) {
                 $this->name = $value->name;
+                $this->name_full = $value->name;
                 $this->extension = $value->extension;
                 $this->uploadFile = $value;
             }
@@ -135,7 +136,7 @@ class File extends Reference
      */
     public function getOriginalPath()
     {
-        return $this->getOriginalDir() . "/{$this->id}.{$this->extension}";
+        return $this->getOriginalDir() . "{$this->id}.{$this->extension}";
     }
 
     /**
