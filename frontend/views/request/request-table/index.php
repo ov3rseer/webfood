@@ -1,14 +1,13 @@
 <?php
 
 use backend\widgets\GridView\GridView;
-use common\components\DateTime;
 use common\models\cross\RequestDateProduct;
 use common\models\tablepart\ContractProduct;
 use yii\helpers\Html;
-use yii\bootstrap\ActiveForm;
 
 /* @var \frontend\models\request\RequestTableForm $model */
 /* @var yii\data\ArrayDataProvider $dataProvider */
+/* @var $weekDayDateMap */
 
 /** @var \frontend\controllers\request\RequestTableController $controller */
 $controller = $this->context;
@@ -55,11 +54,10 @@ $columns = [
     ]
 ];
 
-$startNextWeek = new DateTime('next monday');
-$endNextWeek = clone $startNextWeek;
+$i = 0;
 
 foreach ($weekDayMap as $weekDayId => $weekDay) {
-    $weekDayDate = $endNextWeek->format('d-m-Y');
+    $weekDayDate = $weekDayDateMap[$i];
 
     $header  = '';
     $header .= Html::beginTag('table', $options = ['class' => 'table table-striped table-bordered text-center', 'style' => 'margin: 0;']);
@@ -111,7 +109,7 @@ foreach ($weekDayMap as $weekDayId => $weekDay) {
         },
     ];
 
-    $endNextWeek->modify('+ 1 days');
+    $i++;
 }
 
 $columns = array_merge($columns, [
