@@ -24,7 +24,6 @@ class m190716_080556_add_ref_attached_files extends Migration
         // Создание таблицы для моделей "Файл"
 
         $this->createReferenceTable('{{%ref_file}}', [
-            'name_full' => $this->string(1024)->notNull()->indexed(),
             'path'      => $this->string(256)->notNull(),
             'extension' => $this->string(10)->notNull(),
             'comment'   => $this->text(),

@@ -2,6 +2,8 @@
 
 namespace common\models\reference;
 
+use backend\widgets\ActiveField;
+
 /**
  * Модель справочника "Единицы измерения"
  *
@@ -34,10 +36,9 @@ class Unit extends Reference
     public function rules()
     {
         return array_merge(parent::rules(), [
-            [['name_full'], 'string'],
             [['code', 'international_abbreviation'], 'string', 'max' => 3],
             [['international_abbreviation'], 'filter', 'filter' => 'strtoupper'],
-            [['name_full', 'code', 'international_abbreviation'], 'required'],
+            [['code', 'international_abbreviation'], 'required'],
         ]);
     }
 
@@ -52,5 +53,17 @@ class Unit extends Reference
             'code'      => 'Код',
             'international_abbreviation' => 'Международное сокращение',
         ]);
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getFieldsOptions()
+    {
+        if ($this->_fieldsOptions === []) {
+            parent::getFieldsOptions();
+            $this->_fieldsOptions['name_full']['displayType'] = ActiveField::STRING;
+        }
+        return $this->_fieldsOptions;
     }
 }

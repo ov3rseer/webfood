@@ -302,6 +302,7 @@ class Migration extends \yii\db\Migration
         $columnsBefore = [
             'id'        => $this->primaryKey(),
             'name'      => $this->string(256)->notNull()->indexed(),
+            'name_full' => $this->string(1024)->notNull()->indexed(),
             'is_active' => $this->boolean()->notNull()->defaultValue(true),
         ];
         $columnsAfter = [

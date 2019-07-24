@@ -35,7 +35,6 @@ class m190711_084046_add_doc_preliminary_request extends Migration
         ]);
 
         $this->createReferenceTable('{{%ref_unit}}', [
-            'name_full' => $this->string(1024)->notNull()->indexed(),
             'code' => $this->string(3)->notNull()->indexed()->unsigned(),
             'international_abbreviation' => $this->string(3)->notNull()->indexed(),
         ]);

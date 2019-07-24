@@ -15,7 +15,6 @@ use yii\web\UploadedFile;
 /**
  * Модель "Файл"
  *
- * @property string                             $name_full
  * @property string                             $path       путь для хранения файла
  * @property string                             $extension  расширение файла
  * @property string                             $comment
@@ -54,7 +53,7 @@ class File extends Reference
         return array_merge(parent::rules(), [
             [['extension'], 'required'],
             [['extension'], 'string', 'max' => 10],
-            [['comment', 'name_full'], 'string'],
+            [['comment'], 'string'],
             [['extension'], 'filter', 'filter' => function($ext) { return mb_strtolower(trim($ext)); }],
             [['path'], 'default', 'value' => ''],
             [['uploadFile'], 'required', 'when' => function() { return $this->isNewRecord; }],
@@ -106,7 +105,6 @@ class File extends Reference
     public function attributeLabels()
     {
         return array_merge(parent::attributeLabels(), [
-            'name_full' => 'Заголовок',
             'path'      => 'Подкаталог',
             'extension' => 'Расширение',
             'comment'   => 'Комментарий',

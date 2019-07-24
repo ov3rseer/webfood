@@ -23,6 +23,11 @@ class m190715_104919_add_console_task extends Migration
      */
     public function safeUp()
     {
+        $this->createReferenceTable('{{%ref_system_setting}}', [
+            'data' => $this->text(),
+        ]);
+
+
         $this->createEnumTable('{{%enum_console_task_status}}', [
             1 => 'Запланирована',
             2 => 'Выполняется',
@@ -67,5 +72,7 @@ class m190715_104919_add_console_task extends Migration
         $this->dropTable('{{%ref_console_task}}');
         $this->dropTable('{{%enum_console_task_type}}');
         $this->dropTable('{{%enum_console_task_status}}');
+
+        $this->dropTable('{{%ref_system_setting}}');
     }
 }
