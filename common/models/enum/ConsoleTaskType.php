@@ -2,7 +2,7 @@
 
 namespace common\models\enum;
 
-use backend\models\form\import\ImportContractorAndContractForm;
+use backend\models\system\ImportContractorAndContractForm;
 
 class ConsoleTaskType extends Enum
 {

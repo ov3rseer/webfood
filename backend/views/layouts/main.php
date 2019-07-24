@@ -15,6 +15,7 @@ use backend\controllers\reference\UserController;
 use backend\controllers\report\TasksController;
 use backend\controllers\system\ImportContractorAndContractController;
 use backend\controllers\system\RoleController;
+use common\models\reference\SystemSetting;
 use yii\helpers\Html;
 use yii\bootstrap\Nav;
 use yii\bootstrap\NavBar;
@@ -109,6 +110,11 @@ AppAsset::register($this);
                 [
                     'label' => 'Администрирование',
                     'items' => [
+                        [
+                            'label' => 'Настройки системы',
+                            'url' => ['/reference/system-setting/index'],
+                            'visible' => Yii::$app->user->can(SystemSetting::className() . '.Index'),
+                        ],
                         [
                             'label' => 'Задачи',
                             'url'   => ['/report/tasks'],

@@ -227,6 +227,7 @@ class ConsoleTask extends Reference
     /**
      * Выполнение задачи
      * @throws InvalidConfigException
+     * @throws UserException
      * @throws \yii\base\Exception
      * @throws \Exception
      */

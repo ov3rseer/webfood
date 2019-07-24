@@ -298,8 +298,13 @@ class User extends Reference implements IdentityInterface
     public function beforeSave($insert)
     {
         $parentResult = parent::beforeSave($insert);
-        if ($parentResult && $this->isNewRecord && !$this->auth_key) {
-            $this->auth_key = Yii::$app->security->generateRandomString();
+        if ($parentResult && $this->isNewRecord) {
+            if (!$this->auth_key) {
+                $this->auth_key = Yii::$app->security->generateRandomString();
+            }
+            if (!$this->name_full && ($this->surname || $this->forename)) {
+                $this->name_full = $this->surname . '' . $this->forename;
+            }
         }
         return $parentResult;
     }
@@ -311,6 +316,7 @@ class User extends Reference implements IdentityInterface
     {
         if ($this->_fieldsOptions === []) {
             parent::getFieldsOptions();
+            $this->_fieldsOptions['name_full']['displayType'] = ActiveField::STRING;
             $this->_fieldsOptions['password_hash']['displayType'] = ActiveField::IGNORE;
             $this->_fieldsOptions['auth_key']['displayType'] = ActiveField::IGNORE;
             $this->_fieldsOptions['verification_token']['displayType'] = ActiveField::IGNORE;
