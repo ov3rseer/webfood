@@ -27,7 +27,7 @@ class User extends Reference implements IdentityInterface
     /**
      * @var string
      */
-    protected $_password = 'VERY_BAD_CUSTOMER';
+    protected $_password;
 
     /**
      * @inheritdoc
