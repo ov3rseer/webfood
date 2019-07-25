@@ -28,8 +28,8 @@
         "phpoffice/phpspreadsheet": "*",
         "ext-dom": "*",
         "ext-ftp": "*",
-      "ext-simplexml": "*",
-      "ext-json": "*"
+        "ext-simplexml": "*",
+        "ext-json": "*"
     },
     "require-dev": {
         "yiisoft/yii2-debug": "*",
