@@ -18,8 +18,6 @@ class TaskController extends Controller
 {
     /**
      * Run SomeModel::some_method for a period of time
-     * @param string $from
-     * @param string $to
      * @return int exit code
      */
     public function actionInit()
