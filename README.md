@@ -120,6 +120,30 @@
 **`НИ В КОЕМ СЛУЧАЕ НЕ ДЕЛАЕМ COMMIT В MASTER!!!`**
 
 
+### **Настройка cron:**
+
+Он уже должен быть подключен в композере, если нет, то:
+
+`composer require --prefer-dist yii2tech/crontab`
+
+`composer update`
+
+Проверяем, работает ли демон:
+
+`ps ax | grep [c]ron`
+
+Если нет, то запускаем его:
+
+`/etc/init.d/cron start`
+
+Для запуска контроллера задач в cron:
+
+`php yii task/init`
+
+GitHub: https://github.com/yii2tech/crontab
+Мануал: https://code.tutsplus.com/ru/tutorials/scheduling-tasks-with-cron-jobs--net-8800
+
+
 ### **Запуск тестов:**
 
 Из корня запустить команду:
