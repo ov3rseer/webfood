@@ -54,6 +54,10 @@
 
 `sudo a2ensite backend.webfood.local.conf webfood.local.conf`
 
+`a2enmod rewrite`
+
+`systemctl restart apache2`
+
 
 #### Настройка PostgreSQL:
 
