@@ -24,7 +24,7 @@ class TaskController extends Controller
      */
     public function actionInit()
     {
-        $path = Yii::$app->basePath;
+        $path = dirname(Yii::$app->basePath);
 
         $cronJob = new CronJob();
         $cronJob->min     = '*';
@@ -32,7 +32,7 @@ class TaskController extends Controller
         $cronJob->day     = '*';
         $cronJob->month   = '*';
         $cronJob->weekDay = '*';
-        $cronJob->command = 'php '.$path.'yii task';
+        $cronJob->command = 'php '.$path.'/yii task';
 
         $cronTab = new CronTab();
         $cronTab->setJobs([
