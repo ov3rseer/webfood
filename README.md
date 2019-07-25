@@ -141,6 +141,7 @@
 `php yii task/init`
 
 GitHub: https://github.com/yii2tech/crontab
+
 Мануал: https://code.tutsplus.com/ru/tutorials/scheduling-tasks-with-cron-jobs--net-8800
 
 
@@ -160,4 +161,5 @@ GitHub: https://github.com/yii2tech/crontab
 ### **Почтовый сервер**
 
 E-mail: `webfood.test@gmail.com`
+
 Пароль: `GrDM7b6h57HvZCq`
