@@ -13,7 +13,6 @@ use DateTime;
 use SimpleXMLIterator;
 use yii\base\BaseObject;
 use yii\base\UserException;
-use yii\helpers\Html;
 use yii\helpers\Json;
 
 class ImportContractorAndContract extends BaseObject implements TaskProcessorInterface
@@ -31,12 +30,9 @@ class ImportContractorAndContract extends BaseObject implements TaskProcessorInt
         if (empty($params['files_id'])) {
             throw new UserException('Не указан(ы) файл(ы) для загрузки');
         }
-        if (empty($params['columns'])) {
-            throw new UserException('Не указаны колонки для загрузки');
-        }
         /** @var File $file */
         $files = File::find()->where(['id' => $params['files_id']])->all();
-        if (!$file) {
+        if (!$files) {
             throw new UserException('Указанный(е) файл(ы) не обнаружен(ы)');
         }
         $result = [
@@ -104,8 +100,8 @@ class ImportContractorAndContract extends BaseObject implements TaskProcessorInt
                 $contract->name = $contract_values['name'];
                 $contract->contract_code = $contract_values['contract_code'];
                 $contract->contract_type_id = $contract_values['contract_type_id'];
-                $contract->date_from = (new DateTime($contract_values['date_from']))->format('Y-m-d H:i:s');
-                $contract->date_to = (new DateTime($contract_values['date_from']))->add(new DateInterval('P1Y'))->format('Y-m-d H:i:s');
+                $contract->date_from = (new DateTime($contract_values['date_from']))->format(\common\components\DateTime::DB_DATETIME_FORMAT);
+                $contract->date_to = (new DateTime($contract_values['date_from']))->add(new DateInterval('P1Y'))->format(\common\components\DateTime::DB_DATETIME_FORMAT);
                 $contract->save() ? $result['added']++ : $result['skipped']++;
 
                 foreach ($contract_values['products'] as $product_values) {
@@ -128,8 +124,7 @@ class ImportContractorAndContract extends BaseObject implements TaskProcessorInt
         return [
             'result_text' =>
                 'Добавлено: ' . $result['added'] . '<br>' .
-                'Пропущено: ' . $result['skipped'] . '<br><br>' .
-                Html::a('Загруженный(е) файл(ы)', ['/reference/file/download', 'id' => $file->id], ['target' => '_blank']),
+                'Пропущено: ' . $result['skipped'] . '<br><br>',
             'result_data' => $result,
         ];
     }

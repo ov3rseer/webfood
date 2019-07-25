@@ -2,6 +2,8 @@
 
 namespace console\controllers;
 
+use yii2tech\crontab\CronTab;
+use yii2tech\crontab\CronJob;
 use common\components\DateTime;
 use common\models\enum\ConsoleTaskStatus;
 use common\models\reference\ConsoleTask;
@@ -14,6 +16,33 @@ use yii\console\Exception;
  */
 class TaskController extends Controller
 {
+    /**
+     * Run SomeModel::some_method for a period of time
+     * @param string $from
+     * @param string $to
+     * @return int exit code
+     */
+    public function actionInit()
+    {
+        $path = Yii::$app->basePath;
+
+        $cronJob = new CronJob();
+        $cronJob->min     = '*';
+        $cronJob->hour    = '*';
+        $cronJob->day     = '*';
+        $cronJob->month   = '*';
+        $cronJob->weekDay = '*';
+        $cronJob->command = 'php '.$path.'yii task';
+
+        $cronTab = new CronTab();
+        $cronTab->setJobs([
+            $cronJob
+        ]);
+        $cronTab->apply();
+
+        return 1;
+    }
+
     /**
      * @inheritdoc
      */
@@ -63,7 +92,7 @@ class TaskController extends Controller
             ->active()
             ->andWhere(
                 'start_date <= :curr_min_end',
-                [':curr_min_end' => $curDate->format('Y-m-d H:i:59')]
+                [':curr_min_end' => $curDate->format(DateTime::DB_DATETIME_FORMAT)]
             )
             ->andWhere(['status_id' => ConsoleTaskStatus::PLANNED])
             ->all();

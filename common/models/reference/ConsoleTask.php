@@ -58,7 +58,7 @@ class ConsoleTask extends Reference
         return array_merge(parent::rules(), [
             [['type_id', 'start_date', 'status_id'], 'required'],
             [['start_date'], 'filter', 'skipOnEmpty' => true, 'filter' => function($value) {
-                return (new DateTime($value))->format('Y-m-d H:i:00');
+                return (new DateTime($value))->format(DateTime::DB_DATETIME_FORMAT);
             }],
             [['start_date', 'finish_date'], 'date', 'format' => 'php:' . DateTime::DB_DATETIME_FORMAT],
             [['is_repeatable'], 'default', 'value' => false],
