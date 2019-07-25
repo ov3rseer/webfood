@@ -28,8 +28,9 @@
         "phpoffice/phpspreadsheet": "*",
         "ext-dom": "*",
         "ext-ftp": "*",
-      "ext-simplexml": "*",
-      "ext-json": "*"
+        "ext-simplexml": "*",
+        "ext-json": "*",
+        "yii2tech/crontab": "^1.0"
     },
     "require-dev": {
         "yiisoft/yii2-debug": "*",
