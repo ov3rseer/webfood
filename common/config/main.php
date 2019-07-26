@@ -6,6 +6,7 @@ return [
     ],
     'language' => 'ru-RU',
     'vendorPath' => dirname(dirname(__DIR__)) . '/vendor',
+    'timeZone' => 'Europe/Moscow',
     'components' => [
         'authManager' => [
             'class'           => 'common\components\DbManager',

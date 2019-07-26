@@ -2,8 +2,10 @@
 namespace frontend\models;
 
 use Yii;
+use yii\base\Exception;
 use yii\base\Model;
 use common\models\reference\User;
+use yii\base\UserException;
 
 /**
  * Signup form
@@ -90,7 +92,8 @@ class SignupForm extends Model
      * Signs user up.
      *
      * @return bool whether the creating new account was successful and email was sent
-     * @throws \yii\base\Exception
+     * @throws Exception
+     * @throws UserException
      */
     public function signup()
     {
@@ -100,8 +103,9 @@ class SignupForm extends Model
         $user = new User();
         $user->email = $this->email;
         $user->name = $this->name;
-        $user->forename = $this->forename;
-        $user->surname = $this->surname;
+        $user->name_full = $this->surname . ' ' . $this->forename;
+        $user->forename = ucfirst($this->forename);
+        $user->surname = ucfirst($this->surname);
         $user->is_active = false;
         $user->setPassword($this->password);
         $user->generateAuthKey();
