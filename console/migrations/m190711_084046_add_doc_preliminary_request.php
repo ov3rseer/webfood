@@ -6,8 +6,7 @@ class m190711_084046_add_doc_preliminary_request extends Migration
 {
     private $_permissionsForUnit;
     private $_permissionsForProduct;
-    private $_permissionsForPreliminaryRequest;
-    private $_permissionsForCorrectionRequest;
+    private $_permissionsForRequest;
 
     /**
      * @param array $config
@@ -17,8 +16,7 @@ class m190711_084046_add_doc_preliminary_request extends Migration
     {
         $this->_permissionsForUnit = $this->getPermissions('backend\controllers\reference\UnitController', 'Единицы измерения', 63);
         $this->_permissionsForProduct = $this->getPermissions('backend\controllers\reference\ProductController', 'Продукты', 63);
-        $this->_permissionsForPreliminaryRequest = $this->getPermissions('backend\controllers\document\PreliminaryRequestController', 'Предварительные заявки', 63);
-        $this->_permissionsForCorrectionRequest = $this->getPermissions('backend\controllers\document\CorrectionRequestController', 'Корректировки заявок', 63);
+        $this->_permissionsForRequest = $this->getPermissions('backend\controllers\document\RequestController', 'Заявки', 63);
     }
 
     /**
@@ -57,23 +55,26 @@ class m190711_084046_add_doc_preliminary_request extends Migration
         ]);
         $this->insert('{{%sys_entity}}', ['class_name' => 'common\models\reference\Product']);
 
-        $this->createDocumentTable('{{%doc_preliminary_request}}');
-        $this->insert('{{%sys_entity}}', ['class_name' => 'common\models\document\PreliminaryRequest']);
+        $this->createDocumentTable('{{%doc_request}}');
+        $this->insert('{{%sys_entity}}', ['class_name' => 'common\models\document\Request']);
 
-        $this->createTablePartTable('{{%tab_preliminary_request_product}}', '{{%doc_preliminary_request}}', [
-            'product_id' => $this->integer()->notNull()->indexed()->foreignKey('{{%ref_product}}', 'id'),
-            'quantity' => $this->decimal(10, 2)->notNull(),
+        $this->createTablePartTable('{{%tab_request_date}}', '{{%doc_request}}', [
+            'request_id' => $this->integer()->notNull()->indexed()->foreignKey('{{%doc_request}}', 'id'),
+            'week_day_date' => $this->date()->notNull(),
         ]);
 
-        $this->createDocumentTable('{{%doc_correction_request}}');
-        $this->insert('{{%sys_entity}}', ['class_name' => 'common\models\document\CorrectionRequest']);
+        $this->createRegisterTable('{{%reg_request_product}}', [
+            'product_id' => $this->integer()->notNull()->indexed()->foreignKey('{{%ref_product}}', 'id'),
+            'request_date_id' => $this->integer()->notNull()->indexed()->foreignKey('{{%tab_request_date}}', 'id'),
+            'planned_quantity' => $this->float()->notNull(),
+            'current_quantity' => $this->float()->notNull(),
+        ]);
 
         $this->setPermissions();
         $permissionForAdd = array_merge(
             $this->_permissionsForUnit,
             $this->_permissionsForProduct,
-            $this->_permissionsForPreliminaryRequest,
-            $this->_permissionsForCorrectionRequest
+            $this->_permissionsForRequest
         );
         $this->addPermissions($permissionForAdd);
     }
@@ -88,16 +89,14 @@ class m190711_084046_add_doc_preliminary_request extends Migration
         $permissionForDelete = array_merge(
             $this->_permissionsForUnit,
             $this->_permissionsForProduct,
-            $this->_permissionsForPreliminaryRequest,
-            $this->_permissionsForCorrectionRequest
+            $this->_permissionsForRequest
         );
         $this->deletePermissions($permissionForDelete);
 
-        $this->delete('{{%sys_entity}}', ['class_name' => 'common\models\document\CorrectionRequest']);
-        $this->dropTable('{{%doc_correction_request}}');
-        $this->dropTable('{{%tab_preliminary_request_product}}');
-        $this->delete('{{%sys_entity}}', ['class_name' => 'common\models\document\PreliminaryRequest']);
-        $this->dropTable('{{%doc_preliminary_request}}');
+        $this->dropTable('{{%reg_request_product}}');
+        $this->dropTable('{{%tab_request_date}}');
+        $this->delete('{{%sys_entity}}', ['class_name' => 'common\models\document\Request']);
+        $this->dropTable('{{%doc_request}}');
         $this->delete('{{%sys_entity}}', ['class_name' => 'common\models\reference\Product']);
         $this->dropTable('{{%ref_product}}');
         $this->delete('{{%sys_entity}}', ['class_name' => 'common\models\reference\Unit']);

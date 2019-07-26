@@ -58,6 +58,9 @@ class m190712_072430_add_ref_contractor extends Migration
             'address' => $this->string()->notNull(),
         ]);
 
+        $this->addColumn('{{%doc_request}}', 'contractor_id', $this->integer()->notNull()->indexed()->foreignKey('{{%ref_contractor}}', 'id'));
+        $this->addColumn('{{%doc_request}}', 'contract_id', $this->integer()->notNull()->indexed()->foreignKey('{{%ref_contract}}', 'id'));
+
         $this->setPermissions();
         $permissionForAdd = array_merge(
             $this->_permissionsForContract,
@@ -78,6 +81,9 @@ class m190712_072430_add_ref_contractor extends Migration
             $this->_permissionsForContractor
         );
         $this->deletePermissions($permissionForDelete);
+
+        $this->dropColumn('{{%doc_request}}', 'contract_id');
+        $this->dropColumn('{{%doc_request}}', 'contractor_id');
 
         $this->dropTable('{{%tab_contractor_contract}}');
         $this->dropTable('{{%tab_contract_product}}');
