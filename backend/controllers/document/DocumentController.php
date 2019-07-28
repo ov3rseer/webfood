@@ -3,8 +3,11 @@
 namespace backend\controllers\document;
 
 use backend\controllers\BackendModelController;
+use backend\widgets\ActiveForm;
 use common\models\ActiveRecord;
 use common\models\register\registerAccumulate\RegisterAccumulate;
+use ReflectionException;
+use yii\base\InvalidConfigException;
 use yii\data\ArrayDataProvider;
 
 /**
@@ -42,11 +45,20 @@ abstract class DocumentController extends BackendModelController
     }
 
     /**
+     * @inheritdoc
+     * @param ActiveForm $form
+     */
+    static public function getTablePartColumns($model, $tablePartRelation, $form, $readonly = false)
+    {
+        return parent::getTablePartColumns($model, $tablePartRelation, $form, $readonly);
+    }
+
+    /**
      * Подготовка массива ошибок регистров для отображения в форме документа
      * @param array $registerErrors
      * @return array
-     * @throws \yii\base\InvalidConfigException
-     * @throws \ReflectionException
+     * @throws InvalidConfigException
+     * @throws ReflectionException
      */
     static function prepareRegistersErrors($registerErrors)
     {

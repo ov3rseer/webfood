@@ -1,6 +1,7 @@
 <?php
 
 use common\components\pgsql\Migration;
+use yii\base\NotSupportedException;
 
 class m190711_084046_add_doc_preliminary_request extends Migration
 {
@@ -9,7 +10,6 @@ class m190711_084046_add_doc_preliminary_request extends Migration
     private $_permissionsForRequest;
 
     /**
-     * @param array $config
      * @throws Exception
      */
     public function setPermissions()
@@ -21,7 +21,7 @@ class m190711_084046_add_doc_preliminary_request extends Migration
 
     /**
      * @return bool|void
-     * @throws \yii\base\NotSupportedException
+     * @throws NotSupportedException
      * @throws \yii\db\Exception
      * @throws Exception
      */
@@ -56,16 +56,17 @@ class m190711_084046_add_doc_preliminary_request extends Migration
         $this->insert('{{%sys_entity}}', ['class_name' => 'common\models\reference\Product']);
 
         $this->createDocumentTable('{{%doc_request}}');
+
         $this->insert('{{%sys_entity}}', ['class_name' => 'common\models\document\Request']);
 
         $this->createTablePartTable('{{%tab_request_date}}', '{{%doc_request}}', [
-            'request_id' => $this->integer()->notNull()->indexed()->foreignKey('{{%doc_request}}', 'id'),
             'week_day_date' => $this->date()->notNull(),
         ]);
 
-        $this->createRegisterTable('{{%reg_request_product}}', [
-            'product_id' => $this->integer()->notNull()->indexed()->foreignKey('{{%ref_product}}', 'id'),
+        $this->createCrossTable('{{%cross_request_date_product}}', [
             'request_date_id' => $this->integer()->notNull()->indexed()->foreignKey('{{%tab_request_date}}', 'id'),
+            'product_id' => $this->integer()->notNull()->indexed()->foreignKey('{{%ref_product}}', 'id'),
+            'unit_id' => $this->integer()->notNull()->indexed()->foreignKey('{{%ref_product}}', 'id'),
             'planned_quantity' => $this->float()->notNull(),
             'current_quantity' => $this->float()->notNull(),
         ]);
@@ -93,7 +94,7 @@ class m190711_084046_add_doc_preliminary_request extends Migration
         );
         $this->deletePermissions($permissionForDelete);
 
-        $this->dropTable('{{%reg_request_product}}');
+        $this->dropTable('{{%cross_request_date_product}}');
         $this->dropTable('{{%tab_request_date}}');
         $this->delete('{{%sys_entity}}', ['class_name' => 'common\models\document\Request']);
         $this->dropTable('{{%doc_request}}');

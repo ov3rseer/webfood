@@ -12,7 +12,6 @@ class m190712_072430_add_ref_contractor extends Migration
     private $_permissionsForContractor;
 
     /**
-     * @param array $config
      * @throws Exception
      */
     public function setPermissions()
@@ -60,6 +59,10 @@ class m190712_072430_add_ref_contractor extends Migration
 
         $this->addColumn('{{%doc_request}}', 'contractor_id', $this->integer()->notNull()->indexed()->foreignKey('{{%ref_contractor}}', 'id'));
         $this->addColumn('{{%doc_request}}', 'contract_id', $this->integer()->notNull()->indexed()->foreignKey('{{%ref_contract}}', 'id'));
+        $this->addColumn('{{%doc_request}}', 'address', $this->string()->notNull());
+        $this->addColumn('{{%doc_request}}', 'contract_code', $this->string()->notNull());
+        $this->addColumn('{{%doc_request}}', 'contractor_code', $this->string()->notNull());
+        $this->addColumn('{{%doc_request}}', 'contract_type_id', $this->integer()->notNull()->indexed()->foreignKey('{{%enum_contract_type}}', 'id'));
 
         $this->setPermissions();
         $permissionForAdd = array_merge(
@@ -82,8 +85,12 @@ class m190712_072430_add_ref_contractor extends Migration
         );
         $this->deletePermissions($permissionForDelete);
 
+        $this->dropColumn('{{%doc_request}}', 'contract_type_id');
         $this->dropColumn('{{%doc_request}}', 'contract_id');
         $this->dropColumn('{{%doc_request}}', 'contractor_id');
+        $this->dropColumn('{{%doc_request}}', 'contractor_code');
+        $this->dropColumn('{{%doc_request}}', 'contract_code');
+        $this->dropColumn('{{%doc_request}}', 'address');
 
         $this->dropTable('{{%tab_contractor_contract}}');
         $this->dropTable('{{%tab_contract_product}}');

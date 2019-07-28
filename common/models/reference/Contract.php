@@ -16,7 +16,7 @@ use yii\db\ActiveQuery;
  * @property DateTime $date_to
  *
  * Отношения:
- * @property ContractProduct $contractProducts
+ * @property ContractProduct[] $contractProducts
 */
 class Contract extends Reference
 {

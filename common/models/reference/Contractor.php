@@ -13,8 +13,8 @@ use yii\db\ActiveQuery;
  * @property integer  $type_request_id
  *
  * Отношения:
- * @property User               $user
- * @property ContractorContract $contractorContract
+ * @property User                 $user
+ * @property ContractorContract[] $contractorContract
  */
 class Contractor extends Reference
 {
