@@ -18,6 +18,7 @@ use Yii;
 use yii\data\ArrayDataProvider;
 use yii\db\Query;
 use yii\web\Response;
+use function GuzzleHttp\Psr7\str;
 
 /**
  * Действие для вывода формы
@@ -50,6 +51,7 @@ class IndexAction extends FrontendModelAction
         $action = $action ?: $requestData['action'];
 
         $array = [];
+        $weekDayDateMap = [];
 
         switch ($action) {
             case 'preliminary_request': {
@@ -60,47 +62,55 @@ class IndexAction extends FrontendModelAction
                     $weekDayDateMap = $model->getWeekDayDateMap('monday next week');
                     $requestDatesIdMap = $model->findRequestDatesIdMap($contractorId, $contractId, $weekDayDateMap);
                     $requestDateProducts = $model->getRequestDateProductsByRequestDatesId(array_keys($requestDatesIdMap));
-                    //Yii::$app->session->setFlash('info', 'Предварительная заявка доступна не позднее 13:00 четверга этой недели.');
                 }
 
                 if (isset($requestDateProducts)) {
-                    $contractProducts = ContractProduct::find()->andWhere(['parent_id' => $contractId])->all();
-                    foreach ($contractProducts as $contractProduct) {
-                        $array[$contractProduct->product_id] = [
-                            'product_code' => $contractProduct->product->product_code,
-                            'product_name' => $contractProduct->product->name,
-                            'product_unit' => $contractProduct->product->unit->name,
-                            'quantities'   => [],
-                        ];
-                    }
-                    $requestDateProducts = $model->getRequestDateProductsByRequestDatesId(array_keys($requestDatesIdMap));
-                    foreach ($requestDateProducts as $requestDateProduct) {
-                        $array[$requestDateProduct->product_id]['quantities'][$requestDatesIdMap[$requestDateProduct->request_date_id]] = [
-                            'planned_quantity' => $requestDateProduct->planned_quantity,
-                            'current_quantity' => $requestDateProduct->current_quantity,
-                        ];
+                    if ($requestDateProducts) {
+                        $contractProducts = ContractProduct::find()->andWhere(['parent_id' => $contractId])->all();
+                        foreach ($contractProducts as $contractProduct) {
+                            $array[$contractProduct->product_id] = [
+                                'product_code' => $contractProduct->product->product_code,
+                                'product_name' => $contractProduct->product->name,
+                                'product_unit' => $contractProduct->product->unit->name,
+                                'quantities'   => [],
+                            ];
+                        }
+                        $requestDateProducts = $model->getRequestDateProductsByRequestDatesId(array_keys($requestDatesIdMap));
+                        foreach ($requestDateProducts as $requestDateProduct) {
+                            $array[$requestDateProduct->product_id]['quantities'][$requestDatesIdMap[$requestDateProduct->request_date_id]] = [
+                                'planned_quantity' => $requestDateProduct->planned_quantity,
+                                'current_quantity' => $requestDateProduct->current_quantity,
+                            ];
+                        }
+                    } else {
+                        $contractProducts = ContractProduct::find()->andWhere(['parent_id' => $contractId])->all();
+                        foreach ($contractProducts as $contractProduct) {
+                            $array[$contractProduct->product_id] = [
+                                'product_code' => $contractProduct->product->product_code,
+                                'product_name' => $contractProduct->product->name,
+                                'product_unit' => $contractProduct->product->unit->name,
+                                'quantities'   => [],
+                            ];
+                        }
                     }
                     //Yii::$app->session->setFlash('info', 'Вы создали заявку для этого контрагента и договора.<br/>Перейдите в раздел корректировки заявки.');
                 } else {
-                    $contractProducts = ContractProduct::find()->andWhere(['parent_id' => $contractId])->all();
-                    foreach ($contractProducts as $contractProduct) {
-                        $array[$contractProduct->product_id] = [
-                            'product_code' => $contractProduct->product->product_code,
-                            'product_name' => $contractProduct->product->name,
-                            'product_unit' => $contractProduct->product->unit->name,
-                            'quantities'   => [],
-                        ];
-                    }
+                    Yii::$app->session->setFlash('info', 'Предварительная заявка доступна не позднее 13:00 четверга этой недели.');
                 }
 
                 break;
             };
             case 'correction_request': {
-                $weekDayDateMap = $model->getWeekDayDateMap('monday this week');
-                $requestDatesIdMap = $model->findRequestDatesIdMap($contractorId, $contractId, $weekDayDateMap);
-                $requestDateProducts = $model->getRequestDateProductsByRequestDatesId(array_keys($requestDatesIdMap));
+                $thursdayDate = new DateTime('thursday this week');
+                $thursdayDate = $thursdayDate->format('d-m-Y 13:00');
 
-                if (!$requestDateProducts) {
+                if (strtotime($currentDate) < strtotime($thursdayDate)) {
+                    $weekDayDateMap = $model->getWeekDayDateMap('monday this week');
+                    $requestDatesIdMap = $model->findRequestDatesIdMap($contractorId, $contractId, $weekDayDateMap);
+                    $requestDateProducts = $model->getRequestDateProductsByRequestDatesId(array_keys($requestDatesIdMap));
+                }
+
+                if (!isset($requestDateProducts) || (isset($requestDateProducts) && !$requestDateProducts)) {
                     $weekDayDateMap = $model->getWeekDayDateMap('monday next week');
                     $requestDatesIdMap = $model->findRequestDatesIdMap($contractorId, $contractId, $weekDayDateMap);
                     $requestDateProducts = $model->getRequestDateProductsByRequestDatesId(array_keys($requestDatesIdMap));

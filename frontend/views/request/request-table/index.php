@@ -54,62 +54,66 @@ $columns = [
     ]
 ];
 
-$i = 0;
+if (!empty($dataProvider->allModels)) {
 
-foreach ($weekDayMap as $weekDayId => $weekDay) {
-    $weekDayDate = $weekDayDateMap[$i];
+    $i = 0;
 
-    $header  = '';
-    $header .= Html::beginTag('table', $options = ['class' => 'table table-striped table-bordered text-center', 'style' => 'margin: 0;']);
-    $header .= Html::beginTag('tbody');
+    foreach ($weekDayMap as $weekDayId => $weekDay) {
+        $weekDayDate = $weekDayDateMap[$i];
 
-    $header .= Html::beginTag('tr');
-    $header .= Html::tag('td', Html::encode('Дата поставки'), $options = ['colspan' => 2]);
-    $header .= Html::endTag('tr');
+        $header  = '';
+        $header .= Html::beginTag('table', $options = ['class' => 'table table-striped table-bordered text-center', 'style' => 'margin: 0;']);
+        $header .= Html::beginTag('tbody');
 
-    $header .= Html::beginTag('tr');
-    $header .= Html::tag('td', Html::encode($weekDayDate), $options = ['colspan' => 2]);
-    $header .= Html::endTag('tr');
+        $header .= Html::beginTag('tr');
+        $header .= Html::tag('td', Html::encode('Дата поставки'), $options = ['colspan' => 2]);
+        $header .= Html::endTag('tr');
 
-    $header .= Html::beginTag('tr');
-    $header .= Html::tag('td', Html::encode($weekDay), $options = ['colspan' => 2]);
-    $header .= Html::endTag('tr');
+        $header .= Html::beginTag('tr');
+        $header .= Html::tag('td', Html::encode($weekDayDate), $options = ['colspan' => 2]);
+        $header .= Html::endTag('tr');
 
-    $header .= Html::beginTag('tr');
-    $header .= Html::tag('td', Html::encode('Планируемое количество'));
-    $header .= Html::tag('td', Html::encode('Фактическое количество'));
-    $header .= Html::endTag('tr');
+        $header .= Html::beginTag('tr');
+        $header .= Html::tag('td', Html::encode($weekDay), $options = ['colspan' => 2]);
+        $header .= Html::endTag('tr');
 
-    $header .= Html::endTag('tbody');
-    $header .= Html::endTag('table');
+        $header .= Html::beginTag('tr');
+        $header .= Html::tag('td', Html::encode('Планируемое количество'));
+        $header .= Html::tag('td', Html::encode('Фактическое количество'));
+        $header .= Html::endTag('tr');
 
-    $columns[$weekDayId] = [
-        'header' => $header,
-        'headerOptions' => ['style' => 'width: 28px; padding: 0;'],
-        'format' => 'raw',
-        'value' => function($rowModel) use ($weekDayDate) {
-            /** @var ContractProduct|RequestDateProduct $rowModel */
-            return
-                '<table style="margin: 0;">
-                    <tbody>
-                        <tr>
-                            <td>
-                                '.Html::input(
-                              'text',
-                                    Html::encode(($rowModel['product_code'] ?: '').'_'.$weekDayDate.'_planned_quantity'),
-                              isset($rowModel['quantities'][$weekDayDate]) ? $rowModel['quantities'][$weekDayDate]['planned_quantity'] : 0,
-                                    ['class' => 'form-control', 'style' => 'border-radius: 0;']).'
-                            </td>
-                            <td>
-                                '.Html::input('text', Html::encode(($rowModel['product_code'] ?: '').'_'.$weekDayDate.'_current_quantity'), isset($rowModel['quantities'][$weekDayDate]) ? $rowModel['quantities'][$weekDayDate]['current_quantity'] : 0, ['class' => 'form-control', 'style' => 'border-radius: 0;']).'
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>';
-        },
-    ];
+        $header .= Html::endTag('tbody');
+        $header .= Html::endTag('table');
 
-    $i++;
+        $columns[$weekDayId] = [
+            'header' => $header,
+            'headerOptions' => ['style' => 'width: 28px; padding: 0;'],
+            'format' => 'raw',
+            'value' => function($rowModel) use ($weekDayDate) {
+                /** @var ContractProduct|RequestDateProduct $rowModel */
+                return
+                    '<table style="margin: 0;">
+                        <tbody>
+                            <tr>
+                                <td>
+                                    '.Html::input(
+                                  'text',
+                                        Html::encode(($rowModel['product_code'] ?: '').'_'.$weekDayDate.'_planned_quantity'),
+                                  isset($rowModel['quantities'][$weekDayDate]) ? $rowModel['quantities'][$weekDayDate]['planned_quantity'] : 0,
+                                        ['class' => 'form-control', 'style' => 'border-radius: 0;']).'
+                                </td>
+                                <td>
+                                    '.Html::input('text', Html::encode(($rowModel['product_code'] ?: '').'_'.$weekDayDate.'_current_quantity'), isset($rowModel['quantities'][$weekDayDate]) ? $rowModel['quantities'][$weekDayDate]['current_quantity'] : 0, ['class' => 'form-control', 'style' => 'border-radius: 0;']).'
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>';
+            },
+        ];
+
+        $i++;
+    }
+
 }
 
 $columns = array_merge($columns, [
