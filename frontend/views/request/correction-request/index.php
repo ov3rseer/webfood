@@ -7,34 +7,10 @@ use backend\widgets\GridView\GridViewWithToolbar;
 use yii\helpers\Html;
 use yii\helpers\Url;
 
-/* @var frontend\models\request\PreliminaryRequestForm $model */
+/* @var frontend\models\request\CorrectionRequestForm $model */
 
 $this->title = $model->getPluralName();
 $this->params['breadcrumbs'][] = $this->title;
-
-$fields = $model->getFieldsOptions();
-$logic = $model->logic;
-unset($fields['logic']);
-
-$this->registerJs("
-    $().ready(function() {
-    
-        var selectsId = ['contractor_name', 'contract_code'];
-        
-        var smartSelect = new SmartSelect({
-            'options' : {
-                'contractor_name' : ".json_encode($model->contractor_name).",
-                'contract_code' : ".json_encode($model->contract_code)."
-            },
-            'mainLogic' : ".json_encode($logic).",
-            'selectsId' : selectsId
-        });
-    
-        smartSelect.createChangeHandler();        
-        smartSelect.init();    
-    
-    });
-");
 
 ?>
 <div class="reference-index">
@@ -48,12 +24,21 @@ $this->registerJs("
     ?>
 
     <div class="report-attributes">
+        <div class="display:none;">
+            <?php
+            foreach ($model->getFieldsOptions() as $field => $fieldOptions) {
+                if ($fieldOptions['displayType'] == ActiveField::HIDDEN) {
+                    echo $form->autoField($model, $field, $fieldOptions)->error(false)->label(false);
+                }
+            }
+            ?>
+        </div>
         <div class="row">
             <?php
-            foreach ($fields as $field => $fieldOptions) {
+            foreach ($model->getFieldsOptions() as $field => $fieldOptions) {
                 if ($fieldOptions['displayType'] != ActiveField::HIDDEN) {
-                    echo '<div class="col-md-6">';
-                    echo $form->field($model, $field)->dropDownList($model->{$field}, ['id' => $field]);
+                    echo '<div class="col-xs-12 col-sm-6 col-md-3">';
+                    echo $form->autoField($model, $field, $fieldOptions);
                     echo '</div>';
                 }
             }

@@ -43,13 +43,15 @@ if (Yii::$app->user->can($controller::className() . '.Delete')) {
 
 ?>
 <div class="reference-index">
-    
-    <?= GridViewWithToolbar::widget([
+
+    <?=
+    GridViewWithToolbar::widget([
         'id' => $gridWidgetId,
         'gridToolbarOptions' => [
             'layout' => $toolbarLayout,
         ],
         'gridOptions' => $gridOptions,
-    ]); ?>
+    ]);
+    ?>
 
 </div>
