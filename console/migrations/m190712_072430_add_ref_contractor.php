@@ -50,13 +50,20 @@ class m190712_072430_add_ref_contractor extends Migration
 
         $this->createTablePartTable('{{%tab_contract_product}}', '{{%ref_contract}}', [
             'product_id' => $this->integer()->notNull()->indexed()->foreignKey('{{%ref_product}}', 'id'),
-            'quantity' => $this->decimal(10, 2)->notNull(),
+            //'quantity' => $this->decimal(10, 2)->notNull(),
         ]);
 
         $this->createTablePartTable('{{%tab_contractor_contract}}', '{{%ref_contractor}}', [
             'contract_id' => $this->integer()->notNull()->indexed()->foreignKey('{{%ref_contract}}', 'id'),
             'address' => $this->string()->notNull(),
         ]);
+
+        $this->addColumn('{{%doc_request}}', 'contractor_id', $this->integer()->notNull()->indexed()->foreignKey('{{%ref_contractor}}', 'id'));
+        $this->addColumn('{{%doc_request}}', 'contract_id', $this->integer()->notNull()->indexed()->foreignKey('{{%ref_contract}}', 'id'));
+        $this->addColumn('{{%doc_request}}', 'address', $this->string()->notNull());
+        $this->addColumn('{{%doc_request}}', 'contract_code', $this->string()->notNull());
+        $this->addColumn('{{%doc_request}}', 'contractor_code', $this->string()->notNull());
+        $this->addColumn('{{%doc_request}}', 'contract_type_id', $this->integer()->notNull()->indexed()->foreignKey('{{%enum_contract_type}}', 'id'));
 
         $this->setPermissions();
         $permissionForAdd = array_merge(
@@ -78,6 +85,13 @@ class m190712_072430_add_ref_contractor extends Migration
             $this->_permissionsForContractor
         );
         $this->deletePermissions($permissionForDelete);
+
+        $this->dropColumn('{{%doc_request}}', 'contract_type_id');
+        $this->dropColumn('{{%doc_request}}', 'contract_id');
+        $this->dropColumn('{{%doc_request}}', 'contractor_id');
+        $this->dropColumn('{{%doc_request}}', 'contractor_code');
+        $this->dropColumn('{{%doc_request}}', 'contract_code');
+        $this->dropColumn('{{%doc_request}}', 'address');
 
         $this->dropTable('{{%tab_contractor_contract}}');
         $this->dropTable('{{%tab_contract_product}}');

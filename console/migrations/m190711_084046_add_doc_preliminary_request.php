@@ -1,29 +1,27 @@
 <?php
 
 use common\components\pgsql\Migration;
+use yii\base\NotSupportedException;
 
 class m190711_084046_add_doc_preliminary_request extends Migration
 {
     private $_permissionsForUnit;
     private $_permissionsForProduct;
-    private $_permissionsForPreliminaryRequest;
-    private $_permissionsForCorrectionRequest;
+    private $_permissionsForRequest;
 
     /**
-     * @param array $config
      * @throws Exception
      */
     public function setPermissions()
     {
         $this->_permissionsForUnit = $this->getPermissions('backend\controllers\reference\UnitController', 'Единицы измерения', 63);
         $this->_permissionsForProduct = $this->getPermissions('backend\controllers\reference\ProductController', 'Продукты', 63);
-        $this->_permissionsForPreliminaryRequest = $this->getPermissions('backend\controllers\document\PreliminaryRequestController', 'Предварительные заявки', 63);
-        $this->_permissionsForCorrectionRequest = $this->getPermissions('backend\controllers\document\CorrectionRequestController', 'Корректировки заявок', 63);
+        $this->_permissionsForRequest = $this->getPermissions('backend\controllers\document\RequestController', 'Заявки', 63);
     }
 
     /**
      * @return bool|void
-     * @throws \yii\base\NotSupportedException
+     * @throws NotSupportedException
      * @throws \yii\db\Exception
      * @throws Exception
      */
@@ -57,12 +55,20 @@ class m190711_084046_add_doc_preliminary_request extends Migration
         ]);
         $this->insert('{{%sys_entity}}', ['class_name' => 'common\models\reference\Product']);
 
-        $this->createDocumentTable('{{%doc_preliminary_request}}');
-        $this->insert('{{%sys_entity}}', ['class_name' => 'common\models\document\PreliminaryRequest']);
+        $this->createDocumentTable('{{%doc_request}}');
 
-        $this->createTablePartTable('{{%tab_preliminary_request_product}}', '{{%doc_preliminary_request}}', [
+        $this->insert('{{%sys_entity}}', ['class_name' => 'common\models\document\Request']);
+
+        $this->createTablePartTable('{{%tab_request_date}}', '{{%doc_request}}', [
+            'week_day_date' => $this->date()->notNull(),
+        ]);
+
+        $this->createCrossTable('{{%cross_request_date_product}}', [
+            'request_date_id' => $this->integer()->notNull()->indexed()->foreignKey('{{%tab_request_date}}', 'id'),
             'product_id' => $this->integer()->notNull()->indexed()->foreignKey('{{%ref_product}}', 'id'),
-            'quantity' => $this->decimal(10, 2)->notNull(),
+            'unit_id' => $this->integer()->notNull()->indexed()->foreignKey('{{%ref_product}}', 'id'),
+            'planned_quantity' => $this->float()->notNull(),
+            'current_quantity' => $this->float()->notNull(),
         ]);
 
         $this->createDocumentTable('{{%doc_correction_request}}');
@@ -72,8 +78,7 @@ class m190711_084046_add_doc_preliminary_request extends Migration
         $permissionForAdd = array_merge(
             $this->_permissionsForUnit,
             $this->_permissionsForProduct,
-            $this->_permissionsForPreliminaryRequest,
-            $this->_permissionsForCorrectionRequest
+            $this->_permissionsForRequest
         );
         $this->addPermissions($permissionForAdd);
     }
