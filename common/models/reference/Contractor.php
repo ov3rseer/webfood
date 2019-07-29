@@ -83,4 +83,18 @@ class Contractor extends Reference
             'contractorContracts' => ContractorContract::className(),
         ], parent::getTableParts());
     }
+
+    /**
+     * @inheritdoc
+     */
+    public function beforeSave($insert)
+    {
+        $parentResult = parent::beforeSave($insert);
+        if ($parentResult && $this->user_id) {
+            $this->is_active = true;
+        } else {
+            $this->is_active = false;
+        }
+        return $parentResult;
+    }
 }

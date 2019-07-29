@@ -15,6 +15,8 @@ $this->title = 'Admin WebFood';
                 ['/system/import-contractor-and-contract/index'], ['class' => 'btn btn-lg btn-success', 'style' => 'width:600px;']) ?></p>
         <p><?= Html::a('Экспорт авторизационных данных новых контрагентов',
                 ['export-contractors-authorization-data'], ['class' => 'btn btn-lg btn-success', 'style' => 'width:600px;']) ?></p>
+        <p><?= Html::a('Экспорт предварительных заявок на следующую неделю',
+                ['export-many-requests'], ['class' => 'btn btn-lg btn-success', 'style' => 'width:600px;']) ?></p>
 
     </div>
 

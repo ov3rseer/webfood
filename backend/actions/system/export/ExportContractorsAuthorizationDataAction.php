@@ -6,11 +6,15 @@ use common\components\DateTime;
 use common\models\enum\UserType;
 use common\models\reference\Contractor;
 use common\models\reference\User;
+use PhpOffice\PhpSpreadsheet\Exception;
 use PhpOffice\PhpSpreadsheet\IOFactory;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Style\Border;
 use PhpOffice\PhpSpreadsheet\Worksheet\PageSetup;
+use Yii;
 use yii\base\Action;
+use yii\base\InvalidConfigException;
+use yii\base\UserException;
 use yii\helpers\Html;
 
 /**
@@ -20,9 +24,11 @@ class ExportContractorsAuthorizationDataAction extends Action
 {
     /**
      * @inheritdoc
-     * @throws \PhpOffice\PhpSpreadsheet\Exception
-     * @throws \yii\base\InvalidConfigException
+     * @throws Exception
+     * @throws InvalidConfigException
+     * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception
      * @throws \yii\base\Exception
+     * @throws UserException
      */
     public function run()
     {
@@ -93,7 +99,7 @@ class ExportContractorsAuthorizationDataAction extends Action
             header('Content-Disposition: attachment; filename="' . $filename . '.xlsx"');
             $writer->save("php://output");
         } else {
-            \Yii::$app->session->setFlash('info', 'Не найдены новые контрагенты.');
+            Yii::$app->session->setFlash('info', 'Не найдены новые контрагенты.');
             $this->controller->redirect('index');
         }
     }

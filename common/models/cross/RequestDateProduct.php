@@ -13,8 +13,9 @@ use yii\db\ActiveQuery;
  * @property integer $request_date_id
  * @property integer $product_id
  * @property integer $unit_id
- * @property string  $planned_quantity
- * @property string  $current_quantity
+ * @property string  $product_code
+ * @property float   $planned_quantity
+ * @property float   $current_quantity
  *
  * Отношения:
  * @property Product        $product
@@ -29,9 +30,10 @@ class RequestDateProduct extends CrossTable
     public function rules()
     {
         return array_merge(parent::rules(), [
-            [['request_date_id', 'product_id', 'unit_id'], 'required'],
+            [['request_date_id', 'product_id', 'unit_id', 'product_code'], 'required'],
             [['request_date_id', 'product_id', 'unit_id'], 'integer'],
-            [['planned_quantity', 'current_quantity'], 'number', 'min' => 0]
+            [['planned_quantity', 'current_quantity'], 'number', 'min' => 0],
+            [['product_code'], 'string']
         ]);
     }
 
@@ -42,6 +44,7 @@ class RequestDateProduct extends CrossTable
     {
         return array_merge(parent::attributeLabels(), [
             'request_date_id'   => 'Дата',
+            'product_code'      => 'Код продукта',
             'product_id'        => 'Продукт',
             'unit_id'           => 'Единица измерения',
             'planned_quantity'  => 'Планируемое количество',
