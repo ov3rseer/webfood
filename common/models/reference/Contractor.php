@@ -13,8 +13,8 @@ use yii\db\ActiveQuery;
  * @property integer  $type_request_id
  *
  * Отношения:
- * @property User               $user
- * @property ContractorContract $contractorContract
+ * @property User                 $user
+ * @property ContractorContract[] $contractorContract
  */
 class Contractor extends Reference
 {
@@ -82,5 +82,19 @@ class Contractor extends Reference
         return array_merge([
             'contractorContracts' => ContractorContract::className(),
         ], parent::getTableParts());
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function beforeSave($insert)
+    {
+        $parentResult = parent::beforeSave($insert);
+        if ($parentResult && $this->user_id) {
+            $this->is_active = true;
+        } else {
+            $this->is_active = false;
+        }
+        return $parentResult;
     }
 }

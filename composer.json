@@ -30,6 +30,7 @@
         "ext-ftp": "*",
         "ext-simplexml": "*",
         "ext-json": "*",
+        "ext-zip": "*",
         "yii2tech/crontab": "^1.0"
     },
     "require-dev": {

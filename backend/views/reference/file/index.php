@@ -15,7 +15,7 @@ $this->params['breadcrumbs'][] = $this->title;
 /** @var FileController $controller */
 $controller = $this->context;
 /** @noinspection PhpUnhandledExceptionInspection */
-$reflection = new \ReflectionClass($model->className());
+$reflection = new ReflectionClass($model->className());
 $shortClassName = $reflection->getShortName();
 $gridWidgetId = 'grid-' . $shortClassName;
 
@@ -28,7 +28,6 @@ if (Yii::$app->user->can($controller::className() . '.Delete')) {
 } else {
     $gridOptions['checkboxColumn'] = false;
 }
-$toolbarLayout[][] = 'columns';
 
 $gridToolbarOptions = [
     'layout' => $toolbarLayout,

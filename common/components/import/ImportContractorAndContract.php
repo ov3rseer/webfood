@@ -66,7 +66,7 @@ class ImportContractorAndContract extends BaseObject implements TaskProcessorInt
             //if (!isset($contractors[$contractor_code]['contracts'][$contract_code])) { // потом раскоментить
             $contractors[$contractor_code]['contracts'][$contract_code] = [
                 'name' => trim($xml['НаименованиеДоговора']),
-                'contract_code' => $contractor_code,
+                'contract_code' => trim($xml['НомерДоговора']),
                 'contract_type_id' => \common\models\enum\ContractType::CHILD,
                 'address' => trim($xml['АдресДоставки']),
                 'date_from' => $xml['ДатаДоговора'],

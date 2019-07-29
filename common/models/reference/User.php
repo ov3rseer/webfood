@@ -27,7 +27,7 @@ class User extends Reference implements IdentityInterface
     /**
      * @var string
      */
-    protected $_password = 'VERY_BAD_CUSTOMER';
+    protected $_password;
 
     /**
      * @inheritdoc
@@ -59,11 +59,11 @@ class User extends Reference implements IdentityInterface
     public function rules()
     {
         return array_merge(parent::rules(), [
-            [['name'], 'unique', 'message' => 'Такой пользователь уже существует'],
+            [['name'], 'unique', 'message' => 'Это имя пользователя уже занято.'],
             [['email', 'name_full'], 'filter', 'filter' => 'trim'],
             [['email', 'forename', 'surname'], 'string', 'max' => 255],
             [['name_full'], 'string', 'max' => 1024],
-            [['email'], 'unique', 'message' => 'Этот email-адрес уже зарегистрирован.'],
+            [['email'], 'unique', 'message' => 'Этот адрес электронной почты уже занят.'],
             [['user_type_id'], 'integer'],
         ]);
     }
@@ -110,6 +110,18 @@ class User extends Reference implements IdentityInterface
      */
     public static function findByEmail($email)
     {
+        return static::find()->andWhere(['LOWER(email)' => mb_strtolower($email)])->one();
+    }
+
+    /**
+     * Finds active user by email
+     *
+     * @param string $email
+     * @return array|User|yii\db\ActiveRecord
+     * @throws yii\base\InvalidConfigException
+     */
+    public static function findActiveByEmail($email)
+    {
         return static::find()->active()->andWhere(['LOWER(email)' => mb_strtolower($email)])->one();
     }
 
@@ -121,6 +133,18 @@ class User extends Reference implements IdentityInterface
      * @throws yii\base\InvalidConfigException
      */
     public static function findByName($name)
+    {
+        return static::find()->andWhere(['name' => $name])->one();
+    }
+
+    /**
+     * Finds active user by name
+     *
+     * @param string $name
+     * @return array|User|null
+     * @throws yii\base\InvalidConfigException
+     */
+    public static function findActiveByName($name)
     {
         return static::find()->active()->andWhere(['name' => $name])->one();
     }
@@ -274,21 +298,6 @@ class User extends Reference implements IdentityInterface
     public function removePasswordResetToken()
     {
         $this->password_reset_token = null;
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function load($data, $formName = null)
-    {
-        $parentResult = parent::load($data, $formName);
-        if ($parentResult) {
-            $scope = $formName === null ? $this->formName() : $formName;
-            if (isset($data[$scope]['password'])) {
-                $this->password = $data[$scope]['password'];
-            }
-        }
-        return $parentResult;
     }
 
     /**

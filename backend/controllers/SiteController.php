@@ -1,8 +1,10 @@
 <?php
 namespace backend\controllers;
 
+use common\models\document\Request;
 use common\models\reference\User;
 use Yii;
+use yii\base\InvalidConfigException;
 use yii\web\Controller;
 use yii\filters\VerbFilter;
 use yii\filters\AccessControl;
@@ -13,6 +15,24 @@ use common\models\LoginForm;
  */
 class SiteController extends Controller
 {
+    /**
+     * {@inheritdoc}
+     */
+    public function actions()
+    {
+        return [
+            'error' => [
+                'class' => 'yii\web\ErrorAction',
+            ],
+            'export-contractors-authorization-data' => [
+                'class' => 'backend\actions\system\export\ExportContractorsAuthorizationDataAction',
+            ],
+            'export-many-requests' => [
+                'class' => 'backend\actions\system\export\ExportManyRequestsAction',
+            ],
+        ];
+    }
+
     /**
      * {@inheritdoc}
      */
@@ -36,6 +56,11 @@ class SiteController extends Controller
                         'allow' => true,
                         'roles' => [User::class . '.Index'],
                     ],
+                    [
+                        'actions' => ['export-many-requests'],
+                        'allow' => true,
+                        'roles' => [Request::class . '.Update'],
+                    ],
                 ],
             ],
             'verbs' => [
@@ -43,21 +68,6 @@ class SiteController extends Controller
                 'actions' => [
                     'logout' => ['post'],
                 ],
-            ],
-        ];
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function actions()
-    {
-        return [
-            'error' => [
-                'class' => 'yii\web\ErrorAction',
-            ],
-            'export-contractors-authorization-data' => [
-                'class' => 'backend\actions\system\export\ExportContractorsAuthorizationDataAction',
             ],
         ];
     }
@@ -76,7 +86,7 @@ class SiteController extends Controller
      * Login action.
      *
      * @return string
-     * @throws \yii\base\InvalidConfigException
+     * @throws InvalidConfigException
      */
     public function actionLogin()
     {

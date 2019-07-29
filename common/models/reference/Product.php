@@ -2,11 +2,16 @@
 
 namespace common\models\reference;
 
+use yii\db\ActiveQuery;
+
 /**
  * Модель справочника "Продукты"
  *
  * @property string   $product_code
  * @property integer  $unit_id
+ *
+ * Отношения:
+ * @property Unit $unit
  */
 class Product extends Reference
 {
@@ -44,16 +49,16 @@ class Product extends Reference
     public function attributeLabels()
     {
         return array_merge(parent::attributeLabels(), [
-            'product_code'    => 'Код продукта',
-            'unit_id' => 'Единица измерения',
+            'product_code'  => 'Код продукта',
+            'unit_id'       => 'Единица измерения',
         ]);
     }
 
     /**
-     * @return \yii\db\ActiveQuery
+     * @return ActiveQuery
      */
     public function getUnit()
     {
-        return $this->hasOne(Unit::className(), ['id' => 'unit_id']);
+        return $this->hasOne(Unit::class, ['id' => 'unit_id']);
     }
 }

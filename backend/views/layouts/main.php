@@ -1,11 +1,10 @@
 <?php
 
-/* @var $this \yii\web\View */
+/* @var $this View */
 /* @var $content string */
 
 use backend\assets\AppAsset;
-use backend\controllers\document\CorrectionRequestController;
-use backend\controllers\document\PreliminaryRequestController;
+use backend\controllers\document\RequestController;
 use backend\controllers\reference\ContractController;
 use backend\controllers\reference\ContractorController;
 use backend\controllers\reference\FileController;
@@ -19,6 +18,7 @@ use common\models\reference\SystemSetting;
 use yii\helpers\Html;
 use yii\bootstrap\Nav;
 use yii\bootstrap\NavBar;
+use yii\web\View;
 use yii\widgets\Breadcrumbs;
 use common\widgets\Alert;
 
@@ -61,14 +61,9 @@ AppAsset::register($this);
                     'label' => 'Документы',
                     'items' => [
                         [
-                            'label' => 'Предварительная заявка',
-                            'url' => ['/document/preliminary-request/index'],
-                            'visible' => Yii::$app->user->can( PreliminaryRequestController::className() . '.Index'),
-                        ],
-                        [
-                            'label' => 'Корректировка заявки',
-                            'url' => ['/document/correction-request/index'],
-                            'visible' => Yii::$app->user->can( CorrectionRequestController::className() . '.Index'),
+                            'label' => 'Заявка',
+                            'url' => ['/document/request/index'],
+                            'visible' => Yii::$app->user->can( RequestController::class . '.Index'),
                         ],
                     ],
                 ],
@@ -78,32 +73,32 @@ AppAsset::register($this);
                         [
                             'label' => 'Пользователи',
                             'url' => ['/reference/user/index'],
-                            'visible' => Yii::$app->user->can(UserController::className() . '.Index'),
+                            'visible' => Yii::$app->user->can(UserController::class . '.Index'),
                         ],
                         [
                             'label' => 'Файлы',
                             'url' => ['/reference/file/index'],
-                            'visible' => Yii::$app->user->can(FileController::className() . '.Index'),
+                            'visible' => Yii::$app->user->can(FileController::class . '.Index'),
                         ],
                         [
                             'label' => 'Единицы измерения',
                             'url' => ['/reference/unit/index'],
-                            'visible' => Yii::$app->user->can(UnitController::className() . '.Index'),
+                            'visible' => Yii::$app->user->can(UnitController::class . '.Index'),
                         ],
                         [
                             'label' => 'Продукты',
                             'url' => ['/reference/product/index'],
-                            'visible' => Yii::$app->user->can(ProductController::className() . '.Index'),
+                            'visible' => Yii::$app->user->can(ProductController::class . '.Index'),
                         ],
                         [
                             'label' => 'Контрагенты',
                             'url' => ['/reference/contractor/index'],
-                            'visible' => Yii::$app->user->can(ContractorController::className() . '.Index'),
+                            'visible' => Yii::$app->user->can(ContractorController::class . '.Index'),
                         ],
                         [
                             'label' => 'Договоры с контрагентами',
                             'url' => ['/reference/contract/index'],
-                            'visible' => Yii::$app->user->can(ContractController::className() . '.Index'),
+                            'visible' => Yii::$app->user->can(ContractController::class . '.Index'),
                         ],
                     ],
                 ],
@@ -113,22 +108,22 @@ AppAsset::register($this);
                         [
                             'label' => 'Настройки системы',
                             'url' => ['/reference/system-setting/index'],
-                            'visible' => Yii::$app->user->can(SystemSetting::className() . '.Index'),
+                            'visible' => Yii::$app->user->can(SystemSetting::class . '.Index'),
                         ],
                         [
                             'label' => 'Задачи',
                             'url'   => ['/report/tasks'],
-                            'visible' => Yii::$app->user->can(TasksController::className() . '.Index'),
+                            'visible' => Yii::$app->user->can(TasksController::class . '.Index'),
                         ],
                         [
                             'label' => 'Права доступа',
                             'url' => ['/system/role/index'],
-                            'visible' => Yii::$app->user->can(RoleController::className() . '.Index'),
+                            'visible' => Yii::$app->user->can(RoleController::class . '.Index'),
                         ],
                         [
                             'label' => 'Импорт контрагентов и договоров',
                             'url' => ['/system/import-contractor-and-contract/index'],
-                            'visible' => Yii::$app->user->can(ImportContractorAndContractController::className() . '.Index'),
+                            'visible' => Yii::$app->user->can(ImportContractorAndContractController::class . '.Index'),
                         ],
                     ],
                 ],

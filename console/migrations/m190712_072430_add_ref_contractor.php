@@ -12,7 +12,6 @@ class m190712_072430_add_ref_contractor extends Migration
     private $_permissionsForContractor;
 
     /**
-     * @param array $config
      * @throws Exception
      */
     public function setPermissions()
