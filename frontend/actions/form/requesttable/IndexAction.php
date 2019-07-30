@@ -53,22 +53,17 @@ class IndexAction extends FrontendModelAction
 
         switch ($action) {
             case 'preliminary_request': {
-                $weekDayDateMap = $model->getWeekDayDateMap('monday next week');
-
                 $thursdayDate = new DateTime('thursday this week');
                 $thursdayDate = $thursdayDate->format('d-m-Y 13:00');
 
-                if (strtotime($currentDate) >= strtotime($thursdayDate)) {
-                    $weekDayDateMap = $model->getWeekDayDateMap('monday this week');
+                if (strtotime($currentDate) < strtotime($thursdayDate)) {
+                    $weekDayDateMap = $model->getWeekDayDateMap('monday next week');
                     $requestDatesIdMap = $model->findRequestDatesIdMap($contractorId, $contractId, $weekDayDateMap);
                     $requestDateProducts = $model->getRequestDateProductsByRequestDatesId(array_keys($requestDatesIdMap));
                     //Yii::$app->session->setFlash('info', 'Предварительная заявка доступна не позднее 13:00 четверга этой недели.');
-                } else {
-                    $requestDatesIdMap = $model->findRequestDatesIdMap($contractorId, $contractId, $weekDayDateMap);
-                    $requestDateProducts = $model->getRequestDateProductsByRequestDatesId(array_keys($requestDatesIdMap));
                 }
 
-                if (isset($requestDateProducts) && $requestDateProducts && strtotime($currentDate) < strtotime($thursdayDate)) {
+                if (isset($requestDateProducts)) {
                     $contractProducts = ContractProduct::find()->andWhere(['parent_id' => $contractId])->all();
                     foreach ($contractProducts as $contractProduct) {
                         $array[$contractProduct->product_id] = [
@@ -135,19 +130,25 @@ class IndexAction extends FrontendModelAction
                 break;
             };
             case 'request-table': {
-                $weekDayDateMap = $model->getWeekDayDateMap('monday this week');
-                $requestDatesIdMap = $model->findRequestDatesIdMap($contractorId, $contractId, $weekDayDateMap);
-                $requestDateProducts = $model->getRequestDateProductsByRequestDatesId(array_keys($requestDatesIdMap));
+                $productQuantities = $model->getProductQuantities($requestData['fields']);
+                $requestWeekDateMap = $model->getRequestWeekDateMapByProductQuantities($productQuantities);
 
-                if (!$requestDateProducts) {
+                $thursdayDate = new DateTime('thursday this week');
+                $thursdayDate = $thursdayDate->format('d-m-Y 13:00');
+
+                if (strtotime($currentDate) < strtotime($requestWeekDateMap[0]) && strtotime($currentDate) < strtotime($thursdayDate)) {
                     $weekDayDateMap = $model->getWeekDayDateMap('monday next week');
                     $requestDatesIdMap = $model->findRequestDatesIdMap($contractorId, $contractId, $weekDayDateMap);
                     $requestDateProducts = $model->getRequestDateProductsByRequestDatesId(array_keys($requestDatesIdMap));
+                    $allFields = 1;
+                } else {
+                    $weekDayDateMap = $model->getWeekDayDateMap('monday this week');
+                    $requestDatesIdMap = $model->findRequestDatesIdMap($contractorId, $contractId, $weekDayDateMap);
+                    $requestDateProducts = $model->getRequestDateProductsByRequestDatesId(array_keys($requestDatesIdMap));
+                    $allFields = 0;
                 }
 
                 if ($userId && $contractId && $contractorId) {
-                    $productQuantities = $model->getProductQuantities($requestData['fields']);
-
                     $contractorContract = (new Query())
                         ->select('*')
                         ->from(ContractorContract::tableName().' as cc, '.Contract::tableName().' as c, '.Contractor::tableName().' as ccc')
@@ -180,17 +181,11 @@ class IndexAction extends FrontendModelAction
                                 $requestDateProduct = RequestDateProduct::findOne(['request_date_id' => $requestDate->id, 'product_id' => $product->id]);
 
                                 if ($requestDateProduct) {
-                                    if (isset($quantities['current_quantity'])) {
-                                        $thursdayDate = new DateTime('thursday this week');
-                                        $thursdayDate = $thursdayDate->format('d-m-Y 13:00');
-
-                                        if (strtotime($currentDate) < strtotime($thursdayDate)) {
-                                            if (isset($quantities['planned_quantity'])) {
-                                                $requestDateProduct->planned_quantity = $quantities['planned_quantity'];
-                                                $requestDateProduct->save();
-                                            }
-                                        }
-
+                                    if ($allFields) {
+                                        $requestDateProduct->planned_quantity = isset($quantities['planned_quantity']) ? $quantities['planned_quantity'] : 0;
+                                        $requestDateProduct->current_quantity = isset($quantities['current_quantity']) ? $quantities['current_quantity'] : 0;
+                                        $requestDateProduct->save();
+                                    } else {
                                         if ($quantities['current_quantity'] <= $requestDateProduct->planned_quantity * 1.1 && $quantities['current_quantity'] >= $requestDateProduct->planned_quantity * 0.9) {
                                             $requestDateProduct->current_quantity = isset($quantities['current_quantity']) ? $quantities['current_quantity'] : 0;
                                             $requestDateProduct->save();
