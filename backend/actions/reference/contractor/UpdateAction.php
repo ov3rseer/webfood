@@ -1,9 +1,9 @@
 <?php
 
-namespace backend\actions\base;
+namespace backend\actions\reference\contractor;
 
 use backend\actions\BackendModelAction;
-use common\models\ActiveRecord;
+use common\models\reference\Contractor;
 use ReflectionException;
 use Yii;
 use yii\base\Exception;
@@ -35,7 +35,7 @@ class UpdateAction extends BackendModelAction
      */
     public function run($id)
     {
-        /** @var ActiveRecord $model */
+        /** @var Contractor $model */
         $model = $this->controller->findModel($id, $this->modelClass);
         if (Yii::$app->request->isAjax) {
             $model->load(Yii::$app->request->post());
@@ -58,7 +58,11 @@ class UpdateAction extends BackendModelAction
             }
         } else if (Yii::$app->request->isPost && $model->load(Yii::$app->request->post()) && $model->validate()) {
             $model->save();
-            Yii::$app->session->setFlash('success', 'Элемент "' . $model . '" успешно сохранен');
+            if (!$model->user_id) {
+                Yii::$app->session->setFlash('error', 'Внимание! Контрагент неактивен, необходимо прикрепить пользователя.');
+            } else {
+                Yii::$app->session->setFlash('success', 'Элемент "' . $model . '" успешно сохранен');
+            }
             return $this->controller->autoRedirect(['', 'id' => $model->id]);
         }
         return $this->controller->renderUniversal($this->viewPath, ['model' => $model]);

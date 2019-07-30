@@ -5,6 +5,8 @@ namespace backend\actions\base;
 use backend\actions\BackendModelAction;
 use common\models\ActiveRecord;
 use common\queries\ActiveQuery;
+use Yii;
+use yii\base\InvalidConfigException;
 use yii\base\NotSupportedException;
 use yii\web\Response;
 
@@ -23,7 +25,7 @@ class SearchAction extends BackendModelAction
      * @param string $term
      * @return ActiveQuery $this
      * @throws NotSupportedException
-     * @throws \yii\base\InvalidConfigException
+     * @throws InvalidConfigException
      */
     protected function buildQuery($term = '')
     {
@@ -40,7 +42,7 @@ class SearchAction extends BackendModelAction
                 if (!$columnSchema) {
                     continue;
                 }
-                $schema = \Yii::$app->db->schema;
+                $schema = Yii::$app->db->schema;
                 switch ($columnSchema->type) {
                     case $schema::TYPE_CHAR:
                     case $schema::TYPE_STRING:
@@ -65,11 +67,11 @@ class SearchAction extends BackendModelAction
     /**
      * @inheritdoc
      * @throws NotSupportedException
-     * @throws \yii\base\InvalidConfigException
+     * @throws InvalidConfigException
      */
     public function run($term = '')
     {
-        \Yii::$app->response->format = Response::FORMAT_JSON;
+        Yii::$app->response->format = Response::FORMAT_JSON;
         $result = [];
         /** @var ActiveRecord[] $models */
         $models = $this->buildQuery($term)->all();

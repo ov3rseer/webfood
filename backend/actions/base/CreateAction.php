@@ -4,7 +4,10 @@ namespace backend\actions\base;
 
 use backend\actions\BackendModelAction;
 use common\models\ActiveRecord;
+use ReflectionException;
 use Yii;
+use yii\base\InvalidConfigException;
+use yii\base\UserException;
 use yii\web\Response;
 use yii\widgets\ActiveForm;
 
@@ -21,9 +24,9 @@ class CreateAction extends BackendModelAction
     /**
      * @inheritdoc
      * @return array|string|Response
-     * @throws \ReflectionException
-     * @throws \yii\base\InvalidConfigException
-     * @throws \yii\base\UserException
+     * @throws ReflectionException
+     * @throws InvalidConfigException
+     * @throws UserException
      */
     public function run()
     {
