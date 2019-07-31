@@ -103,8 +103,8 @@ function convertURLDataToJSON() {
     return '{"' + decodeURI(location.search.substring(1)).replace(/"/g, '\\"').replace(/&/g, '","').replace(/=/g,'":"') + '"}';
 }
 
-function createRequestTable() {
-    var data = getRequestData();
+function createRequestTable(action) {
+    var data = getRequestData(action);
     var link = getURL('/request/request-table/index', data);
     var requestTableArea = $('#main_request_table');
     var iframe = document.createElement('iframe');
@@ -123,14 +123,14 @@ function getURL(path, data = null) {
     return path + dataURL;
 }
 
-function getRequestData() {
+function getRequestData(action) {
     let dataURL = JSON.parse(convertURLDataToJSON());
     return {
         'layout' : 'iframe',
         'contractorName' : $('#contractor_name').val(),
         'contractCode' : $('#contract_code').val(),
         'contractTypeId' : dataURL['contractTypeId'],
-        'action' : 'request',
+        'action' : action,
     };
 }
 

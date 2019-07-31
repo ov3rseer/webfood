@@ -36,11 +36,12 @@ $this->registerJs("
 <div class="reference-index">
 
     <?php
-    if ($fields) {
+    if ($fields && !empty($model->contractor_name) && !empty($model->contract_code)) {
         $form = ActiveForm::begin([
             'method' => 'GET',
             'action' => Url::to(['']),
             'enableAjaxValidation' => false,
+            'options' => ['class' => 'container'],
         ]);
         ?>
 
@@ -64,7 +65,7 @@ $this->registerJs("
             'layout' => ['refresh'],
             'tokens' => [
                 'refresh' => function() {
-                    return Html::button('Сформировать', ['class' => 'btn btn-primary', 'onclick' => 'createRequestTable()']);
+                    return Html::button('Сформировать', ['class' => 'btn btn-primary', 'onclick' => 'createRequestTable("preliminary_request")']);
                 }
             ]
         ]);
@@ -75,6 +76,8 @@ $this->registerJs("
     }
     ?>
 
-    <div class="embed-responsive embed-responsive-16by9" id="main_request_table"></div>
+    <div class="container-fluid">
+        <div class="embed-responsive embed-responsive-16by9" id="main_request_table" style="margin-top: 1em;"></div>
+    </div>
 
 </div>

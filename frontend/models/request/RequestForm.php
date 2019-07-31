@@ -37,7 +37,7 @@ class RequestForm extends FrontendForm
     public function attributeLabels()
     {
         return array_merge(parent::attributeLabels(), [
-            'contractor_name' => 'Код заказчик: заказчик',
+            'contractor_name' => 'Код заказчика: заказчик',
             //'contractor_code' => 'Код заказчика',
             'contract_code'   => 'Код договора: место поставки',
             //'address'         => 'Место поставки',

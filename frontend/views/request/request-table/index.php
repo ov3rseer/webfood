@@ -8,7 +8,7 @@ use yii\helpers\Html;
 use yii\bootstrap\ActiveForm;
 
 /* @var \frontend\models\request\RequestTableForm $model */
-/* @var yii\data\ActiveDataProvider $dataProvider */
+/* @var yii\data\ArrayDataProvider $dataProvider */
 
 /** @var \frontend\controllers\request\RequestTableController $controller */
 $controller = $this->context;
@@ -32,7 +32,7 @@ $columns = [
         'format' => 'raw',
         'value' => function($rowModel) {
             /** @var ContractProduct $rowModel */
-            return $rowModel->product && $rowModel->product->product_code ? $rowModel->product->product_code : '';
+            return $rowModel['product_code'] ?: '';
         },
     ],
     'product_name' => [
@@ -41,7 +41,7 @@ $columns = [
         'format' => 'raw',
         'value' => function($rowModel) {
             /** @var ContractProduct $rowModel */
-            return $rowModel->product ? $rowModel->product : '';
+            return $rowModel['product_name'] ?: '';
         },
     ],
     'product_unit' => [
@@ -50,7 +50,7 @@ $columns = [
         'format' => 'raw',
         'value' => function($rowModel) {
             /** @var ContractProduct $rowModel */
-            return $rowModel->product && $rowModel->product->unit ? $rowModel->product->unit : '';
+            return $rowModel['product_unit'] ?: '';
         },
     ]
 ];
@@ -98,12 +98,12 @@ foreach ($weekDayMap as $weekDayId => $weekDay) {
                             <td>
                                 '.Html::input(
                               'text',
-                                    Html::encode(($rowModel->product && $rowModel->product->product_code ? $rowModel->product->product_code : '').'_'.$weekDayDate.'_planned_quantity'),
-                              null,
-                                    ['class' => 'form-control', 'style' => 'border-radius: 0;', 'value' => isset($rowModel->planned_quantity) ? $rowModel->planned_quantity : 0]).'
+                                    Html::encode(($rowModel['product_code'] ?: '').'_'.$weekDayDate.'_planned_quantity'),
+                              isset($rowModel['quantities'][$weekDayDate]) ? $rowModel['quantities'][$weekDayDate]['planned_quantity'] : 0,
+                                    ['class' => 'form-control', 'style' => 'border-radius: 0;']).'
                             </td>
                             <td>
-                                '.Html::input('text', Html::encode(($rowModel->product && $rowModel->product->product_code ? $rowModel->product->product_code : '').'_'.$weekDayDate.'_current_quantity'), null, ['class' => 'form-control', 'style' => 'border-radius: 0;', 'value' => isset($rowModel->current_quantity) ? $rowModel->current_quantity : 0]).'
+                                '.Html::input('text', Html::encode(($rowModel['product_code'] ?: '').'_'.$weekDayDate.'_current_quantity'), isset($rowModel['quantities'][$weekDayDate]) ? $rowModel['quantities'][$weekDayDate]['current_quantity'] : 0, ['class' => 'form-control', 'style' => 'border-radius: 0;']).'
                             </td>
                         </tr>
                     </tbody>
@@ -148,25 +148,27 @@ $columns = array_merge($columns, [
 <div class="reference-index-<?= time() ?>">
 
     <?php
-    $form = ActiveForm::begin(['id' => 'form-request', 'method' => 'get']);
+    if (!empty($dataProvider->allModels)) {
+        $form = ActiveForm::begin(['id' => 'form-request', 'method' => 'get']);
 
-    echo GridView::widget([
-        'id' => $gridWidgetId,
-        'dataProvider' => $dataProvider,
-        'columns' => $columns,
-        'checkboxColumn' => false,
-        'actionColumn' => false,
-    ]);
-    ?>
+        echo GridView::widget([
+            'id' => $gridWidgetId,
+            'dataProvider' => $dataProvider,
+            'columns' => $columns,
+            'checkboxColumn' => false,
+            'actionColumn' => false,
+        ]);
+        ?>
 
-    <input name="action" value="request-table" hidden>
+        <input name="action" value="request-table" hidden>
 
-    <div class="form-group">
-        <?= Html::submitButton('Сохранить', ['class' => 'btn btn-primary', 'name' => 'request-button']) ?>
-    </div>
+        <div class="form-group">
+            <?= Html::submitButton('Сохранить', ['class' => 'btn btn-primary', 'name' => 'request-button']) ?>
+        </div>
 
-    <?php
-    ActiveForm::end();
+        <?php
+        ActiveForm::end();
+    }
     ?>
 
 </div>
