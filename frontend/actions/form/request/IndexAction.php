@@ -35,7 +35,7 @@ class IndexAction extends FrontendModelAction
         $logic = [];
         if ($userId) {
             /** @var Contractor[] $contractors */
-            $contractors = Contractor::find()->andWhere(['user_id' => $userId])->all();
+            $contractors = Contractor::find()->andWhere(['user_id' => $userId, 'is_active' => true])->all();
             if ($contractors) {
                 foreach ($contractors as $contractor) {
                     $contractor_name = $contractor->contractor_code.": ".$contractor->name;
@@ -67,8 +67,12 @@ class IndexAction extends FrontendModelAction
                             $logic[$contractor->id][$contract['contract_id']] = $contract_code;
                             //$model->address[] = $contract['address'];
                         }
+                    } else {
+                        Yii::$app->session->setFlash('info', 'У вас нет активных договоров.');
                     }
                 }
+            } else {
+                Yii::$app->session->setFlash('info', 'У вас нет активных контрагентов.');
             }
         }
         $model->logic = $logic;

@@ -22,10 +22,6 @@ $this->registerJs("
         var selectsId = ['contractor_name', 'contract_code'];
         
         var smartSelect = new SmartSelect({
-            'options' : {
-                'contractor_name' : ".json_encode($model->contractor_name).",
-                'contract_code' : ".json_encode($model->contract_code)."
-            },
             'mainLogic' : ".json_encode($logic).",
             'selectsId' : selectsId
         });
@@ -40,39 +36,45 @@ $this->registerJs("
 <div class="reference-index">
 
     <?php
-    $form = ActiveForm::begin([
-        'method' => 'GET',
-        'action' => Url::to(['']),
-        'enableAjaxValidation' => false,
-    ]);
-    ?>
+    if ($fields) {
+        $form = ActiveForm::begin([
+            'method' => 'GET',
+            'action' => Url::to(['']),
+            'enableAjaxValidation' => false,
+        ]);
+        ?>
 
-    <div class="report-attributes">
-        <div class="row">
-            <?php
-            foreach ($fields as $field => $fieldOptions) {
-                if ($fieldOptions['displayType'] != ActiveField::HIDDEN) {
-                    echo '<div class="col-md-6">';
-                    echo $form->field($model, $field)->dropDownList($model->{$field}, ['id' => $field]);
-                    echo '</div>';
+        <div class="report-attributes">
+            <div class="row">
+                <?php
+                foreach ($fields as $field => $fieldOptions) {
+                    if ($fieldOptions['displayType'] != ActiveField::HIDDEN) {
+                        echo '<div class="col-md-6">';
+                        echo $form->field($model, $field)->dropDownList($model->{$field}, ['id' => $field]);
+                        echo '</div>';
+                    }
                 }
-            }
-            ?>
+                ?>
+            </div>
         </div>
-    </div>
 
-    <?=
-    /** @noinspection PhpUnhandledExceptionInspection */
-    GridViewToolbar::widget([
-        'layout' => ['refresh'],
-        'tokens' => [
-            'refresh' => function() {
-                return Html::submitInput('Сформировать', ['class' => 'btn btn-primary']);
-            }
-        ]
-    ]);
+        <?=
+        /** @noinspection PhpUnhandledExceptionInspection */
+        GridViewToolbar::widget([
+            'layout' => ['refresh'],
+            'tokens' => [
+                'refresh' => function() {
+                    return Html::button('Сформировать', ['class' => 'btn btn-primary', 'onclick' => 'createRequestTable()']);
+                }
+            ]
+        ]);
+        ?>
+
+        <?php
+        ActiveForm::end();
+    }
     ?>
 
-    <?php ActiveForm::end(); ?>
+    <div class="embed-responsive embed-responsive-16by9" id="main_request_table"></div>
 
 </div>

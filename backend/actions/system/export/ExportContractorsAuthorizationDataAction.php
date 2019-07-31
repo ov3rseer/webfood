@@ -33,7 +33,7 @@ class ExportContractorsAuthorizationDataAction extends Action
     public function run()
     {
         /** @var Contractor[] $contractors */
-        $contractors = Contractor::find()->andWhere(['is_active' => true, 'user_id' => null])->all();
+        $contractors = Contractor::find()->andWhere(['user_id' => null])->all();
 
         if ($contractors) {
             $spreadsheet = new Spreadsheet();

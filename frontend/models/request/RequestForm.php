@@ -7,6 +7,7 @@ use frontend\models\FrontendForm;
 
 /*
  * @property array $contractor_name
+ * @property array $contractor_code
  * @property array $contract_code
  * @property array $address
  * @property array $logic

@@ -19,7 +19,7 @@ class CorrectionRequestController extends RequestController
     {
         return array_merge(parent::actions(), [
             'index' => [
-                'class' => 'frontend\actions\request\base\IndexAction',
+                'class' => 'frontend\actions\form\request\IndexAction',
                 'modelClass' => $this->modelClass,
                 'viewPath' => '@frontend/views/request/correction-request/index',
             ],

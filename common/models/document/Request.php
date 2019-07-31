@@ -23,12 +23,9 @@ use yii\db\ActiveQuery;
  * @property string  $address
  *
  * Отношения:
- * @property RequestDate[]  $requestDates
- * @property ContractType   $contractType
- * @property Contractor     $contractor
- * @property Contract       $contract
+ * @property RequestDate[] $requestDates
  */
-class Request extends Document
+class  Request extends Document
 {
     /**
      * @inheritdoc
@@ -113,7 +110,7 @@ class Request extends Document
     public function getTableParts()
     {
         return array_merge([
-            'requestDates' => RequestDate::class,
+            'requestDates' => RequestDate::className(),
         ], parent::getTableParts());
     }
 

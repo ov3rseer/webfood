@@ -7,57 +7,74 @@ use backend\widgets\GridView\GridViewWithToolbar;
 use yii\helpers\Html;
 use yii\helpers\Url;
 
-/* @var frontend\models\request\CorrectionRequestForm $model */
+/* @var frontend\models\request\PreliminaryRequestForm $model */
 
 $this->title = $model->getPluralName();
 $this->params['breadcrumbs'][] = $this->title;
+
+$fields = $model->getFieldsOptions();
+$logic = $model->logic;
+unset($fields['logic']);
+
+$this->registerJs("
+    $().ready(function() {
+    
+        var selectsId = ['contractor_name', 'contract_code'];
+        
+        var smartSelect = new SmartSelect({
+            'mainLogic' : ".json_encode($logic).",
+            'selectsId' : selectsId
+        });
+    
+        smartSelect.createChangeHandler();        
+        smartSelect.init();    
+    
+    });
+");
 
 ?>
 <div class="reference-index">
 
     <?php
-    $form = ActiveForm::begin([
-        'method' => 'GET',
-        'action' => Url::to(['']),
-        'enableAjaxValidation' => false,
-    ]);
+    if ($fields) {
+        $form = ActiveForm::begin([
+            'method' => 'GET',
+            'action' => Url::to(['']),
+            'enableAjaxValidation' => false,
+        ]);
+        ?>
+
+        <div class="report-attributes">
+            <div class="row">
+                <?php
+                foreach ($fields as $field => $fieldOptions) {
+                    if ($fieldOptions['displayType'] != ActiveField::HIDDEN) {
+                        echo '<div class="col-md-6">';
+                        echo $form->field($model, $field)->dropDownList($model->{$field}, ['id' => $field]);
+                        echo '</div>';
+                    }
+                }
+                ?>
+            </div>
+        </div>
+
+        <?=
+        /** @noinspection PhpUnhandledExceptionInspection */
+        GridViewToolbar::widget([
+            'layout' => ['refresh'],
+            'tokens' => [
+                'refresh' => function() {
+                    return Html::button('Сформировать', ['class' => 'btn btn-primary', 'onclick' => 'createRequestTable()']);
+                }
+            ]
+        ]);
+        ?>
+
+        <?php
+        ActiveForm::end();
+    }
     ?>
 
-    <div class="report-attributes">
-        <div class="display:none;">
-            <?php
-            foreach ($model->getFieldsOptions() as $field => $fieldOptions) {
-                if ($fieldOptions['displayType'] == ActiveField::HIDDEN) {
-                    echo $form->autoField($model, $field, $fieldOptions)->error(false)->label(false);
-                }
-            }
-            ?>
-        </div>
-        <div class="row">
-            <?php
-            foreach ($model->getFieldsOptions() as $field => $fieldOptions) {
-                if ($fieldOptions['displayType'] != ActiveField::HIDDEN) {
-                    echo '<div class="col-xs-12 col-sm-6 col-md-3">';
-                    echo $form->autoField($model, $field, $fieldOptions);
-                    echo '</div>';
-                }
-            }
-            ?>
-        </div>
-    </div>
-
-    <?=
-    /** @noinspection PhpUnhandledExceptionInspection */
-    GridViewToolbar::widget([
-        'layout' => ['refresh'],
-        'tokens' => [
-            'refresh' => function() {
-                return Html::submitInput('Сформировать', ['class' => 'btn btn-primary']);
-            }
-        ]
-    ]);
-    ?>
-
-    <?php ActiveForm::end(); ?>
+    <div class="embed-responsive embed-responsive-16by9" id="main_request_table"></div>
 
 </div>

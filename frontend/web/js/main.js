@@ -1,7 +1,6 @@
 class SmartSelect {
 
     constructor(config) {
-        this.options   = null;
         this.mainLogic = null;
         this.selectsId = null;
 
@@ -84,3 +83,58 @@ class SmartSelect {
     }
 
 }
+
+class RememberFields {
+
+    constructor(fields = null) {
+        if (!fields) {
+            let fields = $('input, select');
+        }
+        this.fields = fields;
+    }
+
+    init() {
+        console.log(this.fields);
+    }
+
+}
+
+function convertURLDataToJSON() {
+    return '{"' + decodeURI(location.search.substring(1)).replace(/"/g, '\\"').replace(/&/g, '","').replace(/=/g,'":"') + '"}';
+}
+
+function createRequestTable() {
+    var data = getRequestData();
+    var link = getURL('/request/request-table/index', data);
+    var requestTableArea = $('#main_request_table');
+    var iframe = document.createElement('iframe');
+    iframe.src = link;
+    iframe.classList = 'embed-responsive-item';
+    requestTableArea.html(null);
+    requestTableArea.append(iframe);
+}
+
+function getURL(path, data = null) {
+    let dataURL = [];
+    for (let key in data) {
+        dataURL.push(key + '=' + data[key]);
+    }
+    dataURL = dataURL.length ? '?' + dataURL.join('&') : '';
+    return path + dataURL;
+}
+
+function getRequestData() {
+    let dataURL = JSON.parse(convertURLDataToJSON());
+    return {
+        'layout' : 'iframe',
+        'contractorName' : $('#contractor_name').val(),
+        'contractCode' : $('#contract_code').val(),
+        'contractTypeId' : dataURL['contractTypeId'],
+        'action' : 'request',
+    };
+}
+
+$().ready(function() {
+    var rememberFields = new RememberFields();
+    rememberFields.init();
+});
