@@ -86,16 +86,21 @@ class SmartSelect {
 
 class RememberFields {
 
-    constructor(fields = null) {
+    /*constructor(fields = null) {
         if (!fields) {
-            let fields = $('input, select');
+            var rememberFields = this;
+            $(document).bind('MemberFields', function() {
+                rememberFields.init();
+            });
+            fields = $('input:visible, select:visible').trigger('MemberFields', ['MemberFields', ]);
+        } else {
+            this.fields = fields;
         }
-        this.fields = fields;
     }
 
     init() {
         console.log(this.fields);
-    }
+    }*/
 
 }
 
@@ -112,6 +117,31 @@ function createRequestTable(action) {
     iframe.classList = 'embed-responsive-item';
     requestTableArea.html(null);
     requestTableArea.append(iframe);
+}
+
+function saveRequest(formId) {
+    let dataURL = JSON.parse(convertURLDataToJSON());
+    let inputs = $('#' + formId + ' input');
+    var fields = {};
+    inputs.each(function() {
+        fields[this.name] = this.value;
+    });
+    $.ajax({
+        type: "POST",
+        url: "/request/request-table/index",
+        dataType: "html",
+        cache: false,
+        data: {
+            'fields' : fields,
+            'contractorName' : dataURL['contractorName'],
+            'contractCode' : dataURL['contractCode'],
+            'contractTypeId' : dataURL['contractTypeId'],
+            'action' : 'request-table',
+        },
+        success: function(data) {
+            location.reload();
+        }
+    });
 }
 
 function getURL(path, data = null) {
@@ -136,5 +166,5 @@ function getRequestData(action) {
 
 $().ready(function() {
     var rememberFields = new RememberFields();
-    rememberFields.init();
+    //console.log(rememberFields);
 });

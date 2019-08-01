@@ -145,11 +145,11 @@ $columns = array_merge($columns, [
 ]);
 
 ?>
-<div class="reference-index-<?= time() ?>">
+<div class="reference-index">
 
     <?php
     if (!empty($dataProvider->allModels)) {
-        $form = ActiveForm::begin(['id' => 'form-request', 'method' => 'get']);
+        //$form = ActiveForm::begin(['id' => 'form-request', 'method' => 'get']);
 
         echo GridView::widget([
             'id' => $gridWidgetId,
@@ -163,11 +163,11 @@ $columns = array_merge($columns, [
         <input name="action" value="request-table" hidden>
 
         <div class="form-group">
-            <?= Html::submitButton('Сохранить', ['class' => 'btn btn-primary', 'name' => 'request-button']) ?>
+            <?= Html::button('Сохранить', ['class' => 'btn btn-primary', 'name' => 'request-button', 'onclick' => 'saveRequest("'.$gridWidgetId.'")']) ?>
         </div>
 
         <?php
-        ActiveForm::end();
+        //ActiveForm::end();
     }
     ?>
 

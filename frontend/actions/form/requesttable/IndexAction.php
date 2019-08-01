@@ -44,9 +44,10 @@ class IndexAction extends FrontendModelAction
         $currentDate = date('d-m-Y H:i');
 
         $userId = Yii::$app->user->id;
-        $contractorId = Yii::$app->request->get('contractorName');
-        $contractId = Yii::$app->request->get('contractCode');
-        $contractTypeId = Yii::$app->request->get('contractTypeId');
+        $contractorId = $requestData['contractorName'];
+        $contractId = $requestData['contractCode'];
+        $contractTypeId = $requestData['contractTypeId'];
+        $action = $action ?: $requestData['action'];
 
         $array = [];
 
@@ -119,7 +120,7 @@ class IndexAction extends FrontendModelAction
                 $requestDateProducts = $model->getRequestDateProductsByRequestDatesId(array_keys($requestDatesIdMap));
 
                 if ($userId && $contractId && $contractorId) {
-                    $productQuantities = $model->getProductQuantities(Yii::$app->request->get());
+                    $productQuantities = $model->getProductQuantities($requestData['fields']);
 
                     $contractorContract = (new Query())
                         ->select('*')
