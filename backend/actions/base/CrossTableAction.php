@@ -11,6 +11,8 @@ use common\models\ActiveRecord;
 use common\models\cross\CrossTable;
 use common\models\document\Document;
 use common\models\reference\Reference;
+use Exception;
+use ReflectionException;
 use yii;
 use yii\base\Model;
 use yii\data\ArrayDataProvider;
@@ -70,7 +72,7 @@ class CrossTableAction extends BackendModelAction
      * @inheritdoc
      * @param $id
      * @return array|string|Response
-     * @throws \ReflectionException
+     * @throws ReflectionException
      * @throws \Throwable
      * @throws yii\base\InvalidConfigException
      * @throws yii\web\NotFoundHttpException
@@ -138,7 +140,7 @@ class CrossTableAction extends BackendModelAction
                                 $model->save();
                             }
                             $transaction->commit();
-                        } catch (\Exception $ex) {
+                        } catch (Exception $ex) {
                             $transaction->rollBack();
                             throw $ex;
                         }

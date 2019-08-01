@@ -4,11 +4,13 @@ namespace frontend\controllers;
 
 use backend\widgets\ActiveField;
 use backend\widgets\ActiveForm;
+use BadMethodCallException;
 use common\helpers\ArrayHelper;
 use common\models\ActiveRecord;
 use common\models\cross\CrossTable;
 use common\models\tablepart\TablePart;
 use frontend\models\FrontendForm;
+use ReflectionException;
 use Yii;
 use yii\base\Action;
 use yii\base\InvalidConfigException;
@@ -71,7 +73,7 @@ class FrontendModelController extends Controller
                     [
                         'actions' => ['index'],
                         'allow' => true,
-                        'roles' => [static::class . '.Index'],
+                        'roles' => ['@'],
                     ],
                     [
                         'actions' => ['search', 'select'],
@@ -81,27 +83,27 @@ class FrontendModelController extends Controller
                     [
                         'actions' => ['create'],
                         'allow' => true,
-                        'roles' => [static::class . '.Create'],
+                        'roles' => ['@'],
                     ],
                     [
                         'actions' => ['update'],
                         'allow' => true,
-                        'roles' => [static::class . '.Update'],
+                        'roles' => ['@'],
                     ],
                     [
                         'actions' => ['view'],
                         'allow' => true,
-                        'roles' => [static::class . '.View'],
+                        'roles' => ['@'],
                     ],
                     [
                         'actions' => ['delete', 'delete-checked'],
                         'allow' => true,
-                        'roles' => [static::class . '.Delete'],
+                        'roles' => ['@'],
                     ],
                     [
                         'actions' => ['restore'],
                         'allow' => true,
-                        'roles' => [static::class . '.Restore'],
+                        'roles' => ['@'],
                     ],
                 ],
 
@@ -183,10 +185,10 @@ class FrontendModelController extends Controller
      */
     public function renderUniversal($view, $params = [])
     {
-        if (\Yii::$app->request->isAjax) {
+        if (Yii::$app->request->isAjax) {
             return $this->renderAjax($view, $params);
         } else {
-            $layout = \Yii::$app->request->get('layout', false);
+            $layout = Yii::$app->request->get('layout', false);
             if ($layout) {
                 $this->layout = $layout;
             }
@@ -198,14 +200,14 @@ class FrontendModelController extends Controller
      * Перенаправление с учетом настроек, заданных в $_GET
      * @param array|string $url
      * @param int $statusCode
-     * @return \yii\web\Response
+     * @return Response
      */
     public function autoRedirect($url, $statusCode = 302)
     {
-        $newUrl = \Yii::$app->request->get('redirect', false);
+        $newUrl = Yii::$app->request->get('redirect', false);
         if ($newUrl) {
             $url = $newUrl;
-        } else if (is_array($url) && ($layout = \Yii::$app->request->get('layout', false))) {
+        } else if (is_array($url) && ($layout = Yii::$app->request->get('layout', false))) {
             $url['layout'] = $layout;
         }
         return $this->redirect($url, $statusCode);
@@ -235,19 +237,19 @@ class FrontendModelController extends Controller
 
     /**
      * Получение списка колонок для отображения табличной части в форме редактирования объекта
-     * @param \common\models\ActiveRecord $model
+     * @param ActiveRecord $model
      * @param string $tablePartRelation
-     * @param \backend\widgets\ActiveForm $form
+     * @param ActiveForm $form
      * @param bool $readonly
      * @return array список колонок
      * @throws InvalidConfigException
-     * @throws \ReflectionException
+     * @throws ReflectionException
      */
     static public function getTablePartColumns($model, $tablePartRelation, $form, $readonly = false)
     {
         $tableParts = $model->getTableParts();
         if (!isset($tableParts[$tablePartRelation])) {
-            throw new \BadMethodCallException();
+            throw new BadMethodCallException();
         }
         $tablePartClass = $tableParts[$tablePartRelation];
         /** @var TablePart $tablePartModel */
@@ -303,15 +305,15 @@ class FrontendModelController extends Controller
 
     /**
      * Получение списка колонок для отображения списка связанных записей в форме редактирования объекта
-     * @param \common\models\ActiveRecord $model
+     * @param ActiveRecord $model
      * @param string $crossTableRelation
      * @param string $crossTableRelationClass
      * @param string $parentAttribute
-     * @param \backend\widgets\ActiveForm $form
+     * @param ActiveForm $form
      * @param boolean $isExternalEdit
      * @return array список колонок
      * @throws InvalidConfigException
-     * @throws \ReflectionException
+     * @throws ReflectionException
      */
     public function getCrossTableColumns($model, $crossTableRelation, $crossTableRelationClass, $parentAttribute, $form, $isExternalEdit = false)
     {
@@ -345,7 +347,7 @@ class FrontendModelController extends Controller
                         /** @var CrossTable $crossTableRow */
                         switch ($fieldOptions['displayType']) {
                             case ActiveField::BOOL:
-                                $result = \Yii::$app->formatter->format($crossTableRow->{$attribute}, 'boolean');
+                                $result = Yii::$app->formatter->format($crossTableRow->{$attribute}, 'boolean');
                                 break;
                             case ActiveField::PASSWORD:
                                 $result = '******';
@@ -389,7 +391,7 @@ class FrontendModelController extends Controller
      * @param ActiveRecord $filterModel
      * @return array
      * @throws InvalidConfigException
-     * @throws \ReflectionException
+     * @throws ReflectionException
      */
     public function generateAutoColumns($model, $filterModel)
     {

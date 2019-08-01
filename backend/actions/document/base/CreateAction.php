@@ -10,6 +10,7 @@ use common\models\document\Document;
 use common\models\enum\DocumentStatus;
 use common\models\system\Entity;
 use Yii;
+use yii\base\Exception;
 use yii\web\BadRequestHttpException;
 use yii\web\Response;
 
@@ -25,8 +26,7 @@ class CreateAction extends \backend\actions\base\CreateAction
 
     /**
      * @inheritdoc
-     * @throws \yii\base\Exception
-     * @throws RegisterException
+     * @throws Exception
      */
     public function run()
     {

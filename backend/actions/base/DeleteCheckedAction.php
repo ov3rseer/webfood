@@ -7,6 +7,9 @@ use common\models\ActiveRecord;
 use common\models\document\Document;
 use common\models\enum\DocumentStatus;
 use common\models\reference\Reference;
+use Exception;
+use Throwable;
+use Yii;
 
 /**
  * Действие для удаления нескольких моделей
@@ -15,14 +18,14 @@ class DeleteCheckedAction extends BackendModelAction
 {
     /**
      * @inheritdoc
-     * @throws \Exception
-     * @throws \Throwable
+     * @throws Exception
+     * @throws Throwable
      */
     public function run()
     {
         $model = $this->modelClass;
-        if ($ids = \Yii::$app->request->post('ids')) {
-            $transaction = \Yii::$app->db->beginTransaction();
+        if ($ids = Yii::$app->request->post('ids')) {
+            $transaction = Yii::$app->db->beginTransaction();
             try {
                 /** @var ActiveRecord[] $models */
                 $models = $model::findAll($ids);
@@ -39,7 +42,7 @@ class DeleteCheckedAction extends BackendModelAction
                     }
                 }
                 $transaction->commit();
-            } catch (\Exception $exception) {
+            } catch (Exception $exception) {
                 $transaction->rollBack();
                 throw $exception;
             }

@@ -4,6 +4,7 @@ namespace backend\actions\base;
 
 use backend\actions\BackendModelAction;
 use common\models\ActiveRecord;
+use yii\web\NotFoundHttpException;
 
 /**
  * Действие для вывода формы просмотра существующей модели
@@ -17,7 +18,7 @@ class ViewAction extends BackendModelAction
 
     /**
      * @inheritdoc
-     * @throws \yii\web\NotFoundHttpException
+     * @throws NotFoundHttpException
      */
     public function run($id)
     {

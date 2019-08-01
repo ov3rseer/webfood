@@ -5,7 +5,9 @@ namespace backend\actions\base;
 use backend\actions\BackendModelAction;
 use backend\widgets\ActiveForm;
 use common\models\ActiveRecord;
+use ReflectionException;
 use Yii;
+use yii\base\InvalidConfigException;
 use yii\web\Response;
 
 /**
@@ -32,8 +34,8 @@ class IndexAction extends BackendModelAction
     /**
      * @inheritdoc
      * @return array|string
-     * @throws \ReflectionException
-     * @throws \yii\base\InvalidConfigException
+     * @throws ReflectionException
+     * @throws InvalidConfigException
      */
     public function run()
     {
@@ -51,7 +53,7 @@ class IndexAction extends BackendModelAction
         return $this->controller->renderUniversal($this->viewPath, [
             'model'        => $model,
             'filterModel'  => $filterModel,
-            'dataProvider' => $filterModel->search(\Yii::$app->request->get())
+            'dataProvider' => $filterModel->search(Yii::$app->request->get())
         ]);
     }
 }

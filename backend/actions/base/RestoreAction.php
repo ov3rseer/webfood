@@ -6,6 +6,8 @@ use backend\actions\BackendModelAction;
 use common\models\document\Document;
 use common\models\enum\DocumentStatus;
 use common\models\reference\Reference;
+use yii\base\UserException;
+use yii\web\NotFoundHttpException;
 
 /**
  * Действие для восстановление существующей модели
@@ -14,8 +16,8 @@ class RestoreAction extends BackendModelAction
 {
     /**
      * @inheritdoc
-     * @throws \yii\web\NotFoundHttpException
-     * @throws \yii\base\UserException
+     * @throws NotFoundHttpException
+     * @throws UserException
      */
     public function run($id)
     {
