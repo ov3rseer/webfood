@@ -2,6 +2,7 @@
 namespace backend\controllers;
 
 use common\models\document\Request;
+use common\models\enum\UserType;
 use common\models\reference\User;
 use Yii;
 use yii\base\InvalidConfigException;
@@ -24,8 +25,8 @@ class SiteController extends Controller
             'error' => [
                 'class' => 'yii\web\ErrorAction',
             ],
-            'export-contractors-authorization-data' => [
-                'class' => 'backend\actions\system\export\ExportContractorsAuthorizationDataAction',
+            'export-service-object-authorization-data' => [
+                'class' => 'backend\actions\system\export\ExportServiceObjectAuthorizationDataAction',
             ],
             'export-many-requests' => [
                 'class' => 'backend\actions\system\export\ExportManyRequestsAction',
@@ -52,7 +53,7 @@ class SiteController extends Controller
                         'roles' => ['@'],
                     ],
                     [
-                        'actions' => ['export-contractors-authorization-data'],
+                        'actions' => ['export-service-object-authorization-data'],
                         'allow' => true,
                         'roles' => [User::class . '.Index'],
                     ],
@@ -76,9 +77,14 @@ class SiteController extends Controller
      * Displays homepage.
      *
      * @return string
+     * @throws InvalidConfigException
      */
     public function actionIndex()
     {
+        if(Yii::$app->user->identity->user_type_id != UserType::ADMIN){
+            Yii::$app->user->logout();
+            return $this->actionLogin();
+        }
         return $this->render('index');
     }
 
