@@ -10,7 +10,6 @@ use common\models\reference\Product;
  *
  * Свойства:
  * @property integer $product_id
- * @property float   $quantity
  *
  * Отношения:
  * @property Contract    $parent
@@ -24,9 +23,9 @@ class ContractProduct extends TablePart
     public function rules()
     {
         return array_merge(parent::rules(), [
-            [['product_id', 'quantity'], 'required'],
+            [['product_id'/*, 'quantity'*/], 'required'],
             [['product_id'], 'integer'],
-            [['quantity'], 'number', 'min' => 0],
+            //[['quantity'], 'number', 'min' => 0],
         ]);
     }
 
@@ -37,7 +36,7 @@ class ContractProduct extends TablePart
     {
         return array_merge(parent::attributeLabels(), [
             'product_id'    => 'Продукт',
-            'quantity'      => 'Количество',
+            //'quantity'      => 'Количество',
         ]);
     }
 

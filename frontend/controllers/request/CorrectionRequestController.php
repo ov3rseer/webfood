@@ -2,17 +2,15 @@
 
 namespace frontend\controllers\request;
 
-use frontend\controllers\FrontendModelController;
-
 /**
- * Контроллер для формы "Предварительная заявка"
+ * Контроллер для формы "Корректировка заявки"
  */
-class PreliminaryRequestController extends RequestController
+class CorrectionRequestController extends RequestController
 {
     /**
      * @var string имя класса модели
      */
-    public $modelClass = 'frontend\models\request\PreliminaryRequestForm';
+    public $modelClass = 'frontend\models\request\CorrectionRequestForm';
 
     /**
      * @inheritdoc
@@ -23,7 +21,7 @@ class PreliminaryRequestController extends RequestController
             'index' => [
                 'class' => 'frontend\actions\form\request\IndexAction',
                 'modelClass' => $this->modelClass,
-                'viewPath' => '@frontend/views/request/preliminary-request/index',
+                'viewPath' => '@frontend/views/request/correction-request/index',
             ],
         ]);
     }

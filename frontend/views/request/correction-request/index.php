@@ -65,7 +65,7 @@ $this->registerJs("
             'layout' => ['refresh'],
             'tokens' => [
                 'refresh' => function() {
-                    return Html::button('Сформировать', ['class' => 'btn btn-primary', 'onclick' => 'createRequestTable("preliminary_request")']);
+                    return Html::button('Сформировать', ['class' => 'btn btn-primary', 'onclick' => 'createRequestTable("correction_request")']);
                 }
             ]
         ]);
@@ -76,8 +76,6 @@ $this->registerJs("
     }
     ?>
 
-    <div class="container-fluid">
-        <div class="embed-responsive embed-responsive-16by9" id="main_request_table" style="margin-top: 1em;"></div>
-    </div>
+    <div class="embed-responsive embed-responsive-16by9" id="main_request_table" style="margin-top: 1em;"></div>
 
 </div>

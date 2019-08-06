@@ -49,7 +49,7 @@ class m190712_072430_add_ref_contractor extends Migration
 
         $this->createTablePartTable('{{%tab_contract_product}}', '{{%ref_contract}}', [
             'product_id' => $this->integer()->notNull()->indexed()->foreignKey('{{%ref_product}}', 'id'),
-            'quantity' => $this->decimal(10, 2)->notNull(),
+            //'quantity' => $this->decimal(10, 2)->notNull(),
         ]);
 
         $this->createTablePartTable('{{%tab_contractor_contract}}', '{{%ref_contractor}}', [

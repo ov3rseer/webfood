@@ -2,6 +2,7 @@
 namespace backend\controllers;
 
 use common\models\document\Request;
+use common\models\enum\UserType;
 use common\models\reference\User;
 use Yii;
 use yii\base\InvalidConfigException;
@@ -76,9 +77,14 @@ class SiteController extends Controller
      * Displays homepage.
      *
      * @return string
+     * @throws InvalidConfigException
      */
     public function actionIndex()
     {
+        if(Yii::$app->user->identity->user_type_id != UserType::ADMIN){
+            Yii::$app->user->logout();
+            return $this->actionLogin();
+        }
         return $this->render('index');
     }
 

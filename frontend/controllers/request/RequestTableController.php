@@ -4,15 +4,12 @@ namespace frontend\controllers\request;
 
 use frontend\controllers\FrontendModelController;
 
-/**
- * Контроллер для формы "Предварительная заявка"
- */
-class PreliminaryRequestController extends RequestController
+class RequestTableController extends FrontendModelController
 {
     /**
      * @var string имя класса модели
      */
-    public $modelClass = 'frontend\models\request\PreliminaryRequestForm';
+    public $modelClass = 'frontend\models\request\RequestTableForm';
 
     /**
      * @inheritdoc
@@ -21,9 +18,9 @@ class PreliminaryRequestController extends RequestController
     {
         return array_merge(parent::actions(), [
             'index' => [
-                'class' => 'frontend\actions\form\request\IndexAction',
+                'class' => 'frontend\actions\form\requesttable\IndexAction',
                 'modelClass' => $this->modelClass,
-                'viewPath' => '@frontend/views/request/preliminary-request/index',
+                'viewPath' => '@frontend/views/request/request-table/index',
             ],
         ]);
     }
