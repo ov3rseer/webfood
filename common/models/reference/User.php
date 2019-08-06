@@ -52,7 +52,7 @@ class User extends Reference implements IdentityInterface
      */
     public function __toString()
     {
-        return $this->isNewRecord ? '(новый)' : ($this->name_full ? $this->name_full : $this->name);
+        return $this->isNewRecord ? '(новый)' : ($this->surname ? $this->surname . ' ' . $this->forename : $this->name);
     }
 
     /**
@@ -63,7 +63,7 @@ class User extends Reference implements IdentityInterface
         return array_merge(parent::rules(), [
             [['name'], 'unique', 'message' => 'Это имя пользователя уже занято.'],
             [['email', 'name_full'], 'filter', 'filter' => 'trim'],
-            [['email', 'password'], 'string', 'max' => 255],
+            [['email', 'forename', 'surname'], 'string', 'max' => 255],
             [['name_full'], 'string', 'max' => 1024],
             [['email'], 'unique', 'message' => 'Этот адрес электронной почты уже занят.'],
             [['user_type_id'], 'integer'],
@@ -80,6 +80,8 @@ class User extends Reference implements IdentityInterface
             'name_full'     => 'Полное имя',
             'password'      => 'Пароль',
             'email'         => 'Email',
+            'forename'      => 'Имя',
+            'surname'       => 'Фамилия',
             'user_type_id'  => 'Тип пользователя',
         ]);
     }
@@ -313,7 +315,10 @@ class User extends Reference implements IdentityInterface
             if (!$this->auth_key) {
                 $this->auth_key = Yii::$app->security->generateRandomString();
             }
-            if($this->password){
+            if (!$this->name_full && ($this->surname || $this->forename)) {
+                $this->name_full = $this->surname . '' . $this->forename;
+            }
+            if ($this->password) {
                 $this->setPassword($this->password);
             }
         }
