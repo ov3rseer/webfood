@@ -46,7 +46,6 @@ class m130524_201442_init extends Migration
 
     public function down()
     {
-        $this->delete('{{%ref_user}}', ['id' => 1]);
         $this->delete('{{%sys_entity}}', ['class_name' => 'common\models\reference\User']);
         $this->dropTable('{{%sys_entity}}');
         $this->dropTable('{{%ref_user}}');
