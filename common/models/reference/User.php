@@ -13,7 +13,7 @@ use yii\web\IdentityInterface;
 
 /**
  * Модель спарвочника "Пользователи"
- * @property string $name_full
+ *
  * @property string $email
  * @property string $password_hash
  * @property string $auth_key
@@ -76,7 +76,6 @@ class User extends Reference implements IdentityInterface
     {
         return array_merge(parent::attributeLabels(), [
             'name'          => 'Логин',
-            'name_full'     => 'Полное имя',
             'password'      => 'Пароль',
             'email'         => 'Email',
             'forename'      => 'Имя',
@@ -317,7 +316,7 @@ class User extends Reference implements IdentityInterface
             if ($this->password) {
                 $this->setPassword($this->password);
             }
-            if (!$this->name_full && ($this->surname || $this->forename)) {
+            if ($this->surname || $this->forename) {
                 $this->name_full = $this->surname . ' ' . $this->forename;
             }
         }
@@ -343,7 +342,6 @@ class User extends Reference implements IdentityInterface
     {
         if ($this->_fieldsOptions === []) {
             parent::getFieldsOptions();
-            $this->_fieldsOptions['name_full']['displayType'] = ActiveField::STRING;
             $this->_fieldsOptions['password_hash']['displayType'] = ActiveField::IGNORE;
             $this->_fieldsOptions['auth_key']['displayType'] = ActiveField::IGNORE;
             $this->_fieldsOptions['verification_token']['displayType'] = ActiveField::IGNORE;
