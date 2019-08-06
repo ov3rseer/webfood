@@ -4,9 +4,11 @@ namespace common\models\reference;
 
 use backend\widgets\ActiveField;
 use common\models\enum\UserType;
+use Throwable;
 use yii;
 use yii\base\Exception;
 use yii\base\NotSupportedException;
+use yii\db\ActiveQuery;
 use yii\web\IdentityInterface;
 
 /**
@@ -16,8 +18,6 @@ use yii\web\IdentityInterface;
  * @property string $password_hash
  * @property string $auth_key
  * @property string $name
- * @property string $forename
- * @property string $surname
  * @property integer $user_type_id
  * @property string $password_reset_token
  * @property string $verification_token
@@ -27,7 +27,7 @@ class User extends Reference implements IdentityInterface
     /**
      * @var string
      */
-    protected $_password;
+    protected $password;
 
     /**
      * @inheritdoc
@@ -50,7 +50,7 @@ class User extends Reference implements IdentityInterface
      */
     public function __toString()
     {
-        return $this->isNewRecord ? '(новый)' : ($this->surname ? $this->surname . ' ' . $this->forename : $this->name);
+        return $this->isNewRecord ? '(новый)' : ($this->name_full ? $this->name_full : $this->name);
     }
 
     /**
@@ -61,7 +61,7 @@ class User extends Reference implements IdentityInterface
         return array_merge(parent::rules(), [
             [['name'], 'unique', 'message' => 'Это имя пользователя уже занято.'],
             [['email', 'name_full'], 'filter', 'filter' => 'trim'],
-            [['email', 'forename', 'surname'], 'string', 'max' => 255],
+            [['email', 'password'], 'string', 'max' => 255],
             [['name_full'], 'string', 'max' => 1024],
             [['email'], 'unique', 'message' => 'Этот адрес электронной почты уже занят.'],
             [['user_type_id'], 'integer'],
@@ -76,9 +76,8 @@ class User extends Reference implements IdentityInterface
         return array_merge(parent::attributeLabels(), [
             'name'          => 'Логин',
             'name_full'     => 'Полное имя',
+            'password'      => 'Пароль',
             'email'         => 'Email',
-            'forename'      => 'Имя',
-            'surname'       => 'Фамилия',
             'user_type_id'  => 'Тип пользователя',
         ]);
     }
@@ -197,7 +196,7 @@ class User extends Reference implements IdentityInterface
     }
 
     /**
-     * @return \yii\db\ActiveQuery
+     * @return ActiveQuery
      */
     public function getUserType()
     {
@@ -209,7 +208,7 @@ class User extends Reference implements IdentityInterface
      */
     public function getPassword()
     {
-        return $this->_password;
+        return $this->password;
     }
 
     /**
@@ -220,8 +219,8 @@ class User extends Reference implements IdentityInterface
      */
     public function setPassword($password)
     {
-        $this->_password = $password;
-        $this->password_hash = Yii::$app->security->generatePasswordHash($this->_password);
+        $this->password = $password;
+        $this->password_hash = Yii::$app->security->generatePasswordHash($this->password);
     }
 
     /**
@@ -303,6 +302,7 @@ class User extends Reference implements IdentityInterface
     /**
      * @inheritdoc
      * @throws yii\base\Exception
+     * @throws \Exception
      */
     public function beforeSave($insert)
     {
@@ -311,8 +311,15 @@ class User extends Reference implements IdentityInterface
             if (!$this->auth_key) {
                 $this->auth_key = Yii::$app->security->generateRandomString();
             }
-            if (!$this->name_full && ($this->surname || $this->forename)) {
-                $this->name_full = $this->surname . '' . $this->forename;
+            if($this->password){
+                $this->setPassword($this->password);
+            }
+            if($this->user_type_id == UserType::ADMIN){
+                // Добавляем роль суперадмина
+                $auth = Yii::$app->authManager;
+                $role = $auth->getRole('super-admin');
+                // Добавляем админа
+                $auth->assign($role, $this->id);
             }
         }
         return $parentResult;
@@ -338,7 +345,7 @@ class User extends Reference implements IdentityInterface
     /**
      * Проверка, что компонент пользователя загружен в backend-режиме
      * @return boolean
-     * @throws \Throwable
+     * @throws Throwable
      */
     public static function isBackendUser()
     {
