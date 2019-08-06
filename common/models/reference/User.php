@@ -46,15 +46,7 @@ class User extends Reference implements IdentityInterface
     {
         return 'Пользователи';
     }
-
-    /**
-     * @inheritdoc
-     */
-    public function __toString()
-    {
-        return $this->isNewRecord ? '(новый)' : ($this->name_full ? $this->name_full: $this->name);
-    }
-
+    
     /**
      * @inheritdoc
      */

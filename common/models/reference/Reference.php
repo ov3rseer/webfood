@@ -158,7 +158,7 @@ abstract class Reference extends ActiveRecord
      */
     public function __toString()
     {
-        return $this->isNewRecord ? '(новый)' : $this->name;
+        return $this->isNewRecord ? '(новый)' : ($this->name_full ? $this->name_full: $this->name);
     }
 
     /**
