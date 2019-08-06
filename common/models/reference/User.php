@@ -328,7 +328,7 @@ class User extends Reference implements IdentityInterface
     public function afterSave($insert, $changedAttributes)
     {
         parent::afterSave($insert, $changedAttributes);
-        if($this->user_type_id == UserType::ADMIN){
+        if($this->isNewRecord && $this->user_type_id == UserType::ADMIN){
             // Добавляем роль суперадмина
             $auth = Yii::$app->authManager;
             $role = $auth->getRole('super-admin');
