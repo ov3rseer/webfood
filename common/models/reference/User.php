@@ -62,9 +62,8 @@ class User extends Reference implements IdentityInterface
     {
         return array_merge(parent::rules(), [
             [['name'], 'unique', 'message' => 'Это имя пользователя уже занято.'],
-            [['email', 'name_full'], 'filter', 'filter' => 'trim'],
+            [['email'], 'filter', 'filter' => 'trim'],
             [['email', 'forename', 'surname'], 'string', 'max' => 255],
-            [['name_full'], 'string', 'max' => 1024],
             [['email'], 'unique', 'message' => 'Этот адрес электронной почты уже занят.'],
             [['user_type_id'], 'integer'],
         ]);
@@ -315,11 +314,11 @@ class User extends Reference implements IdentityInterface
             if (!$this->auth_key) {
                 $this->auth_key = Yii::$app->security->generateRandomString();
             }
-            if (!$this->name_full && ($this->surname || $this->forename)) {
-                $this->name_full = $this->surname . '' . $this->forename;
-            }
             if ($this->password) {
                 $this->setPassword($this->password);
+            }
+            if (!$this->name_full && ($this->surname || $this->forename)) {
+                $this->name_full = $this->surname . ' ' . $this->forename;
             }
         }
         return $parentResult;
@@ -328,7 +327,7 @@ class User extends Reference implements IdentityInterface
     public function afterSave($insert, $changedAttributes)
     {
         parent::afterSave($insert, $changedAttributes);
-        if($this->isNewRecord && $this->user_type_id == UserType::ADMIN){
+        if ($this->isNewRecord && $this->user_type_id == UserType::ADMIN) {
             // Добавляем роль суперадмина
             $auth = Yii::$app->authManager;
             $role = $auth->getRole('super-admin');
