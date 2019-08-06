@@ -43,6 +43,7 @@ abstract class Reference extends ActiveRecord
         return array_merge(parent::rules(), [
             [['name', 'name_full'], 'filter', 'filter' => 'trim'],
             [['name'], 'string', 'max' => 256],
+            [['name_full'], 'string', 'max' => 1024],
             [['is_active'], 'boolean'],
             [['is_active'], 'default', 'value' => true],
         ]);
@@ -107,6 +108,7 @@ abstract class Reference extends ActiveRecord
     {
         return array_merge(parent::attributeLabels(), [
             'name'           => 'Наименование',
+            'name_full'      => 'Полное наименование',
             'is_active'      => 'Активен',
             'create_date'    => 'Дата создания',
             'update_date'    => 'Дата изменения',
@@ -134,7 +136,7 @@ abstract class Reference extends ActiveRecord
     {
         if (parent::beforeSave($insert)) {
             if (!$this->name_full && get_class($this) != User::class) {
-                $this->name_full = $this->name;;
+                $this->name_full = $this->name;
             }
             return true;
         }

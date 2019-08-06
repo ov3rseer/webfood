@@ -64,6 +64,7 @@ class User extends Reference implements IdentityInterface
             [['name'], 'unique', 'message' => 'Это имя пользователя уже занято.'],
             [['email'], 'filter', 'filter' => 'trim'],
             [['email', 'forename', 'surname'], 'string', 'max' => 255],
+            [['name_full'], 'string', 'max' => 1024],
             [['email'], 'unique', 'message' => 'Этот адрес электронной почты уже занят.'],
             [['user_type_id'], 'integer'],
         ]);
@@ -76,6 +77,7 @@ class User extends Reference implements IdentityInterface
     {
         return array_merge(parent::attributeLabels(), [
             'name'          => 'Логин',
+            'name_full'     => 'Полное имя',
             'password'      => 'Пароль',
             'email'         => 'Email',
             'forename'      => 'Имя',
@@ -309,12 +311,14 @@ class User extends Reference implements IdentityInterface
     public function beforeSave($insert)
     {
         $parentResult = parent::beforeSave($insert);
-        if ($parentResult && $this->isNewRecord) {
-            if (!$this->auth_key) {
-                $this->auth_key = Yii::$app->security->generateRandomString();
-            }
-            if (!$this->password_hash) {
-                $this->setPassword($this->password);
+        if ($parentResult) {
+            if ($this->isNewRecord) {
+                if (!$this->auth_key) {
+                    $this->auth_key = Yii::$app->security->generateRandomString();
+                }
+                if (!$this->password_hash) {
+                    $this->setPassword($this->password);
+                }
             }
             if ($this->surname || $this->forename) {
                 $this->name_full = $this->surname . ' ' . $this->forename;
@@ -342,6 +346,11 @@ class User extends Reference implements IdentityInterface
     {
         if ($this->_fieldsOptions === []) {
             parent::getFieldsOptions();
+            if ($this->scenario != self::SCENARIO_SEARCH) {
+                $this->_fieldsOptions['name_full']['displayType'] = ActiveField::READONLY;
+            }else{
+                $this->_fieldsOptions['name_full']['displayType'] = ActiveField::STRING;
+            }
             $this->_fieldsOptions['password_hash']['displayType'] = ActiveField::IGNORE;
             $this->_fieldsOptions['auth_key']['displayType'] = ActiveField::IGNORE;
             $this->_fieldsOptions['verification_token']['displayType'] = ActiveField::IGNORE;
