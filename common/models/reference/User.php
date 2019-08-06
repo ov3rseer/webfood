@@ -313,7 +313,7 @@ class User extends Reference implements IdentityInterface
             if (!$this->auth_key) {
                 $this->auth_key = Yii::$app->security->generateRandomString();
             }
-            if ($this->password) {
+            if (!$this->password_hash) {
                 $this->setPassword($this->password);
             }
             if ($this->surname || $this->forename) {

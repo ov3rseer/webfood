@@ -131,7 +131,7 @@ AppAsset::register($this);
             $menuItems[] = '<li>'
                 . Html::beginForm(['/site/logout'], 'post')
                 . Html::submitButton(
-                    'Выход (' . Yii::$app->user->identity->name . ')',
+                    'Выход (' . Yii::$app->user->identity->name_full . ')',
                     ['class' => 'btn btn-link logout']
                 )
                 . Html::endForm()
