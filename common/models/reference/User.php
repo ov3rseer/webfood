@@ -52,7 +52,7 @@ class User extends Reference implements IdentityInterface
      */
     public function __toString()
     {
-        return $this->isNewRecord ? '(новый)' : ($this->surname ? $this->surname . ' ' . $this->forename : $this->name);
+        return $this->isNewRecord ? '(новый)' : ($this->name_full ? $this->name_full: $this->name);
     }
 
     /**

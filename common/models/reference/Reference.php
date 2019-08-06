@@ -107,7 +107,6 @@ abstract class Reference extends ActiveRecord
     {
         return array_merge(parent::attributeLabels(), [
             'name'           => 'Наименование',
-            'name_full'      => 'Полное наименование',
             'is_active'      => 'Активен',
             'create_date'    => 'Дата создания',
             'update_date'    => 'Дата изменения',
