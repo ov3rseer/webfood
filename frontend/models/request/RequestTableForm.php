@@ -62,6 +62,21 @@ class RequestTableForm extends FrontendForm
         return $productQuantities;
     }
 
+    function getRequestWeekDateMapByProductQuantities($productQuantities) {
+        $requestOneDayDate = array_keys($productQuantities[array_keys($productQuantities)[0]])[0];
+        $date = new DateTime($requestOneDayDate);
+        $dayOfWeek = $date->format("w");
+        $sundayDate = $date->modify("-$dayOfWeek days");
+        $weekDayDateMap = [
+            $sundayDate->modify('+1 day')->format('d-m-Y 11:00'),
+            $sundayDate->modify('+2 day')->format('d-m-Y 11:00'),
+            $sundayDate->modify('+3 day')->format('d-m-Y 11:00'),
+            $sundayDate->modify('+4 day')->format('d-m-Y 11:00'),
+            $sundayDate->modify('+5 day')->format('d-m-Y 11:00'),
+        ];
+        return $weekDayDateMap;
+    }
+
     function findRequestDatesIdMap($contractorId, $contractId, $weekDayDateMap) {
         $requestDatesIdMap = [];
         $requests = $this->getRequestsByContractorContract($contractorId, $contractId);

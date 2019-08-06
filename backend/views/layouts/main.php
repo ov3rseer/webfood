@@ -105,11 +105,11 @@ AppAsset::register($this);
                 [
                     'label' => 'Администрирование',
                     'items' => [
-                        [
+                        /*[
                             'label' => 'Настройки системы',
                             'url' => ['/reference/system-setting/index'],
                             'visible' => Yii::$app->user->can(SystemSetting::class . '.Index'),
-                        ],
+                        ],*/
                         [
                             'label' => 'Задачи',
                             'url'   => ['/report/tasks'],

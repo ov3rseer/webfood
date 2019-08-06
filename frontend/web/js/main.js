@@ -92,14 +92,25 @@ class RememberFields {
             $(document).bind('MemberFields', function() {
                 rememberFields.init();
             });
-            fields = $('input:visible, select:visible').trigger('MemberFields', ['MemberFields', ]);
+            this.fields = $('input[name]:visible, select[name]:visible');
+            $(document).trigger('MemberFields');
         } else {
             this.fields = fields;
         }
     }
 
     init() {
-        console.log(this.fields);
+        if (!('memberFields' in localStorage)) {
+            localStorage['memberFields'] = {};
+        }
+        this.fields.each(function() {
+            if (this.name in localStorage['memberFields']) {
+                this.value = localStorage['memberFields'][this.name];
+            }
+            $(this).bind('blur', function() {
+                localStorage['memberFields'][this.name] = this.value;
+            });
+        });
     }*/
 
 }
