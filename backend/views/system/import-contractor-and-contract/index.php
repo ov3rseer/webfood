@@ -13,7 +13,7 @@ $controller = $this->context;
 $this->title = $model->getName();
 $this->params['breadcrumbs'][] = ['label' => (string)$this->title];
 
-$reflection = new \ReflectionClass($model->className());
+$reflection = new ReflectionClass($model->className());
 $shortClassName = $reflection->getShortName();
 
 $formId = $shortClassName.'-form';
@@ -41,15 +41,6 @@ $form = ActiveForm::begin(
                         <ul>
                             <li>
                                 <strong>Формат файла:</strong> XML (*.xml)
-                            </li>
-                            <li>
-                                <strong>Колонки файла:</strong>
-                                <ol>
-
-                                </ol>
-                            </li>
-                            <li>
-                                <strong>Первая строка</strong> предназначена для заголовков колонок и пропускается при загрузке
                             </li>
                             <li>
                                 <strong>Файл-образец:</strong> <?= Html::a('Скачать', ['download-example-file'], ['target' => '_blank']) ?>
