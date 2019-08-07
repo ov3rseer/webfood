@@ -11,6 +11,7 @@ use yii\db\ActiveQuery;
  * Модель строки табличной части "Продукты" документа "Предварительная заявка"
  *
  * Свойства:
+ * @property integer  $parent_id
  * @property DateTime $week_day_date
  *
  * Отношения:

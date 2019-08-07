@@ -1,13 +1,13 @@
 <?php
 
 use common\components\pgsql\Migration;
+use yii\base\NotSupportedException;
 
 class m190716_101111_add_import_contractor_and_contract extends Migration
 {
     private $_permissionsForImportContractorAndContract;
 
     /**
-     * @param array $config
      * @throws Exception
      */
     public function setPermissions()
@@ -17,7 +17,7 @@ class m190716_101111_add_import_contractor_and_contract extends Migration
 
     /**
      * @return bool|void
-     * @throws \yii\base\NotSupportedException
+     * @throws NotSupportedException
      * @throws \yii\db\Exception
      * @throws Exception
      */
@@ -33,10 +33,7 @@ class m190716_101111_add_import_contractor_and_contract extends Migration
         $permissionForAdd = array_merge(
             $this->_permissionsForImportContractorAndContract
         );
-        try {
-            $this->addPermissions($permissionForAdd);
-        } catch (Exception $e) {
-        }
+        $this->addPermissions($permissionForAdd);
     }
 
     /**

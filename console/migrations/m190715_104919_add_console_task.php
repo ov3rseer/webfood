@@ -1,23 +1,25 @@
 <?php
 
 use common\components\pgsql\Migration;
+use yii\base\NotSupportedException;
 
 class m190715_104919_add_console_task extends Migration
 {
     private $_permissionsForTasks;
+    private $_permissionsForSystemSetting;
 
     /**
-     * @param array $config
      * @throws Exception
      */
     public function setPermissions()
     {
         $this->_permissionsForTasks = $this->getPermissions('backend\controllers\report\TasksController', 'Задачи', 32);
+        $this->_permissionsForSystemSetting = $this->getPermissions('backend\controllers\reference\SystemSettingController', 'Настройки системы', 63);
     }
 
     /**
      * @return bool|void
-     * @throws \yii\base\NotSupportedException
+     * @throws NotSupportedException
      * @throws \yii\db\Exception
      * @throws Exception
      */
@@ -26,7 +28,7 @@ class m190715_104919_add_console_task extends Migration
         $this->createReferenceTable('{{%ref_system_setting}}', [
             'data' => $this->text(),
         ]);
-
+        $this->insert('{{%sys_entity}}', ['class_name' => 'common\models\reference\SystemSetting']);
 
         $this->createEnumTable('{{%enum_console_task_status}}', [
             1 => 'Запланирована',
@@ -49,10 +51,12 @@ class m190715_104919_add_console_task extends Migration
             'result_text' => $this->text(),
             'result_data' => $this->text(),
         ]);
+        $this->insert('{{%sys_entity}}', ['class_name' => 'common\models\reference\ConsoleTask']);
 
         $this->setPermissions();
         $permissionForAdd = array_merge(
-            $this->_permissionsForTasks
+            $this->_permissionsForTasks,
+            $this->_permissionsForSystemSetting
         );
         $this->addPermissions($permissionForAdd);
     }
@@ -65,14 +69,16 @@ class m190715_104919_add_console_task extends Migration
     {
         $this->setPermissions();
         $permissionForDelete = array_merge(
-            $this->_permissionsForTasks
+            $this->_permissionsForTasks,
+            $this->_permissionsForSystemSetting
         );
         $this->deletePermissions($permissionForDelete);
 
+        $this->delete('{{%sys_entity}}', ['class_name' => 'common\models\reference\ConsoleTask']);
         $this->dropTable('{{%ref_console_task}}');
         $this->dropTable('{{%enum_console_task_type}}');
         $this->dropTable('{{%enum_console_task_status}}');
-
+        $this->delete('{{%sys_entity}}', ['class_name' => 'common\models\reference\SystemSetting']);
         $this->dropTable('{{%ref_system_setting}}');
     }
 }

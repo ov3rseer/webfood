@@ -7,11 +7,19 @@ use common\models\cross\RequestDateProduct;
 use common\models\document\Request;
 use common\models\reference\Product;
 use common\models\tablepart\RequestDate;
+use Exception;
 use frontend\models\FrontendForm;
+use yii\base\InvalidConfigException;
+use yii\db\ActiveRecord;
 
 class RequestTableForm extends FrontendForm
 {
 
+    /**
+     * @param string $time
+     * @return array
+     * @throws Exception
+     */
     function getWeekDayDateMap($time = 'now') {
         $weekDayDateMap = [];
         $startNextWeek = new DateTime($time);
@@ -23,6 +31,11 @@ class RequestTableForm extends FrontendForm
         return $weekDayDateMap;
     }
 
+    /**
+     * @param $result
+     * @param string $field
+     * @return array
+     */
     function getIdMapByResult($result, $field = 'id') {
         $idMap = [];
         foreach ($result as $res) {
@@ -31,6 +44,11 @@ class RequestTableForm extends FrontendForm
         return $idMap;
     }
 
+    /**
+     * @param $result
+     * @param $field
+     * @return array
+     */
     function getIdMapByResultForDates($result, $field) {
         $idMap = [];
         foreach ($result as $res) {
@@ -39,6 +57,10 @@ class RequestTableForm extends FrontendForm
         return $idMap;
     }
 
+    /**
+     * @param $get
+     * @return array
+     */
     function getProductQuantities($get) {
         $productQuantities = [];
         foreach ($get as $key => $value) {
@@ -62,6 +84,11 @@ class RequestTableForm extends FrontendForm
         return $productQuantities;
     }
 
+    /**
+     * @param $productQuantities
+     * @return array
+     * @throws Exception
+     */
     function getRequestWeekDateMapByProductQuantities($productQuantities) {
         $requestOneDayDate = array_keys($productQuantities[array_keys($productQuantities)[0]])[0];
         $date = new DateTime($requestOneDayDate);
@@ -77,9 +104,17 @@ class RequestTableForm extends FrontendForm
         return $weekDayDateMap;
     }
 
-    function findRequestDatesIdMap($contractorId, $contractId, $weekDayDateMap) {
+    /**
+     * @param $serviceObjectId
+     * @param $contractId
+     * @param $weekDayDateMap
+     * @return array
+     * @throws InvalidConfigException
+     * @throws InvalidConfigException
+     */
+    function findRequestDatesIdMap($serviceObjectId, $contractId, $weekDayDateMap) {
         $requestDatesIdMap = [];
-        $requests = $this->getRequestsByContractorContract($contractorId, $contractId);
+        $requests = $this->getRequestsByServiceObjectContract($serviceObjectId, $contractId);
         if ($requests) {
             $requestsIdMap = $this->getIdMapByResult($requests);
             $requestDates = $this->getRequestDatesByRequestsAndWeekDayDates($requestsIdMap, $weekDayDateMap);
@@ -90,18 +125,40 @@ class RequestTableForm extends FrontendForm
         return $requestDatesIdMap;
     }
 
-    function getRequestsByContractorContract($contractorId, $contractId) {
-        return Request::find()->andWhere(['contractor_id' => $contractorId, 'contract_id' => $contractId])->all();
+    /**
+     * @param $serviceObjectId
+     * @param $contractId
+     * @return array|ActiveRecord[]
+     * @throws InvalidConfigException
+     */
+    function getRequestsByServiceObjectContract($serviceObjectId, $contractId) {
+        return Request::find()->andWhere(['service_object_id' => $serviceObjectId, 'contract_id' => $contractId])->all();
     }
 
+    /**
+     * @param $parentIdMap
+     * @param $weekDayDateMap
+     * @return array|ActiveRecord[]
+     * @throws InvalidConfigException
+     */
     function getRequestDatesByRequestsAndWeekDayDates($parentIdMap, $weekDayDateMap) {
         return RequestDate::find()->andWhere(['parent_id' => $parentIdMap, 'week_day_date' => $weekDayDateMap])->all();
     }
 
+    /**
+     * @param $requestDatesIdMap
+     * @return array|ActiveRecord[]
+     * @throws InvalidConfigException
+     */
     function getRequestDateProductsByRequestDatesId($requestDatesIdMap) {
         return RequestDateProduct::find()->andWhere(['request_date_id' => $requestDatesIdMap])->all();
     }
 
+    /**
+     * @param $codes
+     * @return array|ActiveRecord[]
+     * @throws InvalidConfigException
+     */
     function getProductsByCode($codes) {
         return Product::find()->andWhere(['product_code' => $codes])->all();
     }

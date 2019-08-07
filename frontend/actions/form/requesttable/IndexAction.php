@@ -6,19 +6,20 @@ use common\components\DateTime;
 use common\models\cross\RequestDateProduct;
 use common\models\document\Request;
 use common\models\reference\Contract;
-use common\models\reference\Contractor;
+use common\models\reference\ServiceObject;
 use common\models\reference\Product;
-use common\models\tablepart\ContractorContract;
+use common\models\tablepart\ServiceObjectContract;
 use common\models\tablepart\ContractProduct;
 use common\models\tablepart\RequestDate;
+use Exception;
 use frontend\actions\FrontendModelAction;
 use backend\widgets\ActiveForm;
 use frontend\models\request\RequestTableForm;
 use Yii;
+use yii\base\InvalidConfigException;
 use yii\data\ArrayDataProvider;
 use yii\db\Query;
 use yii\web\Response;
-use function GuzzleHttp\Psr7\str;
 
 /**
  * Действие для вывода формы
@@ -28,8 +29,8 @@ class IndexAction extends FrontendModelAction
 {
     /**
      * @inheritdoc
-     * @throws \yii\base\InvalidConfigException
-     * @throws \Exception
+     * @throws InvalidConfigException
+     * @throws Exception
      */
     public function run()
     {
@@ -45,7 +46,7 @@ class IndexAction extends FrontendModelAction
         $currentDate = date('d-m-Y H:i');
 
         $userId = Yii::$app->user->id;
-        $contractorId = $requestData['contractorName'];
+        $serviceObjectId = $requestData['serviceObjectName'];
         $contractId = $requestData['contractCode'];
         $contractTypeId = $requestData['contractTypeId'];
         $action = $action ?: $requestData['action'];
@@ -60,7 +61,7 @@ class IndexAction extends FrontendModelAction
 
                 if (strtotime($currentDate) < strtotime($thursdayDate)) {
                     $weekDayDateMap = $model->getWeekDayDateMap('monday next week');
-                    $requestDatesIdMap = $model->findRequestDatesIdMap($contractorId, $contractId, $weekDayDateMap);
+                    $requestDatesIdMap = $model->findRequestDatesIdMap($serviceObjectId, $contractId, $weekDayDateMap);
                     $requestDateProducts = $model->getRequestDateProductsByRequestDatesId(array_keys($requestDatesIdMap));
                 }
 
@@ -93,26 +94,26 @@ class IndexAction extends FrontendModelAction
                             ];
                         }
                     }
-                    //Yii::$app->session->setFlash('info', 'Вы создали заявку для этого контрагента и договора.<br/>Перейдите в раздел корректировки заявки.');
+                    //Yii::$app->session->setFlash('info', 'Вы создали заявку для этого объекта обслуживания и договора.<br/>Перейдите в раздел корректировки заявки.');
                 } else {
                     Yii::$app->session->setFlash('info', 'Предварительная заявка доступна не позднее 13:00 четверга этой недели.');
                 }
 
                 break;
-            };
+            }
             case 'correction_request': {
                 $thursdayDate = new DateTime('thursday this week');
                 $thursdayDate = $thursdayDate->format('d-m-Y 13:00');
 
                 if (strtotime($currentDate) < strtotime($thursdayDate)) {
                     $weekDayDateMap = $model->getWeekDayDateMap('monday this week');
-                    $requestDatesIdMap = $model->findRequestDatesIdMap($contractorId, $contractId, $weekDayDateMap);
+                    $requestDatesIdMap = $model->findRequestDatesIdMap($serviceObjectId, $contractId, $weekDayDateMap);
                     $requestDateProducts = $model->getRequestDateProductsByRequestDatesId(array_keys($requestDatesIdMap));
                 }
 
                 if (!isset($requestDateProducts) || (isset($requestDateProducts) && !$requestDateProducts)) {
                     $weekDayDateMap = $model->getWeekDayDateMap('monday next week');
-                    $requestDatesIdMap = $model->findRequestDatesIdMap($contractorId, $contractId, $weekDayDateMap);
+                    $requestDatesIdMap = $model->findRequestDatesIdMap($serviceObjectId, $contractId, $weekDayDateMap);
                     $requestDateProducts = $model->getRequestDateProductsByRequestDatesId(array_keys($requestDatesIdMap));
                 }
 
@@ -135,10 +136,10 @@ class IndexAction extends FrontendModelAction
                         ];
                     }
                 } else {
-                    Yii::$app->session->setFlash('info', 'Не существует заявки для этого контрагента и договора.<br/>Перейдите в раздел предварительной заявки.');
+                    Yii::$app->session->setFlash('info', 'Не существует заявки для этого объекта обслуживания и договора.<br/>Перейдите в раздел предварительной заявки.');
                 }
                 break;
-            };
+            }
             case 'request-table': {
                 $productQuantities = $model->getProductQuantities($requestData['fields']);
                 $requestWeekDateMap = $model->getRequestWeekDateMapByProductQuantities($productQuantities);
@@ -148,30 +149,30 @@ class IndexAction extends FrontendModelAction
 
                 if (strtotime($currentDate) < strtotime($requestWeekDateMap[0]) && strtotime($currentDate) < strtotime($thursdayDate)) {
                     $weekDayDateMap = $model->getWeekDayDateMap('monday next week');
-                    $requestDatesIdMap = $model->findRequestDatesIdMap($contractorId, $contractId, $weekDayDateMap);
+                    $requestDatesIdMap = $model->findRequestDatesIdMap($serviceObjectId, $contractId, $weekDayDateMap);
                     $requestDateProducts = $model->getRequestDateProductsByRequestDatesId(array_keys($requestDatesIdMap));
                     $allFields = 1;
                 } else {
                     $weekDayDateMap = $model->getWeekDayDateMap('monday this week');
-                    $requestDatesIdMap = $model->findRequestDatesIdMap($contractorId, $contractId, $weekDayDateMap);
+                    $requestDatesIdMap = $model->findRequestDatesIdMap($serviceObjectId, $contractId, $weekDayDateMap);
                     $requestDateProducts = $model->getRequestDateProductsByRequestDatesId(array_keys($requestDatesIdMap));
                     $allFields = 0;
                 }
 
-                if ($userId && $contractId && $contractorId) {
-                    $contractorContract = (new Query())
+                if ($userId && $contractId && $serviceObjectId) {
+                    $serviceObjectContract = (new Query())
                         ->select('*')
-                        ->from(ContractorContract::tableName().' as cc, '.Contract::tableName().' as c, '.Contractor::tableName().' as ccc')
-                        ->where('c.id = cc.contract_id and ccc.id = cc.parent_id')
-                        ->andWhere(['cc.parent_id' => $contractorId, 'cc.contract_id' => $contractId])
+                        ->from(ServiceObjectContract::tableName().' as soc, '.Contract::tableName().' as c, '.ServiceObject::tableName().' as so')
+                        ->where('c.id = soc.contract_id and so.id = soc.parent_id')
+                        ->andWhere(['soc.parent_id' => $serviceObjectId, 'soc.contract_id' => $contractId])
                         ->one();
 
-                    $request = Request::findOne(['contractor_id' => $contractorId, 'contract_id' => $contractId, 'contract_type_id' => $contractTypeId]) ?: new Request();
-                    $request->contractor_id = $contractorId;
+                    $request = Request::findOne(['service_object_id' => $serviceObjectId, 'contract_id' => $contractId, 'contract_type_id' => $contractTypeId]) ?: new Request();
+                    $request->service_object_id = $serviceObjectId;
                     $request->contract_id = $contractId;
-                    $request->address = $contractorContract['address'];
-                    $request->contractor_code = $contractorContract['contractor_code'];
-                    $request->contract_code = $contractorContract['contract_code'];
+                    $request->address = $serviceObjectContract['address'];
+                    $request->service_object_code = $serviceObjectContract['service_object_code'];
+                    $request->contract_code = $serviceObjectContract['contract_code'];
                     $request->contract_type_id = $contractTypeId;
                     $request->save();
 
@@ -243,7 +244,7 @@ class IndexAction extends FrontendModelAction
         }
 
         $dataProvider = [];
-        if ($userId && $contractId && $contractorId) {
+        if ($userId && $contractId && $serviceObjectId) {
             $dataProvider = new ArrayDataProvider([
                 'allModels' => $array
             ]);

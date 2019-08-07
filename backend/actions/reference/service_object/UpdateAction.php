@@ -1,9 +1,9 @@
 <?php
 
-namespace backend\actions\reference\contractor;
+namespace backend\actions\reference\service_object;
 
 use backend\actions\BackendModelAction;
-use common\models\reference\Contractor;
+use common\models\reference\ServiceObject;
 use ReflectionException;
 use Yii;
 use yii\base\Exception;
@@ -35,7 +35,7 @@ class UpdateAction extends BackendModelAction
      */
     public function run($id)
     {
-        /** @var Contractor $model */
+        /** @var ServiceObject $model */
         $model = $this->controller->findModel($id, $this->modelClass);
         if (Yii::$app->request->isAjax) {
             $model->load(Yii::$app->request->post());
@@ -59,7 +59,7 @@ class UpdateAction extends BackendModelAction
         } else if (Yii::$app->request->isPost && $model->load(Yii::$app->request->post()) && $model->validate()) {
             $model->save();
             if (!$model->user_id) {
-                Yii::$app->session->setFlash('error', 'Внимание! Контрагент неактивен, необходимо прикрепить пользователя.');
+                Yii::$app->session->setFlash('error', 'Внимание! Объект обслуживания неактивен, необходимо прикрепить пользователя.');
             } else {
                 Yii::$app->session->setFlash('success', 'Элемент "' . $model . '" успешно сохранен');
             }

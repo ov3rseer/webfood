@@ -10,18 +10,21 @@ use common\models\enum\ConsoleTaskType;
 use common\models\reference\ConsoleTask;
 use common\models\reference\File;
 use Yii;
+use yii\base\InvalidConfigException;
+use yii\base\UserException;
+use yii\db\ActiveQuery;
 use yii\helpers\Html;
 use yii\helpers\Json;
 use yii\web\UploadedFile;
 
 /**
- * Форма для импорта контрагентов и договоров
+ * Форма для импорта объектов обслуживания и договоров
  *
  * @property File           $file
  * @property UploadedFile[] $uploadedFiles
  * @property integer        $file_id
  */
-class ImportContractorAndContractForm extends SystemForm
+class ImportServiceObjectAndContractForm extends SystemForm
 {
     /**
      * @var UploadedFile[] загружаемый файл
@@ -38,7 +41,7 @@ class ImportContractorAndContractForm extends SystemForm
      */
     public function getName()
     {
-        return 'Импорт контрагентов и контрактов';
+        return 'Импорт объектов обслуживания и договоров';
     }
 
     /**
@@ -81,8 +84,8 @@ class ImportContractorAndContractForm extends SystemForm
     }
 
     /**
-     * @return \yii\db\ActiveQuery
-     * @throws \yii\base\InvalidConfigException
+     * @return ActiveQuery
+     * @throws InvalidConfigException
      */
     public function getFile()
     {
@@ -91,7 +94,7 @@ class ImportContractorAndContractForm extends SystemForm
 
     /**
      * @inheritdoc
-     * @throws \yii\base\UserException
+     * @throws UserException
      */
     public function proceed()
     {
@@ -101,12 +104,12 @@ class ImportContractorAndContractForm extends SystemForm
             if (!$uploadedFile->error) {
                 $file = new File();
                 $file->setUploadFile($uploadedFile);
-                $file->path = 'contractor-and-contract';
+                $file->path = 'service-object-and-contract';
                 $file->save();
                 $files_id[] = $file->id;
             }
         }
-        $consoleTaskType = ConsoleTaskType::findOne(ConsoleTaskType::IMPORT_CONTRACTOR_AND_CONTRACT);
+        $consoleTaskType = ConsoleTaskType::findOne(ConsoleTaskType::IMPORT_SERVICE_OBJECT_AND_CONTRACT);
         if (!empty($files_id) && $consoleTaskType) {
             $consoleTask = new ConsoleTask();
             $consoleTask->type_id = $consoleTaskType->id;

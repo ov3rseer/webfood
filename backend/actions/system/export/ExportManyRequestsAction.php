@@ -34,11 +34,14 @@ class ExportManyRequestsAction extends Action
             ->alias('r')
             ->innerJoin(RequestDate::tableName() . ' AS rd', 'r.id = rd.parent_id')
             ->andWhere(['between', 'rd.week_day_date', $startNextWeek, $endNextWeek])
-            ->andWhere(['r.status_id' => DocumentStatus::POSTED])
+            ->andWhere(['r.status_id' => [DocumentStatus::DRAFT, DocumentStatus::POSTED]])
             ->with('requestDates')
             ->all();
         if ($requests) {
             $zipPath = Yii::getAlias('@uploads') . '/requests/';
+            if (!is_dir($zipPath)){
+                mkdir($zipPath);
+            }
             $zipName = 'Выгрузка предварительных заявок с ' . $startNextWeek->format('d.m.Y') . ' по ' . $endNextWeek->format('d.m.Y') . '.zip';
             $zip = new ZipArchive();
             if (file_exists($zipPath . $zipName)) {
@@ -55,8 +58,8 @@ class ExportManyRequestsAction extends Action
                 $domDocument->preserveWhiteSpace = false;
 
                 $domElement = $domDocument->createElement('Контрагент');
-                $domAttributes['КодКонтрагента'] = $request->contractor_code;
-                $domAttributes['Контрагент'] = $request->contractor;
+                $domAttributes['КодКонтрагента'] = $request->service_object_code;
+                $domAttributes['Контрагент'] = $request->serviceObject;
                 $domAttributes['КодДоговора'] = $request->contract_code;
                 $domAttributes['НаименованиеДоговора'] = $request->contract;
                 $domAttributes['АдресДоставки'] = $request->address;
@@ -91,7 +94,7 @@ class ExportManyRequestsAction extends Action
 
                 $temp = tempnam(sys_get_temp_dir(), 'request');
                 $domDocument->save($temp);
-                $xmlName = 'Еженедельная заявка на поставку товара к контрагенту ' . $request->contractor . ' №' . $request->id . ' от ' . $request->date->format('d-m-Y');
+                $xmlName = 'Еженедельная заявка на поставку товара к объекту обслужиавания ' . $request->serviceObject . ' №' . $request->id . ' от ' . $request->date->format('d-m-Y') . '.xml';
                 $zip->addFile($temp, $xmlName);
             }
             $zip->close();

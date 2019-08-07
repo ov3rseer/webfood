@@ -2,14 +2,14 @@
 
 namespace common\models\enum;
 
-use common\components\import\ImportContractorAndContract;
+use common\components\import\ImportServiceObjectAndContract;
 
 class ConsoleTaskType extends Enum
 {
     /**
-     * Импорт контрагентов и договоров
+     * Импорт объектов обслживания и договоров
      */
-    const IMPORT_CONTRACTOR_AND_CONTRACT = 1;
+    const IMPORT_SERVICE_OBJECT_AND_CONTRACT = 1;
 
     /**
      * Получение имени класса обработчика задачи в зависимости от типа задачи
@@ -19,8 +19,8 @@ class ConsoleTaskType extends Enum
     static public function getTaskProcessorClassByTypeId($taskTypeId)
     {
         switch ($taskTypeId) {
-            case self::IMPORT_CONTRACTOR_AND_CONTRACT:
-                return ImportContractorAndContract::className();
+            case self::IMPORT_SERVICE_OBJECT_AND_CONTRACT:
+                return ImportServiceObjectAndContract::className();
         }
         return false;
     }

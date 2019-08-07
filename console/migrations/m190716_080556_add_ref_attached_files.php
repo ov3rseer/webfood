@@ -28,6 +28,7 @@ class m190716_080556_add_ref_attached_files extends Migration
             'extension' => $this->string(10)->notNull(),
             'comment'   => $this->text(),
         ]);
+        $this->insert('{{%sys_entity}}', ['class_name' => 'common\models\reference\File']);
 
         $this->setPermissions();
         $permissionForAdd = array_merge(
@@ -48,6 +49,7 @@ class m190716_080556_add_ref_attached_files extends Migration
         );
         $this->deletePermissions($permissionForDelete);
 
+        $this->delete('{{%sys_entity}}', ['class_name' => 'common\models\reference\File']);
         $this->dropTable('{{%ref_file}}');
     }
 }

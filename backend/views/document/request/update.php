@@ -40,7 +40,7 @@ if ($model->isNewRecord) {
 }
 
 /** @noinspection PhpUnhandledExceptionInspection */
-$reflection = new \ReflectionClass($model->className());
+$reflection = new ReflectionClass($model->className());
 $shortClassName = $reflection->getShortName();
 
 $this->beginBlock('main');
@@ -144,7 +144,7 @@ if (!$model->isNewRecord) {
                     echo ButtonGroup::widget(['buttons' => [$dropdown]]);
                 }
                  $exportButtons = [];
-                if (!$model->isNewRecord && $model->status_id == DocumentStatus::POSTED) {
+                if (!$model->isNewRecord && in_array($model->status_id,[DocumentStatus::DRAFT, DocumentStatus::POSTED])) {
                     $exportButtons[] = Html::a('Выгрузить в XML', ['export-request', 'id' => $model->id],
                         ['class' => 'btn btn-info', 'target' => '_blank']
                     );

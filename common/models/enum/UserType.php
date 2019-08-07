@@ -13,7 +13,22 @@ class UserType extends Enum
     const ADMIN = 1;
 
     /**
-     * Контрагент
+     * Объект обслуживания
      */
-    const CONTRACTOR = 2;
+    const SERVICE_OBJECT = 2;
+
+    /**
+     * Сотрудник объекта обслуживания
+     */
+    const EMPLOYEE = 3;
+
+    /**
+     * Родитель
+     */
+    const FATHER = 4;
+
+    /**
+     * Поставщик продуктов
+     */
+    const PRODUCT_PROVIDER = 5;
 }

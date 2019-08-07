@@ -3,14 +3,14 @@
 namespace backend\controllers\reference;
 
 /**
- * Контроллер для справочника "Контрагенты"
+ * Контроллер для справочника "Объекты обслживания"
  */
-class ContractorController extends ReferenceController
+class ServiceObjectController extends ReferenceController
 {
     /**
      * @var string имя класса модели
      */
-    public $modelClass = 'common\models\reference\Contractor';
+    public $modelClass = 'common\models\reference\ServiceObject';
 
     /**
      * @inheritdoc
@@ -19,7 +19,7 @@ class ContractorController extends ReferenceController
     {
         return array_merge(parent::actions(), [
             'update' => [
-                'class' => 'backend\actions\reference\contractor\UpdateAction',
+                'class' => 'backend\actions\reference\service_object\UpdateAction',
                 'modelClass' => $this->modelClass,
                 'viewPath' => '@backend/views/base/update',
             ],

@@ -144,7 +144,7 @@ function saveRequest(formId) {
         cache: false,
         data: {
             'fields' : fields,
-            'contractorName' : dataURL['contractorName'],
+            'serviceObjectId' : dataURL['serviceObjectId'],
             'contractCode' : dataURL['contractCode'],
             'contractTypeId' : dataURL['contractTypeId'],
             'action' : 'request-table',
@@ -168,7 +168,7 @@ function getRequestData(action) {
     let dataURL = JSON.parse(convertURLDataToJSON());
     return {
         'layout' : 'iframe',
-        'contractorName' : $('#contractor_name').val(),
+        'serviceObjectId' : $('#service_object_name').val(),
         'contractCode' : $('#contract_code').val(),
         'contractTypeId' : dataURL['contractTypeId'],
         'action' : action,

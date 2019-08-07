@@ -25,8 +25,8 @@ class SiteController extends Controller
             'error' => [
                 'class' => 'yii\web\ErrorAction',
             ],
-            'export-contractors-authorization-data' => [
-                'class' => 'backend\actions\system\export\ExportContractorsAuthorizationDataAction',
+            'export-service-object-authorization-data' => [
+                'class' => 'backend\actions\system\export\ExportServiceObjectAuthorizationDataAction',
             ],
             'export-many-requests' => [
                 'class' => 'backend\actions\system\export\ExportManyRequestsAction',
@@ -53,7 +53,7 @@ class SiteController extends Controller
                         'roles' => ['@'],
                     ],
                     [
-                        'actions' => ['export-contractors-authorization-data'],
+                        'actions' => ['export-service-object-authorization-data'],
                         'allow' => true,
                         'roles' => [User::class . '.Index'],
                     ],

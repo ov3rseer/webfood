@@ -4,11 +4,13 @@ namespace common\models\tablepart;
 
 use common\models\reference\Contract;
 use common\models\reference\Product;
+use yii\db\ActiveQuery;
 
 /**
- * Модель строки табличной части "Продукты" справочника "Контракты"
+ * Модель строки табличной части "Продукт" справочника "Договор"
  *
  * Свойства:
+ * @property integer $parent_id
  * @property integer $product_id
  *
  * Отношения:
@@ -41,7 +43,7 @@ class ContractProduct extends TablePart
     }
 
     /**
-     * @return \yii\db\ActiveQuery
+     * @return ActiveQuery
      */
     public function getParent()
     {
@@ -49,7 +51,7 @@ class ContractProduct extends TablePart
     }
 
     /**
-     * @return \yii\db\ActiveQuery
+     * @return ActiveQuery
      */
     public function getProduct()
     {

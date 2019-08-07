@@ -7,14 +7,14 @@ use Yii;
 use yii\filters\AccessControl;
 
 /**
- * Контроллер для управления импортом контрагентов и договоров
+ * Контроллер для управления импортом объектов обслуживания и договоров
  */
-class ImportContractorAndContractController extends SystemController
+class ImportServiceObjectAndContractController extends SystemController
 {
     /**
      * @inheritdoc
      */
-    public $modelClass = 'backend\models\system\ImportContractorAndContractForm';
+    public $modelClass = 'backend\models\system\ImportServiceObjectAndContractForm';
 
     /**
      * @inheritdoc
@@ -44,7 +44,7 @@ class ImportContractorAndContractController extends SystemController
             'index' => [
                 'class' => 'backend\actions\system\base\IndexAction',
                 'modelClass' => $this->modelClass,
-                'viewPath' => '@backend/views/system/import-contractor-and-contract/index',
+                'viewPath' => '@backend/views/system/import-service-object-and-contract/index',
             ],
         ]);
     }
@@ -55,8 +55,8 @@ class ImportContractorAndContractController extends SystemController
     public function actionDownloadExampleFile()
     {
         return Yii::$app->response->sendFile(
-            Yii::getAlias('@backend/web/samples/import-contractor-and-contract/contractor-and-contract.xml'),
-            'Файл-образец с контрагентами и контрактами.xml'
+            Yii::getAlias('@backend/web/samples/import-service-object-and-contract/service-object-and-contract.xml'),
+            'Файл-образец с объектами обслуживания и контрактами.xml'
         );
     }
 }

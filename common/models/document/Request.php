@@ -6,7 +6,7 @@ use backend\controllers\document\DocumentController;
 use backend\widgets\ActiveForm;
 use common\models\enum\ContractType;
 use common\models\reference\Contract;
-use common\models\reference\Contractor;
+use common\models\reference\ServiceObject;
 use common\models\tablepart\RequestDate;
 use ReflectionException;
 use yii\base\InvalidConfigException;
@@ -17,13 +17,15 @@ use yii\db\ActiveQuery;
  *
  * @property integer $contract_type_id
  * @property integer $contract_id
- * @property integer $contractor_id
- * @property string  $contractor_code
+ * @property integer $service_object_id
+ * @property string  $service_object_code
  * @property string  $contract_code
  * @property string  $address
  *
  * Отношения:
- * @property RequestDate[] $requestDates
+ * @property RequestDate[]  $requestDates
+ * @property ServiceObject  $serviceObject
+ * @property Contract       $contract
  */
 class  Request extends Document
 {
@@ -49,9 +51,9 @@ class  Request extends Document
     public function rules()
     {
         return array_merge(parent::rules(), [
-            [['contract_id', 'contractor_id', 'contract_type_id'], 'integer'],
-            [['address', 'contract_code', 'contractor_code'], 'string'],
-            [['contractor_code', 'contract_code', 'contract_type_id', 'address', 'contractor_id', 'contract_id'], 'required'],
+            [['contract_id', 'service_object_id', 'contract_type_id'], 'integer'],
+            [['address', 'contract_code', 'service_object_code'], 'string'],
+            [['service_object_code', 'contract_code', 'contract_type_id', 'address', 'service_object_id', 'contract_id'], 'required'],
         ]);
     }
 
@@ -61,13 +63,13 @@ class  Request extends Document
     public function attributeLabels()
     {
         return array_merge(parent::attributeLabels(), [
-            'contract_type_id'  => 'Тип заявки',
-            'contractor_id'     => 'Контрагент',
-            'contractor_code'   => 'Код контрагента',
-            'contract_id'       => 'Контракт',
-            'contract_code'     => 'Код контракта',
-            'address'           => 'Место поставки',
-            'requestDates'      => 'Дни недели',
+            'contract_type_id'      => 'Тип заявки',
+            'service_object_id'     => 'Объект обслуживания',
+            'service_object_code'   => 'Код объекта обслуживания',
+            'contract_id'           => 'Контракт',
+            'contract_code'         => 'Код контракта',
+            'address'               => 'Место поставки',
+            'requestDates'          => 'Дни недели',
         ]);
     }
 
@@ -91,9 +93,9 @@ class  Request extends Document
     /**
      * @return ActiveQuery
      */
-    public function getContractor()
+    public function getServiceObject()
     {
-        return $this->hasOne(Contractor::class, ['id' => 'contractor_id']);
+        return $this->hasOne(ServiceObject::class, ['id' => 'service_object_id']);
     }
 
     /**

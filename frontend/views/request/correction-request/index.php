@@ -3,7 +3,6 @@
 use backend\widgets\ActiveField;
 use backend\widgets\ActiveForm;
 use backend\widgets\GridView\GridViewToolbar;
-use backend\widgets\GridView\GridViewWithToolbar;
 use yii\helpers\Html;
 use yii\helpers\Url;
 
@@ -19,7 +18,7 @@ unset($fields['logic']);
 $this->registerJs("
     $().ready(function() {
     
-        var selectsId = ['contractor_name', 'contract_code'];
+        var selectsId = ['service_object_name', 'contract_code'];
         
         var smartSelect = new SmartSelect({
             'mainLogic' : ".json_encode($logic).",
@@ -36,7 +35,7 @@ $this->registerJs("
 <div class="reference-index">
 
     <?php
-    if ($fields && !empty($model->contractor_name) && !empty($model->contract_code)) {
+    if ($fields && !empty($model->service_object_name) && !empty($model->contract_code)) {
         $form = ActiveForm::begin([
             'method' => 'GET',
             'action' => Url::to(['']),

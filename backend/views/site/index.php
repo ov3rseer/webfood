@@ -11,10 +11,10 @@ $this->title = 'Admin WebFood';
 
     <div class="jumbotron">
 
-        <p><?= Html::a('Импорт контрагентов и договоров',
-                ['/system/import-contractor-and-contract/index'], ['class' => 'btn btn-lg btn-success', 'style' => 'width:600px;']) ?></p>
-        <p><?= Html::a('Экспорт авторизационных данных новых контрагентов',
-                ['export-contractors-authorization-data'], ['class' => 'btn btn-lg btn-success', 'style' => 'width:600px;']) ?></p>
+        <p><?= Html::a('Импорт объектов обслуживания и договоров',
+                ['/system/import-service-object-and-contract/index'], ['class' => 'btn btn-lg btn-success', 'style' => 'width:600px;']) ?></p>
+        <p><?= Html::a('Экспорт авторизационных данных новых объектов обслуживания',
+                ['export-service-object-authorization-data'], ['class' => 'btn btn-lg btn-success', 'style' => 'width:600px;']) ?></p>
         <p><?= Html::a('Экспорт предварительных заявок на следующую неделю',
                 ['export-many-requests'], ['class' => 'btn btn-lg btn-success', 'style' => 'width:600px;']) ?></p>
 

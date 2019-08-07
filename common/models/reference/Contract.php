@@ -25,7 +25,7 @@ class Contract extends Reference
      */
     public function getSingularName()
     {
-        return 'Договор с контрагентом';
+        return 'Договор с объектом обслуживания';
     }
 
     /**
@@ -33,7 +33,7 @@ class Contract extends Reference
      */
     public function getPluralName()
     {
-        return 'Договоры с контрагентами';
+        return 'Договора с объектами обслуживания';
     }
 
     /**

@@ -3,7 +3,7 @@
 namespace common\models\enum;
 
 /**
- * Тип договора с контрагентом
+ * Тип договора с объектом обслуживания
  */
 class ContractType extends Enum
 {

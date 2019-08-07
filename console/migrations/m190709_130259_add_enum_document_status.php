@@ -1,12 +1,13 @@
 <?php
 
 use common\components\pgsql\Migration;
+use yii\base\NotSupportedException;
 
 class m190709_130259_add_enum_document_status extends Migration
 {
     /**
      * @return bool|void
-     * @throws \yii\base\NotSupportedException
+     * @throws NotSupportedException
      * @throws \yii\db\Exception
      */
     public function safeUp()

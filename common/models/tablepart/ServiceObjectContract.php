@@ -3,20 +3,22 @@
 namespace common\models\tablepart;
 
 use common\models\reference\Contract;
-use common\models\reference\Contractor;
+use common\models\reference\ServiceObject;
+use yii\db\ActiveQuery;
 
 /**
- * Модель строки табличной части "Договоры с контрагентом" справочника "Контрагент"
+ * Модель строки табличной части "Договора с объектом обслуживания" справочника "Объект обслуживания"
  *
  * Свойства:
+ * @property integer $parent_id
  * @property integer $contract_id
  * @property string  $address
  *
  * Отношения:
- * @property Contractor    $parent
- * @property Contract      $contract
+ * @property ServiceObject  $parent
+ * @property Contract       $contract
  */
-class ContractorContract extends TablePart
+class ServiceObjectContract extends TablePart
 {
     /**
      * @inheritdoc
@@ -36,21 +38,21 @@ class ContractorContract extends TablePart
     public function attributeLabels()
     {
         return array_merge(parent::attributeLabels(), [
-            'contract_id'    => 'Договор с контрагентом',
+            'contract_id'    => 'Договор с объектом обслуживания',
             'address'        => 'Адрес',
         ]);
     }
 
     /**
-     * @return \yii\db\ActiveQuery
+     * @return ActiveQuery
      */
     public function getParent()
     {
-        return $this->hasOne(Contractor::className(), ['id' => 'parent_id']);
+        return $this->hasOne(ServiceObject::className(), ['id' => 'parent_id']);
     }
 
     /**
-     * @return \yii\db\ActiveQuery
+     * @return ActiveQuery
      */
     public function getContract()
     {

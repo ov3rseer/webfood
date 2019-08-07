@@ -24,8 +24,8 @@ class ExportRequestAction extends BackendModelAction
         $domDocument->preserveWhiteSpace = false;
 
         $domElement = $domDocument->createElement('Контрагент');
-        $domAttributes['КодКонтрагента'] = $model->contractor_code;
-        $domAttributes['Контрагент'] = $model->contractor;
+        $domAttributes['КодКонтрагента'] = $model->service_object_code;
+        $domAttributes['Контрагент'] = $model->serviceObject;
         $domAttributes['КодДоговора'] = $model->contract_code;
         $domAttributes['НаименованиеДоговора'] = $model->contract;
         $domAttributes['АдресДоставки'] = $model->address;
@@ -58,7 +58,7 @@ class ExportRequestAction extends BackendModelAction
         }
         $domDocument->appendChild($domElement);
 
-        $xmlName = 'Еженедельная заявка на поставку товара к контрагенту ' . $model->contractor . ' №' . $model->id . ' от ' . $model->date->format('d-m-Y');
+        $xmlName = 'Еженедельная заявка на поставку товара к объекту обслуживания ' . $model->serviceObject . ' №' . $model->id . ' от ' . $model->date->format('d-m-Y');
         header('Content-Disposition: attachment;filename="' . $xmlName . 'xml"');
         header('Content-Type: application/xml');
         $domDocument->save("php://output");

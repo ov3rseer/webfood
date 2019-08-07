@@ -1,29 +1,28 @@
 <?php
 
+
 namespace common\models\reference;
 
-use common\models\tablepart\ContractorContract;
+use common\models\tablepart\ProductProviderServiceObject;
 use yii\db\ActiveQuery;
 
 /**
- * Модель справочника "Контрагенты"
+ * Модель справочника "Поставщик продуктов"
  *
- * @property integer  $contractor_code
  * @property integer  $user_id
- * @property integer  $type_request_id
  *
  * Отношения:
- * @property User                 $user
- * @property ContractorContract[] $contractorContract
+ * @property User                               $user
+ * @property ProductProviderServiceObject[]     $productProviderServiceObjects
  */
-class Contractor extends Reference
+class ProductProvider extends Reference
 {
     /**
      * @inheritdoc
      */
     public function getSingularName()
     {
-        return 'Контрагент';
+        return 'Поставщик подуктов';
     }
 
     /**
@@ -31,7 +30,7 @@ class Contractor extends Reference
      */
     public function getPluralName()
     {
-        return 'Контрагенты';
+        return 'Поставщики продуктов';
     }
 
     /**
@@ -40,8 +39,7 @@ class Contractor extends Reference
     public function rules()
     {
         return array_merge(parent::rules(), [
-            [['contractor_code', 'user_id'], 'integer'],
-            [['contractor_code'], 'required'],
+            [['user_id'], 'integer'],
         ]);
     }
 
@@ -51,9 +49,8 @@ class Contractor extends Reference
     public function attributeLabels()
     {
         return array_merge(parent::attributeLabels(), [
-            'contractor_code'       => 'Номер контрагента',
-            'user_id'               => 'Прикреплённый пользователь',
-            'contractorContracts'   => 'Договора',
+            'user_id'                       => 'Прикреплённый пользователь',
+            'productProviderServiceObjects' => 'Объекты обслуживания',
         ]);
     }
 
@@ -68,9 +65,9 @@ class Contractor extends Reference
     /**
      * @return ActiveQuery
      */
-    public function getContractorContracts()
+    public function getProductProviderServiceObjects()
     {
-        return $this->hasMany(ContractorContract::className(), ['parent_id' => 'id'])
+        return $this->hasMany(ProductProviderServiceObject::class, ['parent_id' => 'id'])
             ->orderBy('id ASC');
     }
 
@@ -80,7 +77,7 @@ class Contractor extends Reference
     public function getTableParts()
     {
         return array_merge([
-            'contractorContracts' => ContractorContract::className(),
+            'productProviderServiceObjects' => ProductProviderServiceObject::class,
         ], parent::getTableParts());
     }
 
