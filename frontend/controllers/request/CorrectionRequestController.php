@@ -21,7 +21,7 @@ class CorrectionRequestController extends RequestController
             'index' => [
                 'class' => 'frontend\actions\form\request\IndexAction',
                 'modelClass' => $this->modelClass,
-                'viewPath' => '@frontend/views/request/correction-request/index',
+                'viewPath' => '@frontend/views/service-object/request/correction-request/index',
             ],
         ]);
     }

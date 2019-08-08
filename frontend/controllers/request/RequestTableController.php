@@ -20,7 +20,7 @@ class RequestTableController extends FrontendModelController
             'index' => [
                 'class' => 'frontend\actions\form\requesttable\IndexAction',
                 'modelClass' => $this->modelClass,
-                'viewPath' => '@frontend/views/request/request-table/index',
+                'viewPath' => '@frontend/views/service-object/request/request-table/index',
             ],
         ]);
     }

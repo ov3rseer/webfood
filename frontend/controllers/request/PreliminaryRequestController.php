@@ -2,8 +2,6 @@
 
 namespace frontend\controllers\request;
 
-use frontend\controllers\FrontendModelController;
-
 /**
  * Контроллер для формы "Предварительная заявка"
  */
@@ -23,7 +21,7 @@ class PreliminaryRequestController extends RequestController
             'index' => [
                 'class' => 'frontend\actions\form\request\IndexAction',
                 'modelClass' => $this->modelClass,
-                'viewPath' => '@frontend/views/request/preliminary-request/index',
+                'viewPath' => '@frontend/views/service-object/request/preliminary-request/index',
             ],
         ]);
     }

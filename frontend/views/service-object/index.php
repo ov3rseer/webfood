@@ -39,6 +39,25 @@ Modal::end();
 
     <div class="jumbotron">
 
+        <p>
+            <?=
+            Html::a('Предварительная заявка', null, [
+                'class' => 'btn btn-lg btn-success',
+                'data-action' => 'request/preliminary-request/index',
+                'style' => 'width:300px;',
+            ])
+            ?>
+        </p>
+        <p>
+            <?=
+            Html::a('Корректировка заявки', null, [
+                'class' => 'btn btn-lg btn-success',
+                'data-action' => 'request/correction-request/index',
+                'style' => 'width:300px;',
+            ])
+            ?>
+        </p>
+
     </div>
 
 </div>

@@ -1,10 +1,14 @@
 <?php
 namespace frontend\controllers;
 
+use common\models\enum\UserType;
+use frontend\models\SignupForm;
 use frontend\models\VerifyEmailForm;
 use Yii;
 use yii\base\Exception;
 use yii\base\InvalidArgumentException;
+use yii\base\InvalidConfigException;
+use yii\base\UserException;
 use yii\web\BadRequestHttpException;
 use yii\web\Controller;
 use yii\filters\VerbFilter;
@@ -75,14 +79,21 @@ class SiteController extends Controller
         if (Yii::$app->user->isGuest) {
             return $this->redirect(['site/login']);
         }
-        return $this->render('index');
+        switch (Yii::$app->user->identity->user_type_id) {
+            case UserType::ADMIN: return $this->render('@frontend/views/admin/index');
+            case UserType::SERVICE_OBJECT: return $this->render('@frontend/views/service-object/index');
+            case UserType::EMPLOYEE: return $this->render('@frontend/views/employee/index');
+            case UserType::FATHER: return $this->render('@frontend/views/father/index');
+            case UserType::PRODUCT_PROVIDER: return $this->render('@frontend/views/product-provider/index');
+            default: return $this->render('index');
+        }
     }
 
     /**
      * Logs in a user.
      *
      * @return mixed
-     * @throws \yii\base\InvalidConfigException
+     * @throws InvalidConfigException
      */
     public function actionLogin()
     {
@@ -137,30 +148,31 @@ class SiteController extends Controller
 //        }
 //    }
 
-//    /**
-//     * Signs user up.
-//     *
-//     * @return mixed
-//     * @throws \yii\base\Exception
-//     */
-//    public function actionSignup()
-//    {
-//        $model = new SignupForm();
-//        if ($model->load(Yii::$app->request->post()) && $model->signup()) {
-//            Yii::$app->session->setFlash('success', 'Спасибо за регистрацию. Пожалуйста, проверьте свой email для подтверждения регистрации.');
-//            return $this->goHome();
-//        }
-//
-//        return $this->render('signup', [
-//            'model' => $model,
-//        ]);
-//    }
+    /**
+     * Signs user up.
+     *
+     * @return mixed
+     * @throws Exception
+     * @throws UserException
+     */
+    public function actionSignup()
+    {
+        $model = new SignupForm();
+        if ($model->load(Yii::$app->request->post()) && $model->signup()) {
+            Yii::$app->session->setFlash('success', 'Спасибо за регистрацию. Пожалуйста, проверьте свой email для подтверждения регистрации.');
+            return $this->goHome();
+        }
+
+        return $this->render('signup', [
+            'model' => $model,
+        ]);
+    }
 
     /**
      * Requests password reset.
      *
      * @return mixed
-     * @throws \yii\base\Exception
+     * @throws Exception
      */
     public function actionRequestPasswordReset()
     {
@@ -212,7 +224,7 @@ class SiteController extends Controller
      *
      * @param string $token
      * @return yii\web\Response
-     * @throws \yii\base\UserException
+     * @throws UserException
      * @throws BadRequestHttpException
      */
     public function actionVerifyEmail($token)
