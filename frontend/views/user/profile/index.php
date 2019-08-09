@@ -28,7 +28,7 @@ $this->params['breadcrumbs'][] = $this->title;
         <div class="col-lg-5">
             <?php $form = ActiveForm::begin(['id' => 'form-signup']);
 
-            if (!$model->email) {
+            if (!Yii::$app->user->identity->email) {
                 echo $form->field($model, 'email');
             } else {
                 echo $form->field($model, 'name')->textInput(['autofocus' => true]);

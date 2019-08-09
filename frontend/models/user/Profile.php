@@ -142,22 +142,25 @@ class Profile extends FrontendForm
             /** @var User $user */
             $user = User::findIdentity($userId);
             if ($user) {
-                $profile = $user->getProfile();
-                if ($profile && ($profile instanceof Father) || ($profile instanceof Employee)) {
-                    $name_full = ucfirst($this->surname) . ' ' . ucfirst($this->forename);
-                    $profile->name_full = $name_full;
-                    $profile->name = $name_full;
-                    $user->name_full = $name_full;
-                    $profile->forename = ucfirst($this->forename);
-                    $profile->surname = ucfirst($this->surname);
-                    $profile->save();
+                if ($user->email) {
+                    $profile = $user->getProfile();
+                    if ($profile && ($profile instanceof Father) || ($profile instanceof Employee)) {
+                        $name_full = ucfirst($this->surname) . ' ' . ucfirst($this->forename);
+                        $profile->name_full = $name_full;
+                        $profile->name = $name_full;
+                        $user->name_full = $name_full;
+                        $profile->forename = ucfirst($this->forename);
+                        $profile->surname = ucfirst($this->surname);
+                        $profile->save();
+                    }
+                    $user->name = $this->name;
+                    if (!empty($this->password)) {
+                        $user->setPassword($this->password);
+                    }
                 }
                 $user->email = $this->email;
-                $user->name = $this->name;
-                if (!empty($this->password)) {
-                    $user->setPassword($this->password);
-                }
                 $user->save();
+                Yii::$app->session->setFlash('success', 'Вы успешно изменили свои данные.');
             }
         }
     }
