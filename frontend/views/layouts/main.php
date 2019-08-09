@@ -36,13 +36,12 @@ AppAsset::register($this);
             'class' => 'navbar-inverse navbar-sticky-top',
         ],
     ]);
-//    $menuItems = [
-//        ['label' => 'Главная', 'url' => ['/site/index']],
-//        ['label' => 'Предварительная заявка', 'url' => ['/request/preliminary-request-request/index']],
-//        ['label' => 'Техподдержка', 'url' => ['/site/contact']],
-//    ];
+    //    $menuItems = [
+    //        ['label' => 'Главная', 'url' => ['/site/index']],
+    //        ['label' => 'Техподдержка', 'url' => ['/site/contact']],
+    //    ];
     if (Yii::$app->user->isGuest) {
-        // $menuItems[] = ['label' => 'Регистрация', 'url' => ['/site/signup']];
+        $menuItems[] = ['label' => 'Регистрация', 'url' => ['/site/signup']];
         $menuItems[] = ['label' => 'Вход', 'url' => ['/site/login']];
     } else {
         $menuItems[] = ['label' => 'Мой профиль: ' . Yii::$app->user->identity->name_full, 'url' => ['/user/profile/index']];

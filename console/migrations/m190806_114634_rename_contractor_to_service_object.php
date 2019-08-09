@@ -58,6 +58,9 @@ class m190806_114634_rename_contractor_to_service_object extends Migration
         ]);
         $this->addColumn('{{%ref_service_object}}', 'service_object_type_id', $this->integer()->indexed()->foreignKey('{{%enum_service_object_type}}','id'));
 
+        $this->dropColumn('{{%ref_user}}', 'surname');
+        $this->dropColumn('{{%ref_user}}', 'forename');
+
         $serviceObjectIds = (new Query())
             ->select('id')
             ->from('{{%ref_service_object}}')
@@ -100,6 +103,9 @@ class m190806_114634_rename_contractor_to_service_object extends Migration
             $this->_permissionsForImportServiceObjectAndContract
         );
         $this->deletePermissions($permissionForDelete);
+
+        $this->addColumn('{{%ref_user}}', 'forename', $this->string(255));
+        $this->addColumn('{{%ref_user}}', 'surname', $this->string(255));
 
         $this->dropColumn('{{%ref_service_object}}', 'service_object_type_id');
         $this->dropTable('{{%enum_service_object_type}}');

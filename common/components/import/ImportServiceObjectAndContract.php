@@ -4,6 +4,7 @@ namespace common\components\import;
 
 use common\components\DateTime;
 use common\models\enum\ContractType;
+use common\models\enum\ServiceObjectType;
 use common\models\reference\ConsoleTask;
 use common\models\reference\Contract;
 use common\models\reference\File;
@@ -98,6 +99,7 @@ class ImportServiceObjectAndContract extends BaseObject implements TaskProcessor
             $serviceObject = ServiceObject::findOne(['service_object_code' => $service_object_code]) ?: new ServiceObject();
             $serviceObject->name = $service_object_values['name'];
             $serviceObject->service_object_code = $service_object_values['service_object_code'];
+            $serviceObject->service_object_type_id = ServiceObjectType::KINDERGARTEN;
             $serviceObject->save() ? $result['added']++ : $result['skipped']++;
 
             foreach ($service_object_values['contracts'] as $contract_code => $contract_values) {

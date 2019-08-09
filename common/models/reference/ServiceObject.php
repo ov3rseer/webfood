@@ -46,8 +46,8 @@ class ServiceObject extends Reference
     public function rules()
     {
         return array_merge(parent::rules(), [
-            [['service_object_code', 'user_id'], 'integer'],
-            [['service_object_code'], 'required'],
+            [['service_object_code', 'user_id', 'service_object_type_id'], 'integer'],
+            [['service_object_code', 'service_object_type_id'], 'required'],
         ]);
     }
 

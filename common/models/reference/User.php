@@ -18,8 +18,6 @@ use yii\web\IdentityInterface;
  * @property string $password_hash
  * @property string $auth_key
  * @property string $name
- * @property string $forename
- * @property string $surname
  * @property integer $user_type_id
  * @property string $password_reset_token
  * @property string $verification_token
@@ -29,7 +27,12 @@ class User extends Reference implements IdentityInterface
     /**
      * @var string
      */
-    protected $password;
+    public $password;
+
+    /**
+     * @var boolean
+     */
+    public $is_password_block = true;
 
     /**
      * @inheritdoc
@@ -54,11 +57,13 @@ class User extends Reference implements IdentityInterface
     {
         return array_merge(parent::rules(), [
             [['name'], 'unique', 'message' => 'Это имя пользователя уже занято.'],
-            [['email', 'password'], 'filter', 'filter' => 'trim'],
-            [['email', 'forename', 'surname'], 'string', 'max' => 255],
+            [['email'], 'filter', 'filter' => 'trim'],
+            [['password'], 'filter', 'filter' => 'trim', 'skipOnEmpty' => true],
+            [['email'], 'string', 'max' => 255],
             [['name_full'], 'string', 'max' => 1024],
             [['email'], 'unique', 'message' => 'Этот адрес электронной почты уже занят.'],
             [['user_type_id'], 'integer'],
+            [['is_password_block'], 'boolean'],
         ]);
     }
 
@@ -72,9 +77,8 @@ class User extends Reference implements IdentityInterface
             'name_full'     => 'Полное имя',
             'password'      => 'Пароль',
             'email'         => 'Email',
-            'forename'      => 'Имя',
-            'surname'       => 'Фамилия',
             'user_type_id'  => 'Тип пользователя',
+            'is_password_block'  => 'Блокировка смены пароля',
         ]);
     }
 
@@ -196,7 +200,7 @@ class User extends Reference implements IdentityInterface
      */
     public function getUserType()
     {
-        return $this->hasOne(UserType::className(), ['id' => 'user_type_id']);
+        return $this->hasOne(UserType::class, ['id' => 'user_type_id']);
     }
 
     /**
@@ -296,6 +300,28 @@ class User extends Reference implements IdentityInterface
     }
 
     /**
+     * Получение профиля по типу пользователя
+     * @return Employee|Father|ProductProvider|ServiceObject|null
+     */
+    public function getProfile()
+    {
+        switch ($this->user_type_id) {
+            case UserType::SERVICE_OBJECT:
+                return ServiceObject::findOne(['user_id' => $this->id]);
+                break;
+            case UserType::EMPLOYEE:
+                return Employee::findOne(['user_id' => $this->id]);
+                break;
+            case UserType::FATHER:
+                return Father::findOne(['user_id' => $this->id]);
+                break;
+            case UserType::PRODUCT_PROVIDER:
+                return ProductProvider::findOne(['user_id' => $this->id]);
+        }
+        return null;
+    }
+
+    /**
      * @inheritdoc
      * @throws yii\base\Exception
      * @throws \Exception
@@ -308,12 +334,9 @@ class User extends Reference implements IdentityInterface
                 if (!$this->auth_key) {
                     $this->auth_key = Yii::$app->security->generateRandomString();
                 }
-                if (!$this->password_hash) {
-                    $this->setPassword($this->password);
-                }
             }
-            if ($this->surname || $this->forename) {
-                $this->name_full = $this->surname . ' ' . $this->forename;
+            if (!$this->is_password_block && !empty($this->password)) {
+                $this->setPassword($this->password);
             }
         }
         return $parentResult;
@@ -347,6 +370,8 @@ class User extends Reference implements IdentityInterface
             }else{
                 $this->_fieldsOptions['name_full']['displayType'] = ActiveField::STRING;
             }
+            $this->_fieldsOptions['password']['displayType'] = ActiveField::READONLY;
+            $this->_fieldsOptions['is_password_block']['displayType'] = ActiveField::BOOL;
             $this->_fieldsOptions['password_hash']['displayType'] = ActiveField::IGNORE;
             $this->_fieldsOptions['auth_key']['displayType'] = ActiveField::IGNORE;
             $this->_fieldsOptions['verification_token']['displayType'] = ActiveField::IGNORE;

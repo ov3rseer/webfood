@@ -1,6 +1,8 @@
 <?php
 namespace frontend\models;
 
+use common\models\enum\UserType;
+use common\models\reference\Father;
 use Yii;
 use yii\base\Exception;
 use yii\base\Model;
@@ -50,7 +52,7 @@ class SignupForm extends Model
         return [
             ['name', 'trim'],
             ['name', 'required'],
-            ['name', 'unique', 'targetClass' => '\common\models\reference\User', 'message' => 'This username has already been taken.'],
+            ['name', 'unique', 'targetClass' => '\common\models\reference\User', 'message' => 'Это имя пользователя уже занято.'],
             ['name', 'string', 'min' => 2, 'max' => 255],
 
             ['forename', 'trim'],
@@ -65,8 +67,9 @@ class SignupForm extends Model
             ['email', 'required'],
             ['email', 'email'],
             ['email', 'string', 'max' => 255],
-            ['email', 'unique', 'targetClass' => '\common\models\reference\User', 'message' => 'This email address has already been taken.'],
+            ['email', 'unique', 'targetClass' => '\common\models\reference\User', 'message' => 'Этот адрес электронной почты уже занят.'],
 
+            [['password', 'password_repeat'], 'trim'],
             [['password', 'password_repeat'], 'required'],
             [['password', 'password_repeat'], 'string', 'min' => 6],
             ['password_repeat', 'compare', 'compareAttribute' => 'password', 'message' => 'Пароли не совпадают'],
@@ -100,18 +103,26 @@ class SignupForm extends Model
         if (!$this->validate()) {
             return null;
         }
+        $name_full = ucfirst($this->surname) . ' ' . ucfirst($this->forename);
         $user = new User();
         $user->email = $this->email;
         $user->name = $this->name;
-        $user->name_full = $this->surname . ' ' . $this->forename;
-        $user->forename = ucfirst($this->forename);
-        $user->surname = ucfirst($this->surname);
+        $user->name_full = $name_full;
+        $user->user_type_id = UserType::FATHER;
         $user->is_active = false;
         $user->setPassword($this->password);
         $user->generateAuthKey();
         $user->generateEmailVerificationToken();
-        return $user->save() && $this->sendEmail($user);
+        $user->save();
+        $this->sendEmail($user);
 
+        $father = new Father();
+        $father->name = $name_full;
+        $father->name = $name_full;
+        $father->user_id = $user->id;
+        $father->forename = ucfirst($this->forename);
+        $father->surname = ucfirst($this->surname);
+        return $father->save();
     }
 
     /**

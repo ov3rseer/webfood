@@ -2,6 +2,8 @@
 
 namespace frontend\models\user;
 
+use common\models\reference\Employee;
+use common\models\reference\Father;
 use common\models\reference\User;
 use frontend\models\FrontendForm;
 use Yii;
@@ -43,20 +45,22 @@ class Profile extends FrontendForm
      */
     public $password_repeat;
 
+    /**
+     * @inheritdoc
+     */
     public function init()
     {
         parent::init();
         if (!empty(Yii::$app->user->identity->name_full)) {
             $this->name = Yii::$app->user->identity->name;
         }
-        if (!empty(Yii::$app->user->identity->surname)) {
-            $this->surname = Yii::$app->user->identity->surname;
-        }
-        if (!empty(Yii::$app->user->identity->forename)) {
-            $this->forename = Yii::$app->user->identity->forename;
-        }
         if (!empty(Yii::$app->user->identity->email)) {
             $this->email = Yii::$app->user->identity->email;
+        }
+        $profile = Yii::$app->user->identity->getProfile();
+        if ($profile && ($profile instanceof Father) || ($profile instanceof Employee)) {
+            $this->surname = $profile->surname;
+            $this->forename = $profile->forename;
         }
     }
 
@@ -81,6 +85,7 @@ class Profile extends FrontendForm
             ['email', 'string', 'max' => 255],
             ['email', 'validateEmail'],
 
+            [['password', 'password_repeat'], 'filter', 'filter' => 'trim', 'skipOnEmpty' => true],
             [['password', 'password_repeat'], 'string', 'min' => 6],
             ['password_repeat', 'compare', 'compareAttribute' => 'password', 'message' => 'Пароли не совпадают'],
         ];
@@ -126,7 +131,7 @@ class Profile extends FrontendForm
     }
 
     /**
-     * Signs user up.
+     * @inheritdoc
      *
      * @throws Exception
      */
@@ -137,13 +142,21 @@ class Profile extends FrontendForm
             /** @var User $user */
             $user = User::findIdentity($userId);
             if ($user) {
+                $profile = $user->getProfile();
+                if ($profile && ($profile instanceof Father) || ($profile instanceof Employee)) {
+                    $name_full = ucfirst($this->surname) . ' ' . ucfirst($this->forename);
+                    $profile->name_full = $name_full;
+                    $profile->name = $name_full;
+                    $user->name_full = $name_full;
+                    $profile->forename = ucfirst($this->forename);
+                    $profile->surname = ucfirst($this->surname);
+                    $profile->save();
+                }
                 $user->email = $this->email;
                 $user->name = $this->name;
-                $user->name_full = Yii::$app->user->identity->name_full ?? $this->surname . ' ' . $this->forename;
-                $user->forename = ucfirst($this->forename);
-                $user->surname = ucfirst($this->surname);
-                $user->setPassword($this->password);
-                $user->generateAuthKey();
+                if (!empty($this->password)) {
+                    $user->setPassword($this->password);
+                }
                 $user->save();
             }
         }

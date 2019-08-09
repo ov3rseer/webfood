@@ -34,8 +34,8 @@ class m190807_105733_add_ref_father extends Migration
         $this->createReferenceTable('{{%ref_father}}', [
             'forename' => $this->string(256),
             'surname' => $this->string(256),
+            'patronymic' => $this->string(256),
             'user_id' => $this->integer()->notNull()->indexed()->foreignKey('{{%ref_user}}', 'id'),
-            'service_object_id' => $this->integer()->notNull()->indexed()->foreignKey('{{%ref_service_object}}', 'id'),
         ]);
         $this->insert('{{%sys_entity}}', ['class_name' => 'common\models\reference\Father']);
 

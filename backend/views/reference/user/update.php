@@ -34,7 +34,7 @@ if ($model->isNewRecord) {
 }
 
 /** @noinspection PhpUnhandledExceptionInspection */
-$reflection = new \ReflectionClass($model->className());
+$reflection = new ReflectionClass($model->className());
 $shortClassName = $reflection->getShortName();
 
 $this->beginBlock('main');
@@ -118,7 +118,12 @@ foreach ($model->getFieldsOptions() as $field => $fieldOptions) {
         }
     }
 }
-echo $form->field($model, 'password')->passwordInput();
+
+$this->registerJs("
+    $('#".Html::getInputid($model, 'is_password_block')."').click(function(e){
+        $('#" . Html::getInputId($model, 'password') . "').attr('readonly', $(this).is(':checked'));       
+    });
+");
 
 $tabs = [];
 foreach ($controller->getTabs($model) as $relation => $tab) {

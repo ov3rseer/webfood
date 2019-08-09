@@ -10,12 +10,10 @@ use yii\db\ActiveQuery;
  *
  * @property string   $forename
  * @property string   $surname
- * @property integer  $service_object_id
  * @property integer  $user_id
  *
  * Отношения:
  * @property User           $user
- * @property ServiceObject  $serviceObject
  * @property FatherChild[]  $fatherChildren
  */
 class Father extends Reference
@@ -42,9 +40,9 @@ class Father extends Reference
     public function rules()
     {
         return array_merge(parent::rules(), [
-            [['service_object_id', 'user_id'], 'integer'],
-            [['forename', 'surname'], 'string'],
-            [['forename', 'surname', 'service_object_id'], 'required'],
+            [['user_id'], 'integer'],
+            [['forename', 'surname', 'patronymic'], 'string'],
+            [['forename', 'surname'], 'required'],
         ]);
     }
 
@@ -56,7 +54,7 @@ class Father extends Reference
         return array_merge(parent::attributeLabels(), [
             'forename'          => 'Имя',
             'surname'           => 'Фамилия',
-            'service_object_id' => 'Объект обслуживания',
+            'patronymic'        => 'Отчество',
             'user_id'           => 'Прикрепленный пользователь',
             'fatherChildren'    => 'Дети',
         ]);
@@ -73,17 +71,9 @@ class Father extends Reference
     /**
      * @return ActiveQuery
      */
-    public function getServiceObject()
-    {
-        return $this->hasOne(ServiceObject::class, ['id' => 'service_object_id']);
-    }
-
-    /**
-     * @return ActiveQuery
-     */
     public function getFatherChildren()
     {
-        return $this->hasMany(FatherChild::className(), ['parent_id' => 'id'])
+        return $this->hasMany(FatherChild::class, ['parent_id' => 'id'])
             ->orderBy('id ASC');
     }
 
@@ -93,10 +83,9 @@ class Father extends Reference
     public function getTableParts()
     {
         return array_merge([
-            'fatherChildren' => FatherChild::className(),
+            'fatherChildren' => FatherChild::class,
         ], parent::getTableParts());
     }
-
 
     /**
      * @inheritdoc
@@ -104,11 +93,25 @@ class Father extends Reference
     public function beforeSave($insert)
     {
         $parentResult = parent::beforeSave($insert);
-        if ($parentResult && $this->user_id) {
-            $this->is_active = true;
-        } else {
-            $this->is_active = false;
+        if ($parentResult) {
+            if ($this->user_id) {
+                $this->is_active = true;
+            } else {
+                $this->is_active = false;
+            }
+            if ($this->surname || $this->forename) {
+                $this->name_full = $this->surname . ' ' . $this->forename;
+            }
         }
         return $parentResult;
+    }
+
+    public function afterSave($insert, $changedAttributes)
+    {
+        parent::afterSave($insert, $changedAttributes);
+        if ($this->user) {
+            $this->user->name_full = $this->name_full;
+            $this->user->save();
+        }
     }
 }

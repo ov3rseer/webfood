@@ -2,8 +2,9 @@
 
 /* @var $this yii\web\View */
 /* @var $form yii\bootstrap\ActiveForm */
-/* @var $model \frontend\models\ResetPasswordForm */
+/* @var $model ResetPasswordForm */
 
+use frontend\models\ResetPasswordForm;
 use yii\helpers\Html;
 use yii\bootstrap\ActiveForm;
 
@@ -21,7 +22,7 @@ $this->params['breadcrumbs'][] = $this->title;
 
                 <?= $form->field($model, 'password')->passwordInput(['autofocus' => true]) ?>
 
-                <?= $form->field($model, 'repeat_password')->passwordInput() ?>
+                <?= $form->field($model, 'password_repeat')->passwordInput() ?>
 
                 <div class="form-group">
                     <?= Html::submitButton('Сохранить', ['class' => 'btn btn-primary']) ?>
