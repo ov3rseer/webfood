@@ -6,6 +6,7 @@ use common\models\enum\ServiceObjectType;
 use common\models\tablepart\ServiceObjectContract;
 use common\models\tablepart\ServiceObjectEmployee;
 use common\models\tablepart\ServiceObjectSchoolClass;
+use yii\base\UserException;
 use yii\db\ActiveQuery;
 
 /**
@@ -124,15 +125,30 @@ class ServiceObject extends Reference
 
     /**
      * @inheritdoc
+     * @throws UserException
      */
     public function beforeSave($insert)
     {
         $parentResult = parent::beforeSave($insert);
-        if ($parentResult && $this->user_id) {
-            $this->is_active = true;
-        } else {
-            $this->is_active = false;
+        if ($parentResult) {
+            if ($this->user_id) {
+                if ($this->user->getProfile()) {
+                    throw new UserException('Этот пользователь уже занят');
+                }
+                $this->is_active = true;
+            } else {
+                $this->is_active = false;
+            }
         }
         return $parentResult;
+    }
+
+    public function afterSave($insert, $changedAttributes)
+    {
+        parent::afterSave($insert, $changedAttributes);
+        if ($this->user) {
+            $this->user->name_full = $this->name_full;
+            $this->user->save();
+        }
     }
 }

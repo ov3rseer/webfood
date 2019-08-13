@@ -1,5 +1,6 @@
 <?php
-namespace frontend\models;
+
+namespace frontend\models\site;
 
 use common\models\enum\UserType;
 use common\models\reference\Father;

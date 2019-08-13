@@ -32,7 +32,7 @@ class m190807_122142_add_ref_product_provider extends Migration
         $this->resetSequence('{{%enum_user_type}}');
 
         $this->createReferenceTable('{{%ref_product_provider}}', [
-            'user_id' => $this->integer()->notNull()->indexed()->foreignKey('{{%ref_user}}', 'id'),
+            'user_id' => $this->integer()->indexed()->foreignKey('{{%ref_user}}', 'id'),
         ]);
         $this->insert('{{%sys_entity}}', ['class_name' => 'common\models\reference\ProductProvider']);
 
@@ -66,7 +66,7 @@ class m190807_122142_add_ref_product_provider extends Migration
             ->andWhere(['user_type_id' => array_keys($this->_userTypes)])
             ->column();
         $this->delete('{{%ref_product_provider}}', ['user_id' => $userIds]);
-        $this->delete('{{%ref_user}}', ['id' => $userIds]);
+        $this->update('{{%ref_user}}', ['user_type_id' => null, 'is_active' => false], ['id' => $userIds]);
         $this->delete('{{%enum_user_type}}', ['id' => array_keys($this->_userTypes)]);
 
         $this->delete('{{%sys_entity}}', ['class_name' => 'common\models\reference\ProductProvider']);

@@ -22,7 +22,6 @@ class m190807_095706_add_ref_school_class extends Migration
         $this->createReferenceTable('{{%ref_school_class}}', [
             'number' => $this->integer(2)->notNull(),
             'litter' => $this->char(1)->notNull(),
-            'teacher_id' => $this->integer()->notNull()->indexed()->foreignKey('{{%ref_employee}}', 'id'),
             'service_object_id' => $this->integer()->notNull()->indexed()->foreignKey('{{%ref_service_object}}', 'id'),
         ]);
         $this->insert('{{%sys_entity}}', ['class_name' => 'common\models\reference\SchoolClass']);

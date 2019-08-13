@@ -3,6 +3,7 @@
 namespace common\models\reference;
 
 use common\models\tablepart\FatherChild;
+use yii\base\UserException;
 use yii\db\ActiveQuery;
 
 /**
@@ -89,12 +90,16 @@ class Father extends Reference
 
     /**
      * @inheritdoc
+     * @throws UserException
      */
     public function beforeSave($insert)
     {
         $parentResult = parent::beforeSave($insert);
         if ($parentResult) {
             if ($this->user_id) {
+                if ($this->user->getProfile()) {
+                    throw new UserException('Этот пользователь уже занят');
+                }
                 $this->is_active = true;
             } else {
                 $this->is_active = false;

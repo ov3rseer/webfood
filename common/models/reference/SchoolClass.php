@@ -10,10 +10,11 @@ use yii\db\ActiveQuery;
  *
  * @property integer  $service_object_id
  * @property integer  $teacher_id
+ * @property integer  $number
+ * @property string   $litter
  *
  * Отношения:
  * @property ServiceObject $serviceObject
- * @property Employee      $teacher
  */
 class SchoolClass extends Reference
 {
@@ -40,9 +41,9 @@ class SchoolClass extends Reference
     {
         return array_merge(parent::rules(), [
             [['service_object_id', 'number'], 'integer'],
-            [['number'], 'in', 'range' => range(1, 11)],
+            [['number'], 'in', 'range' => range(1, 11), 'message' => 'Значение не должно быть больше 11.'],
             [['litter'], 'string', 'max' => 1],
-            [['service_object_id', 'litter'], 'required'],
+            [['service_object_id', 'number', 'litter'], 'required'],
         ]);
     }
 
@@ -54,18 +55,9 @@ class SchoolClass extends Reference
         return array_merge(parent::attributeLabels(), [
             'number'                => 'Номер',
             'litter'                => 'Литера',
-            'teacher_id'            => 'Классный руководитель',
             'service_object_id'     => 'Объект обслуживания',
             'schoolClassChildren'   => 'Ученики',
         ]);
-    }
-
-    /**
-     * @return ActiveQuery
-     */
-    public function getTeacher()
-    {
-        return $this->hasOne(Employee::class, ['id' => 'teacher_id']);
     }
 
     /**
@@ -93,5 +85,17 @@ class SchoolClass extends Reference
         return array_merge([
             'schoolClassChildren' => SchoolClassChild::className(),
         ], parent::getTableParts());
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function beforeSave($insert)
+    {
+        $parentResult = parent::beforeSave($insert);
+        if ($parentResult) {
+            $this->name = $this->number . $this->litter;
+        }
+        return $parentResult;
     }
 }

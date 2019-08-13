@@ -1,8 +1,6 @@
 <?php
 
-namespace frontend\models\request;
-
-use frontend\models\FrontendForm;
+namespace frontend\models\serviceObject\request;
 
 /**
  * Форма "Предварительная заявка"

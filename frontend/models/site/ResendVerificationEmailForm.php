@@ -1,7 +1,6 @@
 <?php
 
-
-namespace frontend\models;
+namespace frontend\models\site;
 
 use common\models\reference\User;
 use Yii;

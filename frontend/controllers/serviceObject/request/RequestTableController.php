@@ -1,6 +1,6 @@
 <?php
 
-namespace frontend\controllers\request;
+namespace frontend\controllers\serviceObject\request;
 
 use frontend\controllers\FrontendModelController;
 
@@ -9,7 +9,7 @@ class RequestTableController extends FrontendModelController
     /**
      * @var string имя класса модели
      */
-    public $modelClass = 'frontend\models\request\RequestTableForm';
+    public $modelClass = 'frontend\models\serviceObject\request\RequestTableForm';
 
     /**
      * @inheritdoc

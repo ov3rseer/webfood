@@ -40,6 +40,5 @@ class UserController extends ReferenceController
     {
         $result = ReferenceController::generateAutoColumns($model, $filterModel);
         return ArrayHelper::filter($result, ['name', 'name_full', 'is_active', 'userType', 'email', 'createUser', 'updateUser', 'create_date', 'update_date']);
-
     }
 }
