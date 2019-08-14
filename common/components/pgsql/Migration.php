@@ -2,6 +2,7 @@
 
 namespace common\components\pgsql;
 
+use common\models\system\Structure;
 use Yii;
 use yii\rbac\Permission;
 
@@ -33,6 +34,11 @@ class Migration extends \yii\db\Migration
      */
     protected $tablesForSchemaRefresh = [];
 
+    public function __construct($config = [])
+    {
+        parent::__construct($config);
+    }
+
     /**
      * @inheritdoc
      */
@@ -45,7 +51,7 @@ class Migration extends \yii\db\Migration
                     $this->createIndexWithAutoName($table, $column, $type->isUnique);
                 }
                 if ($type->foreignKeyData) {
-                    $this->addForeignKeyWithAutoName($table, $column, $type->foreignKeyData[0], $type->foreignKeyData[1]);
+                    $this->addForeignKeyWithAutoName($table, $column, $type->foreignKeyData[0], $type->foreignKeyData[1], 'CASCADE');
                 }
             }
         }
@@ -81,7 +87,7 @@ class Migration extends \yii\db\Migration
                 $this->createIndexWithAutoName($table, $column, $type->isUnique);
             }
             if ($type->foreignKeyData) {
-                $this->addForeignKeyWithAutoName($table, $column, $type->foreignKeyData[0], $type->foreignKeyData[1]);
+                $this->addForeignKeyWithAutoName($table, $column, $type->foreignKeyData[0], $type->foreignKeyData[1], 'CASCADE');
             }
         }
         $this->refreshTableSchema($table);
