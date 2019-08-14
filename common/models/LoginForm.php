@@ -3,6 +3,7 @@ namespace common\models;
 
 use common\models\reference\User;
 use Yii;
+use yii\base\InvalidConfigException;
 use yii\base\Model;
 
 /**
@@ -47,7 +48,7 @@ class LoginForm extends Model
      * Validates the password.
      * This method serves as the inline validation for password.
      * @param $attribute
-     * @throws \yii\base\InvalidConfigException
+     * @throws InvalidConfigException
      */
     public function validatePassword($attribute)
     {
@@ -63,7 +64,7 @@ class LoginForm extends Model
      * Logs in a user using the provided username and password.
      *
      * @return bool whether the user is logged in successfully
-     * @throws \yii\base\InvalidConfigException
+     * @throws InvalidConfigException
      */
     public function login()
     {
@@ -78,7 +79,7 @@ class LoginForm extends Model
      * Finds user by [[username]]
      *
      * @return array|User|null
-     * @throws \yii\base\InvalidConfigException
+     * @throws InvalidConfigException
      */
     protected function getUser()
     {

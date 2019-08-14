@@ -1,6 +1,6 @@
 <?php
 
-namespace frontend\controllers\request;
+namespace frontend\controllers\serviceObject\request;
 
 /**
  * Контроллер для формы "Предварительная заявка"
@@ -10,7 +10,7 @@ class PreliminaryRequestController extends RequestController
     /**
      * @var string имя класса модели
      */
-    public $modelClass = 'frontend\models\request\PreliminaryRequestForm';
+    public $modelClass = 'frontend\models\serviceObject\request\PreliminaryRequestForm';
 
     /**
      * @inheritdoc

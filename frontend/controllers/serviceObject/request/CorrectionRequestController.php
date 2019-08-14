@@ -1,6 +1,6 @@
 <?php
 
-namespace frontend\controllers\request;
+namespace frontend\controllers\serviceObject\request;
 
 /**
  * Контроллер для формы "Корректировка заявки"
@@ -10,7 +10,7 @@ class CorrectionRequestController extends RequestController
     /**
      * @var string имя класса модели
      */
-    public $modelClass = 'frontend\models\request\CorrectionRequestForm';
+    public $modelClass = 'frontend\models\serviceObject\request\CorrectionRequestForm';
 
     /**
      * @inheritdoc

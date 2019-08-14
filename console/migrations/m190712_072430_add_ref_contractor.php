@@ -1,6 +1,7 @@
 <?php
 
 use common\components\pgsql\Migration;
+use yii\db\Query;
 
 class m190712_072430_add_ref_contractor extends Migration
 {
@@ -92,14 +93,20 @@ class m190712_072430_add_ref_contractor extends Migration
         $this->dropColumn('{{%doc_request}}', 'contract_code');
         $this->dropColumn('{{%doc_request}}', 'address');
 
+        $userIds = (new Query())
+            ->select(['id'])
+            ->from('{{%ref_user}}')
+            ->andWhere(['user_type_id' => array_keys($this->_userTypes)])
+            ->column();
+        $this->delete('{{%ref_contractor}}', ['user_id' => $userIds]);
+        $this->update('{{%ref_user}}', ['user_type_id' => null, 'is_active' => false], ['id' => $userIds]);
+        $this->delete('{{%enum_user_type}}', ['id' => array_keys($this->_userTypes)]);
+
         $this->dropTable('{{%tab_contractor_contract}}');
         $this->dropTable('{{%tab_contract_product}}');
         $this->dropTable('{{%ref_contract}}');
         $this->delete('{{%sys_entity}}', ['class_name' => 'common\models\reference\Contract']);
         $this->dropTable('{{%ref_contractor}}');
         $this->delete('{{%sys_entity}}', ['class_name' => 'common\models\reference\Contractor']);
-
-        $this->delete('{{%ref_user}}', ['user_type_id' => array_keys($this->_userTypes)]);
-        $this->delete('{{%enum_user_type}}', ['id' => array_keys($this->_userTypes)]);
     }
 }

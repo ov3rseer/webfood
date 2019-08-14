@@ -1,6 +1,6 @@
 <?php
 
-namespace frontend\controllers\request;
+namespace frontend\controllers\serviceObject\request;
 
 use frontend\controllers\FrontendModelController;
 

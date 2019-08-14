@@ -93,6 +93,9 @@ echo GridViewWithToolbar::widget([
                             alert('Не выбраны строки для удаления');
                             return;
                         }
+                        if (!confirm('Вы действительно хотите удалить выделенные элементы?')) {
+                            return;
+                        }                       
                         checkedItems.each(function(e, item){
                             $(item).closest('tr').remove();
                         });
@@ -140,6 +143,9 @@ echo GridViewWithToolbar::widget([
                     $this->registerJs("
                         $('#" . $gridWidgetId . "-grid .delete-row').click(function(e){
                             e.preventDefault();
+                            if (!confirm('Вы действительно хотите удалить элемент?')) {
+                                return;
+                            }  
                             $(this).closest('tr').remove();
                             $.pjax.reload('#" . $pjaxId . "', {
                                 url: $('#" . $formId . "').attr('action'),

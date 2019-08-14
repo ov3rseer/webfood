@@ -2,8 +2,10 @@
 namespace frontend\controllers;
 
 use common\models\enum\UserType;
-use frontend\models\SignupForm;
-use frontend\models\VerifyEmailForm;
+use frontend\models\site\PasswordResetRequestForm;
+use frontend\models\site\ResetPasswordForm;
+use frontend\models\site\SignupForm;
+use frontend\models\site\VerifyEmailForm;
 use Yii;
 use yii\base\Exception;
 use yii\base\InvalidArgumentException;
@@ -14,8 +16,6 @@ use yii\web\Controller;
 use yii\filters\VerbFilter;
 use yii\filters\AccessControl;
 use common\models\LoginForm;
-use frontend\models\PasswordResetRequestForm;
-use frontend\models\ResetPasswordForm;
 
 /**
  * Site controller

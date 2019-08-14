@@ -34,7 +34,7 @@ class m190807_093000_add_ref_employee extends Migration
         $this->createReferenceTable('{{%ref_employee}}', [
             'forename' => $this->string(256),
             'surname' => $this->string(256),
-            'user_id' => $this->integer()->notNull()->indexed()->foreignKey('{{%ref_user}}', 'id'),
+            'user_id' => $this->integer()->indexed()->foreignKey('{{%ref_user}}', 'id'),
             'service_object_id' => $this->integer()->notNull()->indexed()->foreignKey('{{%ref_service_object}}', 'id'),
         ]);
         $this->insert('{{%sys_entity}}', ['class_name' => 'common\models\reference\Employee']);
@@ -69,7 +69,7 @@ class m190807_093000_add_ref_employee extends Migration
             ->andWhere(['user_type_id' => array_keys($this->_userTypes)])
             ->column();
         $this->delete('{{%ref_employee}}', ['user_id' => $userIds]);
-        $this->delete('{{%ref_user}}', ['id' => $userIds]);
+        $this->update('{{%ref_user}}', ['user_type_id' => null, 'is_active' => false], ['id' => $userIds]);
         $this->delete('{{%enum_user_type}}', ['id' => array_keys($this->_userTypes)]);
 
         $this->delete('{{%sys_entity}}', ['class_name' => 'common\models\reference\Employee']);

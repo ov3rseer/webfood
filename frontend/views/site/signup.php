@@ -2,6 +2,7 @@
 
 /* @var $this yii\web\View */
 /* @var $form yii\bootstrap\ActiveForm */
+
 /* @var $model SignupForm */
 
 use frontend\models\SignupForm;
@@ -43,13 +44,16 @@ $this->title = 'Регистрация в личном кабинете роди
             <?= $form->field($model, 'password_repeat')->passwordInput() ?>
         </div>
     </div>
+
     <div class="form-group">
         <?= Html::submitButton('Зарегистрироваться', ['class' => 'btn btn-success', 'name' => 'signup-button']) ?>
     </div>
 
-    <p>* Регистрируясь в личном кабинете вы присоединяетесь к условиям указанного Соглашения </p>
-    <p>** Нажимая "Зарегистрироваться", вы разрешаете этой информационной системе использовать предоставленные вами данные.</p>
-
+    <div style="color:#999;margin:1em 0">
+        <p>* Регистрируясь в личном кабинете вы присоединяетесь к условиям указанного Соглашения </p>
+        <p>** Нажимая "Зарегистрироваться", вы разрешаете этой информационной системе использовать предоставленные вами
+            данные.</p>
+    </div>
     <?php ActiveForm::end(); ?>
 
 </div>

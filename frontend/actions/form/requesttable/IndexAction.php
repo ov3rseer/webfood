@@ -14,7 +14,7 @@ use common\models\tablepart\RequestDate;
 use Exception;
 use frontend\actions\FrontendModelAction;
 use backend\widgets\ActiveForm;
-use frontend\models\request\RequestTableForm;
+use frontend\models\serviceObject\request\RequestTableForm;
 use Yii;
 use yii\base\InvalidConfigException;
 use yii\data\ArrayDataProvider;
