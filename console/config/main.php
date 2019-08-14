@@ -28,9 +28,6 @@ return [
         'task' => [
             'class' => 'console\controllers\TaskController',
         ],
-        'migration_handler' => [
-            'class' => 'console\controllers\MigrateHandlerController',
-        ]
     ],
     'components' => [
         'log' => [
