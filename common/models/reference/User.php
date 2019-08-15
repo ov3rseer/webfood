@@ -8,6 +8,7 @@ use Throwable;
 use yii;
 use yii\base\Exception;
 use yii\base\NotSupportedException;
+use yii\base\UserException;
 use yii\db\ActiveQuery;
 use yii\web\IdentityInterface;
 
@@ -330,6 +331,11 @@ class User extends Reference implements IdentityInterface
     {
         $parentResult = parent::beforeSave($insert);
         if ($parentResult) {
+            if($this->id == 1){
+                $exceptionMessage = 'Для данного пользователя невозможно изменить тип.';
+                $exception = new UserException($exceptionMessage);
+                throw $exception;
+            }
             if ($this->isNewRecord) {
                 if (!$this->auth_key) {
                     $this->auth_key = Yii::$app->security->generateRandomString();
@@ -342,20 +348,50 @@ class User extends Reference implements IdentityInterface
         return $parentResult;
     }
 
+    /**
+     * @inheritdoc
+     */
     public function afterSave($insert, $changedAttributes)
     {
         parent::afterSave($insert, $changedAttributes);
         if (array_key_exists('user_type_id', $changedAttributes)
             && $this->user_type_id != $changedAttributes['user_type_id']) {
             $auth = Yii::$app->authManager;
-            $role = $auth->getRole('super-admin');
-            if ($this->user_type_id == UserType::ADMIN) {
-                // Добавляем админа
-                $auth->assign($role, $this->id);
-            } else {
+            $role = self::checkRole($changedAttributes['user_type_id']);
+            if ($role) {
+                $role = $auth->getRole($role);
                 $auth->revoke($role, $this->id);
             }
+            $role = self::checkRole($this->user_type_id);
+            if ($role) {
+                $role = $auth->getRole($role);
+                $auth->assign($role, $this->id);
+            }
         }
+    }
+
+    /**
+     * Проверка какой ролью должен обладать пользователь по его типу
+     * @param integer $userTypeId
+     * @return string
+     */
+    public static function checkRole($userTypeId)
+    {
+        switch ($userTypeId) {
+            case UserType::ADMIN:
+                return 'super-admin';
+            case UserType::OTHER;
+                return 'other';
+            case UserType::SERVICE_OBJECT;
+                return 'service-object';
+            case UserType::EMPLOYEE;
+                return 'employee';
+            case UserType::FATHER;
+                return 'father';
+            case UserType::PRODUCT_PROVIDER:
+                return 'product-provider';
+        }
+        return null;
     }
 
     /**

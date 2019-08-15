@@ -1,6 +1,6 @@
 <?php
 
-namespace frontend\actions\form\requesttable;
+namespace frontend\actions\form\serviceObject\requesttable;
 
 use common\components\DateTime;
 use common\models\cross\RequestDateProduct;

@@ -18,6 +18,8 @@ class AppAsset extends AssetBundle
         'js/main.js',
     ];
     public $depends = [
+        'common\assets\Html5ShivAsset',
+        'common\assets\RespondAsset',
         'yii\web\YiiAsset',
         'yii\bootstrap\BootstrapAsset',
     ];

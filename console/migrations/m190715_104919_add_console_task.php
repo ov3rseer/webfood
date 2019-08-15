@@ -5,18 +5,6 @@ use yii\base\NotSupportedException;
 
 class m190715_104919_add_console_task extends Migration
 {
-    private $_permissionsForTasks;
-    private $_permissionsForSystemSetting;
-
-    /**
-     * @throws Exception
-     */
-    public function setPermissions()
-    {
-        $this->_permissionsForTasks = $this->getPermissions('backend\controllers\report\TasksController', 'Задачи', 32);
-        $this->_permissionsForSystemSetting = $this->getPermissions('backend\controllers\reference\SystemSettingController', 'Настройки системы', 63);
-    }
-
     /**
      * @return bool|void
      * @throws NotSupportedException
@@ -52,13 +40,6 @@ class m190715_104919_add_console_task extends Migration
             'result_data' => $this->text(),
         ]);
         $this->insert('{{%sys_entity}}', ['class_name' => 'common\models\reference\ConsoleTask']);
-
-        $this->setPermissions();
-        $permissionForAdd = array_merge(
-            $this->_permissionsForTasks,
-            $this->_permissionsForSystemSetting
-        );
-        $this->addPermissions($permissionForAdd);
     }
 
     /**
@@ -67,13 +48,6 @@ class m190715_104919_add_console_task extends Migration
      */
     public function safeDown()
     {
-        $this->setPermissions();
-        $permissionForDelete = array_merge(
-            $this->_permissionsForTasks,
-            $this->_permissionsForSystemSetting
-        );
-        $this->deletePermissions($permissionForDelete);
-
         $this->delete('{{%sys_entity}}', ['class_name' => 'common\models\reference\ConsoleTask']);
         $this->dropTable('{{%ref_console_task}}');
         $this->dropTable('{{%enum_console_task_type}}');

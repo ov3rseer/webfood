@@ -4,8 +4,8 @@ namespace backend\actions\base;
 
 use backend\actions\BackendModelAction;
 use common\models\document\Document;
-use common\models\enum\DocumentStatus;
 use common\models\reference\Reference;
+use common\models\reference\User;
 use Throwable;
 use yii\base\UserException;
 use yii\db\StaleObjectException;
@@ -31,11 +31,15 @@ class DeleteAction extends BackendModelAction
         $model = $this->controller->findModel($id, $this->modelClass);
         if ($model instanceof Reference || $model instanceof Document) {
             if ($model instanceof Reference) {
-                $model->is_active = false;
+                if ($model instanceof User) {
+                    $model->is_active = false;
+                    $model->save();
+                } else {
+                    $model->delete();
+                }
             } else if ($model instanceof Document) {
-                $model->status_id = DocumentStatus::DELETED;
+                $model->delete();
             }
-            $model->save();
         } else {
             $model->delete();
         }

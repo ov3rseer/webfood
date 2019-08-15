@@ -1,13 +1,13 @@
 <?php
 
-namespace frontend\actions\form\request;
+namespace frontend\actions\form\serviceObject\request;
 
 use common\models\reference\Contract;
 use common\models\reference\ServiceObject;
 use common\models\tablepart\ServiceObjectContract;
 use frontend\actions\FrontendModelAction;
 use backend\widgets\ActiveForm;
-use frontend\models\request\RequestForm;
+use frontend\models\serviceObject\request\RequestForm;
 use Yii;
 use yii\base\InvalidConfigException;
 use yii\db\Query;

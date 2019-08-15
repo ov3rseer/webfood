@@ -71,7 +71,7 @@ class ImportServiceObjectAndContract extends BaseObject implements TaskProcessor
             //if (!isset($serviceObjects[$service_object_code]['contracts'][$contract_code])) { // потом раскоментить
             $serviceObjects[$service_object_code]['contracts'][$contract_code] = [
                 'name' => trim($xml['НаименованиеДоговора']),
-                'contract_code' => trim($xml['НомерДоговора']),
+                'contract_code' => trim($xml['КодДоговора']),
                 'contract_type_id' => ContractType::CHILD,
                 'address' => trim($xml['АдресДоставки']),
                 'date_from' => $xml['ДатаДоговора'],

@@ -14,7 +14,8 @@ use yii\db\ActiveQuery;
  * @property string   $litter
  *
  * Отношения:
- * @property ServiceObject $serviceObject
+ * @property ServiceObject      $serviceObject
+ * @property SchoolClassChild[] $schoolClassChildren
  */
 class SchoolClass extends Reference
 {

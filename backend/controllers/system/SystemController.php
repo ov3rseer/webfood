@@ -5,6 +5,7 @@ namespace backend\controllers\system;
 use backend\controllers\BackendModelController;
 use common\helpers\ArrayHelper;
 use yii\filters\AccessControl;
+use yii\web\BadRequestHttpException;
 
 /**
  * Базовый класс контроллера для системных моделей
@@ -32,7 +33,7 @@ abstract class SystemController extends BackendModelController
 
     /**
      * @inheritdoc
-     * @throws \yii\web\BadRequestHttpException
+     * @throws BadRequestHttpException
      */
     public function beforeAction($action)
     {
@@ -52,7 +53,7 @@ abstract class SystemController extends BackendModelController
                     [
                         'actions' => ['index'],
                         'allow'   => true,
-                        'roles'   => [static::className() . '.Index'],
+                        'roles'   => ['super-admin'],
                     ],
                 ],
             ],

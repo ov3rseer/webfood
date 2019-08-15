@@ -31,7 +31,10 @@
         "ext-simplexml": "*",
         "ext-json": "*",
         "ext-zip": "*",
-        "yii2tech/crontab": "^1.0"
+        "yii2tech/crontab": "^1.0",
+        "bower-asset/html5shiv": "*",
+        "bower-asset/respond": "*",
+        "bower-asset/jquery": "^1.9.1"
     },
     "require-dev": {
         "yiisoft/yii2-debug": "*",

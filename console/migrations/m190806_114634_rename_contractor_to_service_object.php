@@ -6,27 +6,11 @@ use yii\db\Query;
 class m190806_114634_rename_contractor_to_service_object extends Migration
 {
     private $_userTypesToRename = [
-        2 => [
+        3 => [
             'old' => 'Контрагент',
             'new' => 'Объект обслуживания'
         ]
     ];
-
-    private $_permissionsForContractor;
-    private $_permissionsForServiceObject;
-    private $_permissionsForImportContractorAndContract;
-    private $_permissionsForImportServiceObjectAndContract;
-
-    /**
-     * @throws Exception
-     */
-    public function setPermissions()
-    {
-        $this->_permissionsForContractor = $this->getPermissions('backend\controllers\reference\ContractorController', 'Контрагенты', 63);
-        $this->_permissionsForServiceObject = $this->getPermissions('backend\controllers\reference\ServiceObjectController', 'Объект обслуживания', 63);
-        $this->_permissionsForImportContractorAndContract = $this->getPermissions('backend\controllers\system\ImportContractorAndContractController', 'Импорт контрагентов и договоров', 32);
-        $this->_permissionsForImportServiceObjectAndContract = $this->getPermissions('backend\controllers\system\ImportServiceObjectAndContractController', 'Импорт объектов обслуживания и договоров', 32);
-    }
 
     /**
      * @return bool|void
@@ -72,18 +56,6 @@ class m190806_114634_rename_contractor_to_service_object extends Migration
             ->scalar();
         $this->update('{{%ref_service_object}}', ['service_object_type_id' => $serviceObjectTypeId], ['id' => $serviceObjectIds]);
         $this->alterColumn('{{%ref_service_object}}', 'service_object_type_id', 'SET NOT NULL');
-
-        $this->setPermissions();
-        $permissionForAdd = array_merge(
-            $this->_permissionsForServiceObject,
-            $this->_permissionsForImportServiceObjectAndContract
-        );
-        $this->addPermissions($permissionForAdd);
-        $permissionForDelete = array_merge(
-            $this->_permissionsForContractor,
-            $this->_permissionsForImportContractorAndContract
-        );
-        $this->deletePermissions($permissionForDelete);
     }
 
     /**
@@ -92,18 +64,6 @@ class m190806_114634_rename_contractor_to_service_object extends Migration
      */
     public function safeDown()
     {
-        $this->setPermissions();
-        $permissionForAdd = array_merge(
-            $this->_permissionsForContractor,
-            $this->_permissionsForImportContractorAndContract
-        );
-        $this->addPermissions($permissionForAdd);
-        $permissionForDelete = array_merge(
-            $this->_permissionsForServiceObject,
-            $this->_permissionsForImportServiceObjectAndContract
-        );
-        $this->deletePermissions($permissionForDelete);
-
         $this->addColumn('{{%ref_user}}', 'forename', $this->string(255));
         $this->addColumn('{{%ref_user}}', 'surname', $this->string(255));
 

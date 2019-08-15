@@ -53,6 +53,11 @@ class m130710_113758_add_rbac_entities extends Migration
         $auth->add($role);
         // Добавляем админа
         $auth->assign($role, 1);
+
+        // Добавляем роль объекта обслуживания
+        $role = $auth->createRole('service-object');
+        $role->description = 'Объект обслуживания';
+        $auth->add($role);
     }
 
     /**
