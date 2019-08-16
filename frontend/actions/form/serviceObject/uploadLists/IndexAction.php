@@ -28,12 +28,14 @@ class IndexAction extends FrontendModelAction
                 $model->scenario = $action;
                 if ($model->load($requestData) && $model->validate()) {
                     $model->submit();
+                    $this->controller->refresh();
                 }
             }
             if ($action == UploadLists::SCENARIO_UPLOAD_FILE) {
                 $model->scenario = $action;
                 if ($model->load($requestData) && $model->validate()) {
                     $model->proceed();
+                    $this->controller->refresh();
                 }
             }
         }

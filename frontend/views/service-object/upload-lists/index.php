@@ -40,8 +40,6 @@ $this->registerJs("
     });
 ");
 
-
-
 Modal::begin([
     'header' => '<h2>Ручной ввод</h2>',
     'options' => [
@@ -68,8 +66,6 @@ echo Html::endTag('div');
 ActiveForm::end();
 Modal::end();
 
-
-
 Modal::begin([
     'header' => '<h2>Загрузка из файла</h2>',
     'options' => [
@@ -79,13 +75,47 @@ Modal::begin([
 $form = ActiveForm::begin([
     'id' => 'form-signup',
 ]);
+
 echo Html::beginTag('div', ['class' => 'form-group']);
+    echo Html::beginTag('div', ['class' => 'row']);
+        echo Html::beginTag('div', ['class' => 'col-xs-12']);
+            echo Html::beginTag('div', ['class' => 'alert alert-info']);
+                echo Html::beginTag('ul');
+                    echo Html::beginTag('li');
+                        echo Html::tag('strong', 'Формат файла: ');
+                        echo 'Excel (*.xls, *.xlsx), CSV (*.csv)';
+                    echo Html::endTag('li');
+                    echo Html::beginTag('li');
+                        echo Html::tag('strong', 'Колонки файла: ');
+                        echo Html::beginTag('ol');
+                            echo Html::tag('li', 'Фамилия');
+                            echo Html::tag('li', 'Имя');
+                            echo Html::tag('li', 'Отчество');
+                            echo Html::tag('li', 'Номер класса');
+                            echo Html::tag('li', 'Литера класса');
+                            echo Html::tag('li', 'Кодовое слово');
+                            echo Html::tag('li', 'СНИЛС');
+                        echo Html::endTag('ol');
+                    echo Html::endTag('li');
+                    echo Html::beginTag('li');
+                        echo Html::tag('strong', 'Первая строка ');
+                        echo 'предназначена для заголовков колонок и пропускается при загрузке';
+                    echo Html::endTag('li');
+                    echo Html::beginTag('li');
+                        echo Html::tag('strong', 'Файл-образец: ');
+                        echo Html::a('Скачать', ['download-example-file'], ['target' => '_blank']);
+                    echo Html::endTag('li');
+                echo Html::endTag('ul');
+            echo Html::endTag('div');
+        echo Html::endTag('div');
+    echo Html::endTag('div');
+echo Html::endTag('div');
+
 echo $form->field($model, 'uploadedFile')->fileInput();
 echo Html::submitButton('Загрузить данные из файла', [
     'name' => 'action',
     'value' => 'upload-file',
     'class' => 'btn btn-success',
 ]);
-echo Html::endTag('div');
 ActiveForm::end();
 Modal::end();

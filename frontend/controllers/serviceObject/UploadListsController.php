@@ -4,6 +4,7 @@ namespace frontend\controllers\serviceObject;
 
 use common\helpers\ArrayHelper;
 use frontend\controllers\FrontendModelController;
+use Yii;
 use yii\filters\AccessControl;
 
 /**
@@ -44,8 +45,24 @@ class UploadListsController extends FrontendModelController
                         'allow' => true,
                         'roles' => ['service-object'],
                     ],
+                    [
+                        'actions' => ['download-example-file'],
+                        'allow'   => true,
+                        'roles'   => ['service-object'],
+                    ],
                 ],
             ]
         ]);
+    }
+
+    /**
+     * Скачивание файла-образца
+     */
+    public function actionDownloadExampleFile()
+    {
+        return Yii::$app->response->sendFile(
+            Yii::getAlias('@frontend/web/samples/upload-lists/upload-lists.xlsx'),
+            'Файл-образец для загрузки в систему учащихся и открытия счетов.xlsx'
+        );
     }
 }

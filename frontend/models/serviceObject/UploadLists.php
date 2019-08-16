@@ -102,6 +102,7 @@ class UploadLists extends SystemForm
             [['surname', 'forename', 'patronymic', 'class_number', 'class_litter', 'codeword', 'snils'], 'trim'],
             [['surname', 'forename', 'patronymic', 'class_number', 'class_litter', 'codeword', 'snils'], 'required'],
             [['surname', 'forename', 'patronymic', 'codeword'], 'string', 'min' => 2, 'max' => 255],
+            [['snils'], 'string', 'min' => 11, 'max' =>11],
             [['class_litter'], 'string', 'max' => 1],
             [['class_number'], 'integer'],
             [['class_number'], 'in', 'range' => range(0, 11), 'message' => 'Значение не должно быть больше 11.'],
@@ -169,7 +170,10 @@ class UploadLists extends SystemForm
                 $openBankAccountChild = new OpenBankAccountChild();
                 $openBankAccountChild->child_id = $child->id;
                 $openBankAccountChild->parent_id = $openBankAccount->id;
+                $openBankAccountChild->codeword = $this->codeword;
+                $openBankAccountChild->snils = $this->snils;
                 $openBankAccountChild->save();
+                Yii::$app->session->setFlash('success', 'Сохранение выполнено успешно');
             }
         }
     }
@@ -185,6 +189,9 @@ class UploadLists extends SystemForm
             $file->setUploadFile($this->uploadedFile);
             $file->path = 'upload-lists';
             $file->save();
+            if ($file){
+
+            }
         }
     }
 }
