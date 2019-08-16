@@ -31,17 +31,20 @@ class ColumnSchemaBuilder extends \yii\db\ColumnSchemaBuilder
         return $this;
     }
 
-    /**
+     /**
      * Добавляет внешний ключ для колонки
      * @param $table
      * @param $column
+     * @param $delete
+     * @param $update
      * @return $this
      */
-    public function foreignKey($table, $column)
+    public function foreignKey($table, $column, $delete = null, $update = null)
     {
-        $this->foreignKeyData = [$table, $column];
+        $this->foreignKeyData = [$table, $column, $delete, $update];
         return $this;
     }
+
 
     /**
      * Получение флага индекса
