@@ -8,7 +8,6 @@ use Throwable;
 use yii;
 use yii\base\Exception;
 use yii\base\NotSupportedException;
-use yii\base\UserException;
 use yii\db\ActiveQuery;
 use yii\web\IdentityInterface;
 
@@ -331,11 +330,6 @@ class User extends Reference implements IdentityInterface
     {
         $parentResult = parent::beforeSave($insert);
         if ($parentResult) {
-            if($this->id == 1){
-                $exceptionMessage = 'Для данного пользователя невозможно изменить тип.';
-                $exception = new UserException($exceptionMessage);
-                throw $exception;
-            }
             if ($this->isNewRecord) {
                 if (!$this->auth_key) {
                     $this->auth_key = Yii::$app->security->generateRandomString();
