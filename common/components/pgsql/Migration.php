@@ -45,7 +45,7 @@ class Migration extends \yii\db\Migration
                     $this->createIndexWithAutoName($table, $column, $type->isUnique);
                 }
                 if ($type->foreignKeyData) {
-                    $this->addForeignKeyWithAutoName($table, $column, $type->foreignKeyData[0], $type->foreignKeyData[1]);
+                    $this->addForeignKeyWithAutoName($table, $column, $type->foreignKeyData[0], $type->foreignKeyData[1], 'CASCADE');
                 }
             }
         }
@@ -81,7 +81,7 @@ class Migration extends \yii\db\Migration
                 $this->createIndexWithAutoName($table, $column, $type->isUnique);
             }
             if ($type->foreignKeyData) {
-                $this->addForeignKeyWithAutoName($table, $column, $type->foreignKeyData[0], $type->foreignKeyData[1]);
+                $this->addForeignKeyWithAutoName($table, $column, $type->foreignKeyData[0], $type->foreignKeyData[1], 'CASCADE');
             }
         }
         $this->refreshTableSchema($table);
