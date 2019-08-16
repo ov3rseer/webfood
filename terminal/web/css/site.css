@@ -118,6 +118,31 @@ a.desc:after {
     outline: none;
 }
 
+.navbar-inverse {
+    background-color: #669966;
+}
+
+.navbar-inverse .navbar-nav > li > a,
+.navbar-inverse .navbar-brand,
+.navbar-inverse .btn-link
+{
+    color: #ffffff;
+}
+
+.navbar-inverse .navbar-toggle {
+    border-color: #ffffff;
+}
+
+.navbar-inverse .navbar-brand:hover,
+.navbar-inverse .navbar-brand:focus,
+.navbar-inverse .navbar-nav > li > a:hover,
+.navbar-inverse .navbar-nav > li > a:focus,
+.navbar-inverse .btn-link:hover,
+.navbar-inverse .btn-link:focus
+{
+    color: #000000;
+}
+
 .pointer {
     cursor: pointer;
 }
