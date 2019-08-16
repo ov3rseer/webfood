@@ -4,7 +4,7 @@
  * @var \yii\web\View $this
  * @var string        $content
  */
-use frontend\assets\AppAsset;
+use terminal\assets\AppAsset;
 use common\widgets\Alert;
 use yii\helpers\Html;
 
