@@ -5,7 +5,7 @@ return [
             'class' => 'common\components\pgsql\Connection',
             'schemaMap' => ['pgsql' => 'common\components\pgsql\Schema'],
             'charset' => 'utf8',
-            'dsn' => 'pgsql:host=127.0.0.1;dbname=webfood',
+            'dsn' => 'pgsql:host=127.0.0.1;dbname=webfood_extend',
             'username' => 'postgres',
             'password' => '1234',
             'enableSchemaCache' => true,

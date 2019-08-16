@@ -5,20 +5,6 @@ use yii\base\NotSupportedException;
 
 class m190711_084046_add_doc_preliminary_request extends Migration
 {
-    private $_permissionsForUnit;
-    private $_permissionsForProduct;
-    private $_permissionsForRequest;
-
-    /**
-     * @throws Exception
-     */
-    public function setPermissions()
-    {
-        $this->_permissionsForUnit = $this->getPermissions('backend\controllers\reference\UnitController', 'Единицы измерения', 63);
-        $this->_permissionsForProduct = $this->getPermissions('backend\controllers\reference\ProductController', 'Продукты', 63);
-        $this->_permissionsForRequest = $this->getPermissions('backend\controllers\document\RequestController', 'Заявки', 63);
-    }
-
     /**
      * @return bool|void
      * @throws NotSupportedException
@@ -70,14 +56,6 @@ class m190711_084046_add_doc_preliminary_request extends Migration
             'planned_quantity' => $this->float()->notNull(),
             'current_quantity' => $this->float()->notNull(),
         ]);
-
-        $this->setPermissions();
-        $permissionForAdd = array_merge(
-            $this->_permissionsForUnit,
-            $this->_permissionsForProduct,
-            $this->_permissionsForRequest
-        );
-        $this->addPermissions($permissionForAdd);
     }
 
     /**
@@ -86,14 +64,6 @@ class m190711_084046_add_doc_preliminary_request extends Migration
      */
     public function safeDown()
     {
-        $this->setPermissions();
-        $permissionForDelete = array_merge(
-            $this->_permissionsForUnit,
-            $this->_permissionsForProduct,
-            $this->_permissionsForRequest
-        );
-        $this->deletePermissions($permissionForDelete);
-
         $this->dropTable('{{%cross_request_date_product}}');
         $this->dropTable('{{%tab_request_date}}');
         $this->delete('{{%sys_entity}}', ['class_name' => 'common\models\document\Request']);

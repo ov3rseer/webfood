@@ -19,6 +19,8 @@ class AppAsset extends AssetBundle
     ];
     public $depends = [
         'frontend\assets\FontAwesomeAsset',
+        'common\assets\Html5ShivAsset',
+        'common\assets\RespondAsset',
         'yii\web\YiiAsset',
         'yii\bootstrap\BootstrapAsset',
     ];

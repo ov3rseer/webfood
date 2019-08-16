@@ -6,20 +6,8 @@ use yii\db\Query;
 class m190712_072430_add_ref_contractor extends Migration
 {
     private $_userTypes = [
-        2 => 'Контрагент'
+        3 => 'Контрагент'
     ];
-
-    private $_permissionsForContract;
-    private $_permissionsForContractor;
-
-    /**
-     * @throws Exception
-     */
-    public function setPermissions()
-    {
-        $this->_permissionsForContract = $this->getPermissions('backend\controllers\reference\ContractController', 'Контракты', 63);
-        $this->_permissionsForContractor = $this->getPermissions('backend\controllers\reference\ContractorController', 'Контрагенты', 63);
-    }
 
     /**
      * @return bool|void
@@ -64,13 +52,6 @@ class m190712_072430_add_ref_contractor extends Migration
         $this->addColumn('{{%doc_request}}', 'contract_code', $this->string()->notNull());
         $this->addColumn('{{%doc_request}}', 'contractor_code', $this->string()->notNull());
         $this->addColumn('{{%doc_request}}', 'contract_type_id', $this->integer()->notNull()->indexed()->foreignKey('{{%enum_contract_type}}', 'id'));
-
-        $this->setPermissions();
-        $permissionForAdd = array_merge(
-            $this->_permissionsForContract,
-            $this->_permissionsForContractor
-        );
-        $this->addPermissions($permissionForAdd);
     }
 
     /**
@@ -79,13 +60,6 @@ class m190712_072430_add_ref_contractor extends Migration
      */
     public function safeDown()
     {
-        $this->setPermissions();
-        $permissionForDelete = array_merge(
-            $this->_permissionsForContract,
-            $this->_permissionsForContractor
-        );
-        $this->deletePermissions($permissionForDelete);
-
         $this->dropColumn('{{%doc_request}}', 'contract_type_id');
         $this->dropColumn('{{%doc_request}}', 'contract_id');
         $this->dropColumn('{{%doc_request}}', 'contractor_id');
@@ -98,8 +72,14 @@ class m190712_072430_add_ref_contractor extends Migration
             ->from('{{%ref_user}}')
             ->andWhere(['user_type_id' => array_keys($this->_userTypes)])
             ->column();
+        $contractorIds = (new Query())
+            ->select(['id'])
+            ->from('{{%ref_contractor}}')
+            ->andWhere(['user_id' => $userIds])
+            ->column();
+        $this->delete('{{%tab_contractor_contract}}', ['parent_id' => $contractorIds]);
         $this->delete('{{%ref_contractor}}', ['user_id' => $userIds]);
-        $this->update('{{%ref_user}}', ['user_type_id' => null, 'is_active' => false], ['id' => $userIds]);
+        $this->update('{{%ref_user}}', ['user_type_id' => 2, 'is_active' => false], ['id' => $userIds]);
         $this->delete('{{%enum_user_type}}', ['id' => array_keys($this->_userTypes)]);
 
         $this->dropTable('{{%tab_contractor_contract}}');

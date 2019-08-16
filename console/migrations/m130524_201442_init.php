@@ -12,6 +12,7 @@ class m130524_201442_init extends Migration
     {
         $this->createEnumTable('{{%enum_user_type}}', [
             1 => 'Администратор',
+            2 => 'Прочее',
         ]);
 
         $this->createReferenceTable('{{%ref_user}}', [

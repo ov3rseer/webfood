@@ -28,7 +28,7 @@ class ImportServiceObjectAndContractController extends SystemController
                     [
                         'actions' => ['download-example-file'],
                         'allow'   => true,
-                        'roles'   => [static::className() . '.Index'],
+                        'roles'   => ['super-admin'],
                     ],
                 ],
             ],

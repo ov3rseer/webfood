@@ -10,6 +10,7 @@ return [
     'id' => 'app-backend',
     'name' => 'Admin WebFood',
     'basePath' => dirname(__DIR__),
+    'homeUrl' => '/admin',
     'controllerNamespace' => 'backend\controllers',
     'bootstrap' => ['log'],
     'modules' => [],
@@ -20,7 +21,7 @@ return [
     'components' => [
         'request' => [
             'csrfParam' => '_csrf-backend',
-            'baseUrl' => '',
+            'baseUrl' => '/admin',
         ],
         'assetManager' => [
             'linkAssets' => true,
@@ -49,8 +50,6 @@ return [
         'urlManager' => [
             'enablePrettyUrl' => true,
             'showScriptName' => false,
-            'rules' => [
-            ],
         ],
     ],
     'params' => $params,

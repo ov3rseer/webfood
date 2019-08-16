@@ -42,7 +42,7 @@ class ReportController extends BackendModelController
                     [
                         'actions' => ['index'],
                         'allow'   => true,
-                        'roles'   => [static::className() . '.Index'],
+                        'roles'   => ['super-admin'],
                     ],
                 ],
             ],

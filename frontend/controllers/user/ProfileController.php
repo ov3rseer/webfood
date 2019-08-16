@@ -2,7 +2,9 @@
 
 namespace frontend\controllers\user;
 
+use common\helpers\ArrayHelper;
 use frontend\controllers\FrontendModelController;
+use yii\filters\AccessControl;
 
 /**
  * Контроллер для формы "Профиль"
@@ -24,6 +26,25 @@ class ProfileController extends FrontendModelController
                 'class' => 'frontend\actions\form\base\IndexAction',
                 'modelClass' => $this->modelClass,
                 'viewPath' => '@frontend/views/user/profile/index',
+            ],
+        ]);
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function behaviors()
+    {
+        return ArrayHelper::merge(parent::behaviors(), [
+            'access' => [
+                'class' => AccessControl::class,
+                'rules' => [
+                    [
+                        'actions' => ['index'],
+                        'allow' => true,
+                        'roles' => ['service-object'],
+                    ],
+                ],
             ],
         ]);
     }

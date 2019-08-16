@@ -12,14 +12,11 @@ use common\models\tablepart\TablePart;
 use frontend\models\FrontendForm;
 use ReflectionException;
 use Yii;
-use yii\base\Action;
 use yii\base\InvalidConfigException;
 use yii\filters\AccessControl;
-use yii\filters\ContentNegotiator;
 use yii\filters\VerbFilter;
 use yii\helpers\Html;
 use yii\web\Controller;
-use yii\web\ForbiddenHttpException;
 use yii\web\NotFoundHttpException;
 use yii\web\Response;
 
@@ -73,55 +70,9 @@ class FrontendModelController extends Controller
                     [
                         'actions' => ['index'],
                         'allow' => true,
-                        'roles' => ['@'],
-                    ],
-                    [
-                        'actions' => ['search', 'select'],
-                        'allow' => true,
-                        'roles' => ['@'],
-                    ],
-                    [
-                        'actions' => ['create'],
-                        'allow' => true,
-                        'roles' => ['@'],
-                    ],
-                    [
-                        'actions' => ['update'],
-                        'allow' => true,
-                        'roles' => ['@'],
-                    ],
-                    [
-                        'actions' => ['view'],
-                        'allow' => true,
-                        'roles' => ['@'],
-                    ],
-                    [
-                        'actions' => ['delete', 'delete-checked'],
-                        'allow' => true,
-                        'roles' => ['@'],
-                    ],
-                    [
-                        'actions' => ['restore'],
-                        'allow' => true,
-                        'roles' => ['@'],
+                        'roles' => ['super-admin'],
                     ],
                 ],
-
-                'denyCallback' => function ($rule, $action) {
-                    unset($rule);
-                    /**
-                     * @var Action $action
-                     */
-                    if ($action->id == 'update') {
-                        $action->controller->redirect(['view'] + Yii::$app->request->get());
-                    } else {
-                        if (Yii::$app->user !== false && Yii::$app->user->getIsGuest()) {
-                            Yii::$app->user->loginRequired();
-                        } else {
-                            throw new ForbiddenHttpException(Yii::t('yii', 'You are not allowed to perform this action.'));
-                        }
-                    }
-                }
             ],
             'verbs' => [
                 'class' => VerbFilter::class,
@@ -129,11 +80,6 @@ class FrontendModelController extends Controller
                     'delete' => ['POST'],
                     'delete-checked' => ['POST'],
                 ],
-            ],
-            'contentNegotiator' => [
-                'class' => ContentNegotiator::class,
-                'only' => ['delete-checked', 'search'],
-                'formats' => ['application/json' => Response::FORMAT_JSON],
             ],
         ]);
     }

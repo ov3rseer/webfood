@@ -4,26 +4,6 @@
 /* @var $content string */
 
 use backend\assets\AppAsset;
-use backend\controllers\document\RequestController;
-use backend\controllers\reference\ChildController;
-use backend\controllers\reference\ComplexController;
-use backend\controllers\reference\ContractController;
-use backend\controllers\reference\EmployeeController;
-use backend\controllers\reference\FatherController;
-use backend\controllers\reference\FileController;
-use backend\controllers\reference\MealController;
-use backend\controllers\reference\MenuController;
-use backend\controllers\reference\ProductCategoryController;
-use backend\controllers\reference\ProductController;
-use backend\controllers\reference\ProductProviderController;
-use backend\controllers\reference\SchoolClassController;
-use backend\controllers\reference\ServiceObjectController;
-use backend\controllers\reference\UnitController;
-use backend\controllers\reference\UserController;
-use backend\controllers\report\TasksController;
-use backend\controllers\system\ImportServiceObjectAndContractController;
-use backend\controllers\system\RoleController;
-use common\models\reference\SystemSetting;
 use yii\helpers\Html;
 use yii\bootstrap\Nav;
 use yii\bootstrap\NavBar;
@@ -68,116 +48,119 @@ AppAsset::register($this);
                 ],
                 [
                     'label' => 'Документы',
+                    'visible' => Yii::$app->user->can('super-admin'),
                     'items' => [
                         [
-                            'label' => 'Заявка',
+                            'label' => 'Заявки',
                             'url' => ['/document/request/index'],
-                            'visible' => Yii::$app->user->can( RequestController::class . '.Index'),
+                            'visible' => Yii::$app->user->can('super-admin'),
+                        ],
+                        [
+                            'label' => 'Открытие счетов',
+                            'url' => ['/document/open-bank-account/index'],
+                            'visible' => Yii::$app->user->can('super-admin'),
                         ],
                     ],
                 ],
                 [
                     'label' => 'Справочники',
+                    'visible' => Yii::$app->user->can('super-admin'),
                     'items' => [
                         [
                             'label' => 'Пользователи',
                             'url' => ['/reference/user/index'],
-                            'visible' => Yii::$app->user->can(UserController::class . '.Index'),
+                            'visible' => Yii::$app->user->can('super-admin'),
                         ],
                         [
                             'label' => 'Файлы',
                             'url' => ['/reference/file/index'],
-                            'visible' => Yii::$app->user->can(FileController::class . '.Index'),
+                            'visible' => Yii::$app->user->can('super-admin'),
                         ],
                         [
                             'label' => 'Поставщики продуктов',
                             'url' => ['/reference/product-provider/index'],
-                            'visible' => Yii::$app->user->can(ProductProviderController::class . '.Index'),
+                            'visible' => Yii::$app->user->can('super-admin'),
                         ],
                         [
                             'label' => 'Объекты обслуживания',
                             'url' => ['/reference/service-object/index'],
-                            'visible' => Yii::$app->user->can(ServiceObjectController::class . '.Index'),
+                            'visible' => Yii::$app->user->can('super-admin'),
                         ],
                         [
                             'label' => 'Сотрудники',
                             'url' => ['/reference/employee/index'],
-                            'visible' => Yii::$app->user->can(EmployeeController::class . '.Index'),
+                            'visible' => Yii::$app->user->can('super-admin'),
                         ],
                         [
                             'label' => 'Договора с объектами обслуживания',
                             'url' => ['/reference/contract/index'],
-                            'visible' => Yii::$app->user->can(ContractController::class . '.Index'),
+                            'visible' => Yii::$app->user->can('super-admin'),
                         ],
                         [
                             'label' => 'Классы',
                             'url' => ['/reference/school-class/index'],
-                            'visible' => Yii::$app->user->can(SchoolClassController::class . '.Index'),
+                            'visible' => Yii::$app->user->can('super-admin'),
                         ],
                         [
                             'label' => 'Родители',
                             'url' => ['/reference/father/index'],
-                            'visible' => Yii::$app->user->can(FatherController::class . '.Index'),
+                            'visible' => Yii::$app->user->can('super-admin'),
                         ],
                         [
                             'label' => 'Дети',
                             'url' => ['/reference/child/index'],
-                            'visible' => Yii::$app->user->can(ChildController::class . '.Index'),
+                            'visible' => Yii::$app->user->can('super-admin'),
                         ],
                         [
                             'label' => 'Единицы измерения',
                             'url' => ['/reference/unit/index'],
-                            'visible' => Yii::$app->user->can(UnitController::class . '.Index'),
+                            'visible' => Yii::$app->user->can('super-admin'),
                         ],
                         [
                             'label' => 'Категории продуктов',
                             'url' => ['/reference/product-category/index'],
-                            'visible' => Yii::$app->user->can(ProductCategoryController::class . '.Index'),
+                            'visible' => Yii::$app->user->can('super-admin'),
                         ],
                         [
                             'label' => 'Продукты',
                             'url' => ['/reference/product/index'],
-                            'visible' => Yii::$app->user->can(ProductController::class . '.Index'),
+                            'visible' => Yii::$app->user->can('super-admin'),
                         ],
                         [
                             'label' => 'Блюда',
                             'url' => ['/reference/meal/index'],
-                            'visible' => Yii::$app->user->can(MealController::class . '.Index'),
+                            'visible' => Yii::$app->user->can('super-admin'),
                         ],
                         [
                             'label' => 'Комплексы',
                             'url' => ['/reference/complex/index'],
-                            'visible' => Yii::$app->user->can(ComplexController::class . '.Index'),
+                            'visible' => Yii::$app->user->can('super-admin'),
                         ],
                         [
                             'label' => 'Меню',
                             'url' => ['/reference/menu/index'],
-                            'visible' => Yii::$app->user->can(MenuController::class . '.Index'),
+                            'visible' => Yii::$app->user->can('super-admin'),
                         ],
                     ],
                 ],
                 [
                     'label' => 'Администрирование',
+                    'visible' => Yii::$app->user->can('super-admin'),
                     'items' => [
                         [
                             'label' => 'Настройки системы',
                             'url' => ['/reference/system-setting/index'],
-                            'visible' => Yii::$app->user->can(SystemSetting::class . '.Index'),
+                            'visible' => Yii::$app->user->can('super-admin'),
                         ],
                         [
                             'label' => 'Задачи',
-                            'url'   => ['/report/tasks'],
-                            'visible' => Yii::$app->user->can(TasksController::class . '.Index'),
-                        ],
-                        [
-                            'label' => 'Права доступа',
-                            'url' => ['/system/role/index'],
-                            'visible' => Yii::$app->user->can(RoleController::class . '.Index'),
+                            'url' => ['/report/tasks'],
+                            'visible' => Yii::$app->user->can('super-admin'),
                         ],
                         [
                             'label' => 'Импорт объектов обслуживания и договоров',
                             'url' => ['/system/import-service-object-and-contract/index'],
-                            'visible' => Yii::$app->user->can(ImportServiceObjectAndContractController::class . '.Index'),
+                            'visible' => Yii::$app->user->can('super-admin'),
                         ],
                     ],
                 ],

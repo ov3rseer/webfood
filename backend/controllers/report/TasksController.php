@@ -27,7 +27,7 @@ class TasksController extends ReportController
                     [
                         'actions' => ['status'],
                         'allow'   => true,
-                        'roles'   => ['@'],
+                        'roles'   => ['super-admin'],
                     ],
                 ],
             ],

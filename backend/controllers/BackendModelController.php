@@ -5,19 +5,18 @@ namespace backend\controllers;
 use backend\models\form\Form;
 use backend\widgets\ActiveField;
 use backend\widgets\ActiveForm;
+use BadMethodCallException;
 use common\helpers\ArrayHelper;
 use common\models\ActiveRecord;
 use common\models\cross\CrossTable;
 use common\models\tablepart\TablePart;
 use Yii;
-use yii\base\Action;
 use yii\base\InvalidConfigException;
 use yii\filters\AccessControl;
 use yii\filters\ContentNegotiator;
 use yii\filters\VerbFilter;
 use yii\helpers\Html;
 use yii\web\Controller;
-use yii\web\ForbiddenHttpException;
 use yii\web\NotFoundHttpException;
 use yii\web\Response;
 
@@ -111,7 +110,7 @@ abstract class BackendModelController extends Controller
                     [
                         'actions' => ['index'],
                         'allow' => true,
-                        'roles' => [static::class . '.Index'],
+                        'roles' => ['super-admin'],
                     ],
                     [
                         'actions' => ['search', 'select'],
@@ -121,45 +120,29 @@ abstract class BackendModelController extends Controller
                     [
                         'actions' => ['create'],
                         'allow' => true,
-                        'roles' => [static::class . '.Create'],
+                        'roles' => ['super-admin'],
                     ],
                     [
                         'actions' => ['update'],
                         'allow' => true,
-                        'roles' => [static::class . '.Update'],
+                        'roles' => ['super-admin'],
                     ],
                     [
                         'actions' => ['view'],
                         'allow' => true,
-                        'roles' => [static::class . '.View'],
+                        'roles' => ['super-admin'],
                     ],
                     [
                         'actions' => ['delete', 'delete-checked'],
                         'allow' => true,
-                        'roles' => [static::class . '.Delete'],
+                        'roles' => ['super-admin'],
                     ],
                     [
                         'actions' => ['restore'],
                         'allow' => true,
-                        'roles' => [static::class . '.Restore'],
+                        'roles' => ['super-admin'],
                     ],
                 ],
-
-                'denyCallback' => function ($rule, $action) {
-                    unset($rule);
-                    /**
-                     * @var Action $action
-                     */
-                    if ($action->id == 'update') {
-                        $action->controller->redirect(['view'] + Yii::$app->request->get());
-                    } else {
-                        if (Yii::$app->user !== false && Yii::$app->user->getIsGuest()) {
-                            Yii::$app->user->loginRequired();
-                        } else {
-                            throw new ForbiddenHttpException(Yii::t('yii', 'You are not allowed to perform this action.'));
-                        }
-                    }
-                }
             ],
             'verbs' => [
                 'class' => VerbFilter::class,
@@ -223,10 +206,10 @@ abstract class BackendModelController extends Controller
      */
     public function renderUniversal($view, $params = [])
     {
-        if (\Yii::$app->request->isAjax) {
+        if (Yii::$app->request->isAjax) {
             return $this->renderAjax($view, $params);
         } else {
-            $layout = \Yii::$app->request->get('layout', false);
+            $layout = Yii::$app->request->get('layout', false);
             if ($layout) {
                 $this->layout = $layout;
             }
@@ -238,14 +221,14 @@ abstract class BackendModelController extends Controller
      * Перенаправление с учетом настроек, заданных в $_GET
      * @param array|string $url
      * @param int $statusCode
-     * @return \yii\web\Response
+     * @return Response
      */
     public function autoRedirect($url, $statusCode = 302)
     {
-        $newUrl = \Yii::$app->request->get('redirect', false);
+        $newUrl = Yii::$app->request->get('redirect', false);
         if ($newUrl) {
             $url = $newUrl;
-        } else if (is_array($url) && ($layout = \Yii::$app->request->get('layout', false))) {
+        } else if (is_array($url) && ($layout = Yii::$app->request->get('layout', false))) {
             $url['layout'] = $layout;
         }
         return $this->redirect($url, $statusCode);
@@ -287,7 +270,7 @@ abstract class BackendModelController extends Controller
     {
         $tableParts = $model->getTableParts();
         if (!isset($tableParts[$tablePartRelation])) {
-            throw new \BadMethodCallException();
+            throw new BadMethodCallException();
         }
         $tablePartClass = $tableParts[$tablePartRelation];
         /** @var TablePart $tablePartModel */
@@ -385,7 +368,7 @@ abstract class BackendModelController extends Controller
                         /** @var CrossTable $crossTableRow */
                         switch ($fieldOptions['displayType']) {
                             case ActiveField::BOOL:
-                                $result = \Yii::$app->formatter->format($crossTableRow->{$attribute}, 'boolean');
+                                $result = Yii::$app->formatter->format($crossTableRow->{$attribute}, 'boolean');
                                 break;
                             case ActiveField::PASSWORD:
                                 $result = '******';

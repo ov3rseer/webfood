@@ -31,7 +31,7 @@ class ColumnSchemaBuilder extends \yii\db\ColumnSchemaBuilder
         return $this;
     }
 
-    /**
+     /**
      * Добавляет внешний ключ для колонки
      * @param $table
      * @param $column
@@ -44,6 +44,7 @@ class ColumnSchemaBuilder extends \yii\db\ColumnSchemaBuilder
         $this->foreignKeyData = [$table, $column, $delete, $update];
         return $this;
     }
+
 
     /**
      * Получение флага индекса

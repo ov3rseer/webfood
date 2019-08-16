@@ -1,9 +1,10 @@
 <?php
 
-
 namespace backend\controllers\document;
 
-
+/**
+ * Контроллер для документов "Заявки"
+ */
 class RequestController extends DocumentController
 {
     /**

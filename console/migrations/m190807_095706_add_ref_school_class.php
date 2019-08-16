@@ -4,16 +4,6 @@ use common\components\pgsql\Migration;
 
 class m190807_095706_add_ref_school_class extends Migration
 {
-    private $_permissionsForSchoolClass;
-
-    /**
-     * @throws Exception
-     */
-    public function setPermissions()
-    {
-        $this->_permissionsForSchoolClass = $this->getPermissions('backend\controllers\reference\SchoolClassController', 'Классы', 63);
-    }
-
     /**
      * @throws Exception
      */
@@ -29,12 +19,6 @@ class m190807_095706_add_ref_school_class extends Migration
         $this->createTablePartTable('{{%tab_service_object_school_class}}','{{%ref_service_object}}',[
             'school_class_id' => $this->integer()->notNull()->indexed()->foreignKey('{{%ref_school_class}}', 'id'),
         ]);
-
-        $this->setPermissions();
-        $permissionForAdd = array_merge(
-            $this->_permissionsForSchoolClass
-        );
-        $this->addPermissions($permissionForAdd);
     }
 
     /**
@@ -42,12 +26,6 @@ class m190807_095706_add_ref_school_class extends Migration
      */
     public function safeDown()
     {
-        $this->setPermissions();
-        $permissionForDelete = array_merge(
-            $this->_permissionsForSchoolClass
-        );
-        $this->deletePermissions($permissionForDelete);
-
         $this->dropTable('{{%tab_service_object_school_class}}');
         $this->delete('{{%sys_entity}}', ['class_name' => 'common\models\reference\SchoolClass']);
         $this->dropTable('{{%ref_school_class}}');

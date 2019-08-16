@@ -1,9 +1,7 @@
 <?php
 namespace backend\controllers;
 
-use common\models\document\Request;
 use common\models\enum\UserType;
-use common\models\reference\User;
 use Yii;
 use yii\base\InvalidConfigException;
 use yii\web\Controller;
@@ -55,12 +53,12 @@ class SiteController extends Controller
                     [
                         'actions' => ['export-service-object-authorization-data'],
                         'allow' => true,
-                        'roles' => [User::class . '.Index'],
+                        'roles' => ['super-admin'],
                     ],
                     [
                         'actions' => ['export-many-requests'],
                         'allow' => true,
-                        'roles' => [Request::class . '.Update'],
+                        'roles' => ['super-admin'],
                     ],
                 ],
             ],

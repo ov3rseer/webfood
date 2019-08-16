@@ -4,16 +4,6 @@ use common\components\pgsql\Migration;
 
 class m190807_082518_add_ref_meal extends Migration
 {
-    private $_permissionsForMeal;
-
-    /**
-     * @throws Exception
-     */
-    public function setPermissions()
-    {
-        $this->_permissionsForMeal = $this->getPermissions('backend\controllers\reference\MealController', 'Блюда', 63);
-    }
-
     /**
      * @throws Exception
      */
@@ -27,12 +17,6 @@ class m190807_082518_add_ref_meal extends Migration
             'unit_id' => $this->integer()->notNull()->indexed()->foreignKey('{{%ref_unit}}','id'),
             'product_quantity' => $this->decimal(10,2)->notNull(),
         ]);
-
-        $this->setPermissions();
-        $permissionForAdd = array_merge(
-            $this->_permissionsForMeal
-        );
-        $this->addPermissions($permissionForAdd);
     }
 
     /**
@@ -40,12 +24,6 @@ class m190807_082518_add_ref_meal extends Migration
      */
     public function safeDown()
     {
-        $this->setPermissions();
-        $permissionForDelete = array_merge(
-            $this->_permissionsForMeal
-        );
-        $this->deletePermissions($permissionForDelete);
-
         $this->dropTable('{{%tab_meal_product}}');
         $this->delete('{{%sys_entity}}', ['class_name' => 'common\models\reference\Meal']);
         $this->dropTable('{{%ref_meal}}');

@@ -9,6 +9,7 @@ use yii\db\ActiveQuery;
  *
  * @property string   $forename
  * @property string   $surname
+ * @property string   $patronymic
  * @property integer  $service_object_id
  * @property integer  $school_class_id
  * @property integer  $father_id
@@ -42,9 +43,9 @@ class Child extends Reference
     public function rules()
     {
         return array_merge(parent::rules(), [
-            [['forename', 'surname'], 'string'],
+            [['forename', 'surname', 'patronymic'], 'string'],
             [['service_object_id', 'school_class_id', 'father_id'], 'integer'],
-            [['forename', 'surname', 'service_object_id', 'school_class_id', 'father_id'], 'required'],
+            [['forename', 'surname', 'patronymic', 'service_object_id', 'school_class_id'], 'required'],
         ]);
     }
 
@@ -56,6 +57,7 @@ class Child extends Reference
         return array_merge(parent::attributeLabels(), [
             'forename'          => 'Имя',
             'surname'           => 'Фамилия',
+            'patronymic'        => 'Отчество',
             'service_object_id' => 'Объект обслуживания',
             'school_class_id'   => 'Класс',
             'father_id'         => 'Родитель',
