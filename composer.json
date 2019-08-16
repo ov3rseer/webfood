@@ -33,8 +33,7 @@
         "ext-zip": "*",
         "yii2tech/crontab": "^1.0",
         "bower-asset/html5shiv": "*",
-        "bower-asset/respond": "*",
-        "bower-asset/jquery": "^1.9.1"
+        "bower-asset/respond": "*"
     },
     "require-dev": {
         "yiisoft/yii2-debug": "*",
