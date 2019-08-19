@@ -189,7 +189,7 @@ class OpenBankAccountRequest extends SystemForm
                     $openBankAccountChild->codeword = $this->codeword;
                     $openBankAccountChild->snils = $this->snils;
                     $openBankAccountChild->save();
-                    Yii::$app->session->setFlash('error', 'Заявка успешно оформлена.');
+                    Yii::$app->session->setFlash('success', 'Заявка успешно оформлена.');
                 } else {
                     Yii::$app->session->setFlash('error', 'На этого ребенка уже оформлена заявка.');
                 }
@@ -286,7 +286,7 @@ class OpenBankAccountRequest extends SystemForm
                         $openBankAccountChild->snils = $child['snils'];
                         $openBankAccountChild->save();
                     }
-                    Yii::$app->session->setFlash('error', 'Заявка успешно оформлена.');
+                    Yii::$app->session->setFlash('success', 'Заявка успешно оформлена.');
                 } else {
                     Yii::$app->session->setFlash('error', 'На всех детей уже оформлены заявки.');
                 }
