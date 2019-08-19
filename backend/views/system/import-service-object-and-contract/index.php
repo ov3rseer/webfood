@@ -49,11 +49,9 @@ $form = ActiveForm::begin(
                     </div>
                 </div>
                 <?php
-                //foreach ($model->getFieldsOptions() as $field => $fieldOptions) {
                     echo '<div class="col-xs-12 col-sm-6 col-md-3">';
                     echo $form->field($model, 'uploadedFiles[]')->fileInput(['multiple' => true]);
                     echo '</div>';
-                //}
                 ?>
             </div>
             <div class="row">

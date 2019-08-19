@@ -1,6 +1,6 @@
 <?php
 
-namespace frontend\assets;
+namespace terminal\assets;
 
 use yii\web\AssetBundle;
 
@@ -13,14 +13,12 @@ class AppAsset extends AssetBundle
     public $baseUrl = '@web';
     public $css = [
         'css/site.css',
-        'css/fluent.css',
     ];
     public $js = [
-        'js/fluent.js',
         'js/main.js',
     ];
     public $depends = [
-        //'frontend\assets\FontAwesomeAsset',
+        //'terminal\assets\FontAwesomeAsset',
         'common\assets\Html5ShivAsset',
         'common\assets\RespondAsset',
         'yii\web\YiiAsset',

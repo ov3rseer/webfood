@@ -1,6 +1,6 @@
 <?php
 
-namespace frontend\controllers;
+namespace terminal\controllers;
 
 use common\helpers\ArrayHelper;
 use common\models\ActiveRecord;
@@ -13,7 +13,7 @@ use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\web\Response;
 
-class FrontendModelController extends Controller
+class TerminalModelController extends Controller
 {
     /**
      * @var string имя класса модели
@@ -44,9 +44,9 @@ class FrontendModelController extends Controller
     {
         return array_merge(parent::actions(), [
             'index' => [
-                'class' => 'frontend\actions\base\IndexAction',
+                'class' => 'terminal\actions\base\IndexAction',
                 'modelClass' => $this->modelClass,
-                'viewPath' => '@frontend/views/base/index',
+                'viewPath' => '@terminal/views/base/index',
             ],
         ]);
     }
@@ -63,7 +63,7 @@ class FrontendModelController extends Controller
                     [
                         'actions' => ['index'],
                         'allow' => true,
-                        'roles' => ['super-admin'],
+                        'roles' => ['@'],
                     ],
                 ],
             ],

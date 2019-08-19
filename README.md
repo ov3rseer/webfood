@@ -1,5 +1,9 @@
 ### **Установка:**
 
+#### Настройка nginx
+
+Есть тут: https://github.com/mickgeek/yii2-advanced-one-domain-config
+
 #### Настройка сервера Apache:
 
 Из корня / выполнить команды:
@@ -10,49 +14,93 @@
 
 Внести изменения в файл hosts:
 
-`127.0.0.1 backend.webfood.local webfood.local`
+`127.0.0.1 webfood.local`
 
 Далее выполняем команды:
 
 `cd apache2/sites-available/`
 
-`sudo cp 000-default.conf backend.webfood.local.conf`
-
 `sudo cp 000-default.conf webfood.local.conf`
 
-Внести изменения в файлы (обратить внимание на <путь к проекту> далее):
+Внести изменения в файл (обратить внимание на <путь к проекту> далее):
 
-`sudo gedit backend.webfood.local.conf `
+`sudo gedit webfood.local.conf`
 
-    <VirtualHost *:80>
-        ServerName backend.webfood.local
-        DocumentRoot "/<путь к проекту>/webfood/backend/web"      
-        <Directory "/<путь к проекту>/webfood/backend/web">
-            RewriteEngine on
-            RewriteCond %{REQUEST_FILENAME} !-f
-            RewriteCond %{REQUEST_FILENAME} !-d
-            RewriteRule . index.php
-            DirectoryIndex index.php
-            Require all granted
-        </Directory>
-    </VirtualHost>
+        <VirtualHost *:80>
+           ServerName webfood.local      
+           #ErrorLog /var/log/apache2/advanced.local.error.log
+           #CustomLog /var/log/apache2/advanced.local.access.log combined
+           AddDefaultCharset UTF-8
+        
+           Options FollowSymLinks
+           DirectoryIndex index.php index.html
+           RewriteEngine on
+        
+           RewriteRule /\. - [L,F]
+        
+           DocumentRoot /var/www/webfood_extend/frontend/web
+           <Directory /var/www/webfood_extend/frontend/web>
+               AllowOverride none
+               <IfVersion < 2.4>
+                 Order Allow,Deny
+                 Allow from all
+               </IfVersion>
+               <IfVersion >= 2.4>
+                 Require all granted
+               </IfVersion>
+        
+               # if a directory or a file exists, use the request directly
+               RewriteCond %{REQUEST_FILENAME} !-f
+               RewriteCond %{REQUEST_FILENAME} !-d
+               # otherwise forward the request to index.php
+               RewriteRule ^ index.php [L]
+           </Directory>
+        
+           # redirect to the URL without a trailing slash (uncomment if necessary)
+           #RewriteRule ^/admin/$ /admin [L,R=301]
+        
+           Alias /admin /var/www/webfood_extend/backend/web
+           # prevent the directory redirect to the URL with a trailing slash
+           RewriteRule ^/admin$ /admin/ [L,PT]
+           <Directory /var/www/webfood_extend/backend/web>
+               AllowOverride none
+               <IfVersion < 2.4>
+                   Order Allow,Deny
+                   Allow from all
+               </IfVersion>
+               <IfVersion >= 2.4>
+                   Require all granted
+               </IfVersion>
+        
+               # if a directory or a file exists, use the request directly
+               RewriteCond %{REQUEST_FILENAME} !-f
+               RewriteCond %{REQUEST_FILENAME} !-d
+               # otherwise forward the request to index.php
+               RewriteRule ^ index.php [L]
+           </Directory>
+           
+           Alias /terminal /var/www/webfood_extend/terminal/web
+           # prevent the directory redirect to the URL with a trailing slash
+           RewriteRule ^/terminal$ /terminal/ [L,PT]
+           <Directory /var/www/webfood_extend/terminal/web>
+               AllowOverride none
+               <IfVersion < 2.4>
+                   Order Allow,Deny
+                   Allow from all
+               </IfVersion>
+               <IfVersion >= 2.4>
+                   Require all granted
+               </IfVersion>
+        
+               # if a directory or a file exists, use the request directly
+               RewriteCond %{REQUEST_FILENAME} !-f
+               RewriteCond %{REQUEST_FILENAME} !-d
+               # otherwise forward the request to index.php
+               RewriteRule ^ index.php [L]
+           </Directory>
+        </VirtualHost>
 
-`sudo gedit webfood.local.conf `
-
-    <VirtualHost *:80>
-        ServerName webfood.local
-        DocumentRoot "/<путь к проекту>/webfood/frontend/web"      
-        <Directory "/<путь к проекту>/webfood/frontend/web">
-            RewriteEngine on
-            RewriteCond %{REQUEST_FILENAME} !-f
-            RewriteCond %{REQUEST_FILENAME} !-d
-            RewriteRule . index.php
-            DirectoryIndex index.php
-            Require all granted
-        </Directory>
-    </VirtualHost>
-
-`sudo a2ensite backend.webfood.local.conf webfood.local.conf`
+`sudo a2ensite webfood.local.conf`
 
 `a2enmod rewrite`
 
