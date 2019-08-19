@@ -3,6 +3,7 @@
 namespace common\components\import;
 
 use common\components\DateTime;
+use common\components\TaskProcessorInterface;
 use common\models\enum\ContractType;
 use common\models\enum\ServiceObjectType;
 use common\models\reference\ConsoleTask;

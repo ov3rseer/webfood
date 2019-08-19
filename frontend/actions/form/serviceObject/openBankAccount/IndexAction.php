@@ -1,10 +1,11 @@
 <?php
 
-namespace frontend\actions\form\serviceObject\uploadLists;
+namespace frontend\actions\form\serviceObject\openBankAccount;
 
 use frontend\actions\FrontendModelAction;
-use frontend\models\serviceObject\UploadLists;
+use frontend\models\serviceObject\OpenBankAccountRequest;
 use Yii;
+use yii\base\Exception;
 use yii\base\UserException;
 
 /**
@@ -14,28 +15,29 @@ class IndexAction extends FrontendModelAction
 {
     /**
      * @inheritdoc
+     * @return string
+     * @throws Exception
      * @throws UserException
+     * @throws \PhpOffice\PhpSpreadsheet\Exception
+     * @throws \PhpOffice\PhpSpreadsheet\Reader\Exception
      */
     public function run()
     {
-        /** @var UploadLists $model */
+        /** @var OpenBankAccountRequest $model */
         $model = new $this->modelClass();
-        $requestData = array_merge(Yii::$app->request->post(), Yii::$app->request->get());
         if (Yii::$app->request->isPost) {
-            $model->load($requestData);
+            $requestData = array_merge(Yii::$app->request->post());
             $action = Yii::$app->request->post('action');
-            if ($action == UploadLists::SCENARIO_HAND_INPUT) {
+            if ($action == OpenBankAccountRequest::SCENARIO_HAND_INPUT) {
                 $model->scenario = $action;
                 if ($model->load($requestData) && $model->validate()) {
                     $model->submit();
-                    $this->controller->refresh();
                 }
             }
-            if ($action == UploadLists::SCENARIO_UPLOAD_FILE) {
+            if ($action == OpenBankAccountRequest::SCENARIO_UPLOAD_FILE) {
                 $model->scenario = $action;
                 if ($model->load($requestData) && $model->validate()) {
                     $model->proceed();
-                    $this->controller->refresh();
                 }
             }
         }

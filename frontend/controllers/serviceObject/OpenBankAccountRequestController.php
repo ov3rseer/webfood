@@ -10,12 +10,12 @@ use yii\filters\AccessControl;
 /**
  * Контроллер для формы "Загрузка списков"
  */
-class UploadListsController extends FrontendModelController
+class OpenBankAccountRequestController extends FrontendModelController
 {
     /**
      * @var string имя класса модели
      */
-    public $modelClass = 'frontend\models\serviceObject\UploadLists';
+    public $modelClass = 'frontend\models\serviceObject\OpenBankAccountRequest';
 
     /**
      * @inheritdoc
@@ -24,9 +24,9 @@ class UploadListsController extends FrontendModelController
     {
         return array_merge(parent::actions(), [
             'index' => [
-                'class' => 'frontend\actions\form\serviceObject\uploadLists\IndexAction',
+                'class' => 'frontend\actions\form\serviceObject\openBankAccount\IndexAction',
                 'modelClass' => $this->modelClass,
-                'viewPath' => '@frontend/views/service-object/upload-lists/index',
+                'viewPath' => '@frontend/views/service-object/request/open-bank-account-request/index',
             ],
         ]);
     }
@@ -61,7 +61,7 @@ class UploadListsController extends FrontendModelController
     public function actionDownloadExampleFile()
     {
         return Yii::$app->response->sendFile(
-            Yii::getAlias('@frontend/web/samples/upload-lists/upload-lists.xlsx'),
+            Yii::getAlias('@frontend/web/samples/open-bank-account-request/open-bank-account.xlsx'),
             'Файл-образец для загрузки в систему учащихся и открытия счетов.xlsx'
         );
     }

@@ -2,6 +2,7 @@
 
 namespace common\models\reference;
 
+use backend\widgets\ActiveField;
 use common\models\tablepart\SchoolClassChild;
 use yii\db\ActiveQuery;
 
@@ -81,6 +82,22 @@ class SchoolClass extends Reference
     /**
      * @inheritdoc
      */
+    public function getFieldsOptions()
+    {
+        if ($this->_fieldsOptions === []) {
+            parent::getFieldsOptions();
+            if ($this->scenario != self::SCENARIO_SEARCH) {
+                $this->_fieldsOptions['name_full']['displayType'] = ActiveField::READONLY;
+            } else {
+                $this->_fieldsOptions['name_full']['displayType'] = ActiveField::STRING;
+            }
+        }
+        return $this->_fieldsOptions;
+    }
+
+    /**
+     * @inheritdoc
+     */
     public function getTableParts()
     {
         return array_merge([
@@ -96,6 +113,7 @@ class SchoolClass extends Reference
         $parentResult = parent::beforeSave($insert);
         if ($parentResult) {
             $this->name = $this->number . $this->litter;
+            $this->name_full = $this->name . ' ' . $this->serviceObject;
         }
         return $parentResult;
     }

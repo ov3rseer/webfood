@@ -1,6 +1,6 @@
 <?php
 
-namespace common\components\import;
+namespace common\components;
 
 use common\models\reference\ConsoleTask;
 

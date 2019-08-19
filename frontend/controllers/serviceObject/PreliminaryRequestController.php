@@ -1,16 +1,16 @@
 <?php
 
-namespace frontend\controllers\serviceObject\request;
+namespace frontend\controllers\serviceObject;
 
 /**
- * Контроллер для формы "Корректировка заявки"
+ * Контроллер для формы "Предварительная заявка"
  */
-class CorrectionRequestController extends RequestController
+class PreliminaryRequestController extends RequestController
 {
     /**
      * @var string имя класса модели
      */
-    public $modelClass = 'frontend\models\serviceObject\request\CorrectionRequestForm';
+    public $modelClass = 'frontend\models\serviceObject\request\PreliminaryRequestForm';
 
     /**
      * @inheritdoc
@@ -21,7 +21,7 @@ class CorrectionRequestController extends RequestController
             'index' => [
                 'class' => 'frontend\actions\form\serviceObject\request\IndexAction',
                 'modelClass' => $this->modelClass,
-                'viewPath' => '@frontend/views/service-object/request/correction-request/index',
+                'viewPath' => '@frontend/views/service-object/request/preliminary-request/index',
             ],
         ]);
     }
