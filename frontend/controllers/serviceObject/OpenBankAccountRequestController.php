@@ -2,10 +2,15 @@
 
 namespace frontend\controllers\serviceObject;
 
+use backend\widgets\ActiveForm;
 use common\helpers\ArrayHelper;
 use frontend\controllers\FrontendModelController;
+use frontend\models\serviceObject\OpenBankAccountRequest;
 use Yii;
+use yii\base\Exception;
+use yii\base\UserException;
 use yii\filters\AccessControl;
+use yii\web\Response;
 
 /**
  * Контроллер для формы "Загрузка списков"
@@ -22,13 +27,9 @@ class OpenBankAccountRequestController extends FrontendModelController
      */
     public function actions()
     {
-        return array_merge(parent::actions(), [
-            'index' => [
-                'class' => 'frontend\actions\form\serviceObject\openBankAccount\IndexAction',
-                'modelClass' => $this->modelClass,
-                'viewPath' => '@frontend/views/service-object/request/open-bank-account-request/index',
-            ],
-        ]);
+        $result = parent::actions();
+        unset($result['index']);
+        return $result;
     }
 
     /**
@@ -53,6 +54,41 @@ class OpenBankAccountRequestController extends FrontendModelController
                 ],
             ]
         ]);
+    }
+
+    /**
+     * @return array|string
+     * @throws \PhpOffice\PhpSpreadsheet\Exception
+     * @throws \PhpOffice\PhpSpreadsheet\Reader\Exception
+     * @throws Exception
+     * @throws UserException
+     */
+    public function actionIndex()
+    {
+        /** @var OpenBankAccountRequest $model */
+        $model = new $this->modelClass();
+        $requestData = array_merge(Yii::$app->request->post(), Yii::$app->request->get());
+        $model->load($requestData);
+        if (Yii::$app->request->isAjax && !Yii::$app->request->isPjax && $model->load($requestData)) {
+            Yii::$app->response->format = Response::FORMAT_JSON;
+            return ActiveForm::validate($model);
+        }
+        if (Yii::$app->request->isPost) {
+            $action = Yii::$app->request->post('action');
+            if ($action == OpenBankAccountRequest::SCENARIO_HAND_INPUT) {
+                $model->scenario = $action;
+                if ($model->validate()) {
+                    $model->submit();
+                }
+            }
+            if ($action == OpenBankAccountRequest::SCENARIO_UPLOAD_FILE) {
+                $model->scenario = $action;
+                if ($model->validate()) {
+                    $model->proceed();
+                }
+            }
+        }
+        return $this->renderUniversal('@frontend/views/service-object/request/open-bank-account-request/index', ['model' => $model]);
     }
 
     /**
