@@ -5,7 +5,7 @@ namespace frontend\models\serviceObject;
 /**
  * Форма "Предварительная заявка"
  */
-class PreliminaryRequestForm extends RequestForm
+class PreliminaryRequest extends Request
 {
     /**
      * @inheritdoc

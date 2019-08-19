@@ -12,7 +12,7 @@ use frontend\models\FrontendForm;
 use yii\base\InvalidConfigException;
 use yii\db\ActiveRecord;
 
-class RequestTableForm extends FrontendForm
+class RequestTable extends FrontendForm
 {
 
     /**

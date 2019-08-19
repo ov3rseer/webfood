@@ -10,7 +10,7 @@ class PreliminaryRequestController extends RequestController
     /**
      * @var string имя класса модели
      */
-    public $modelClass = 'frontend\models\serviceObject\request\PreliminaryRequestForm';
+    public $modelClass = 'frontend\models\serviceObject\request\PreliminaryRequest';
 
     /**
      * @inheritdoc

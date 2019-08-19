@@ -5,7 +5,7 @@ namespace frontend\controllers\serviceObject;
 use backend\widgets\ActiveForm;
 use common\helpers\ArrayHelper;
 use frontend\controllers\FrontendModelController;
-use frontend\models\serviceObject\OpenBankAccountRequest;
+use frontend\models\serviceObject\OpenCardRequest;
 use Yii;
 use yii\base\Exception;
 use yii\base\UserException;
@@ -15,12 +15,12 @@ use yii\web\Response;
 /**
  * Контроллер для формы "Загрузка списков"
  */
-class OpenBankAccountRequestController extends FrontendModelController
+class OpenCardRequestController extends FrontendModelController
 {
     /**
      * @var string имя класса модели
      */
-    public $modelClass = 'frontend\models\serviceObject\OpenBankAccountRequest';
+    public $modelClass = 'frontend\models\serviceObject\OpenCardRequest';
 
     /**
      * @inheritdoc
@@ -65,7 +65,7 @@ class OpenBankAccountRequestController extends FrontendModelController
      */
     public function actionIndex()
     {
-        /** @var OpenBankAccountRequest $model */
+        /** @var OpenCardRequest $model */
         $model = new $this->modelClass();
         $requestData = array_merge(Yii::$app->request->post(), Yii::$app->request->get());
         $model->load($requestData);
@@ -75,20 +75,20 @@ class OpenBankAccountRequestController extends FrontendModelController
         }
         if (Yii::$app->request->isPost) {
             $action = Yii::$app->request->post('action');
-            if ($action == OpenBankAccountRequest::SCENARIO_HAND_INPUT) {
+            if ($action == OpenCardRequest::SCENARIO_HAND_INPUT) {
                 $model->scenario = $action;
                 if ($model->validate()) {
                     $model->submit();
                 }
             }
-            if ($action == OpenBankAccountRequest::SCENARIO_UPLOAD_FILE) {
+            if ($action == OpenCardRequest::SCENARIO_UPLOAD_FILE) {
                 $model->scenario = $action;
                 if ($model->validate()) {
                     $model->proceed();
                 }
             }
         }
-        return $this->renderUniversal('@frontend/views/service-object/request/open-bank-account-request/index', ['model' => $model]);
+        return $this->renderUniversal('@frontend/views/service-object/request/open-card-request/index', ['model' => $model]);
     }
 
     /**
@@ -97,7 +97,7 @@ class OpenBankAccountRequestController extends FrontendModelController
     public function actionDownloadExampleFile()
     {
         return Yii::$app->response->sendFile(
-            Yii::getAlias('@frontend/web/samples/open-bank-account-request/open-bank-account.xlsx'),
+            Yii::getAlias('@frontend/web/samples/open-account/open-account.xlsx'),
             'Файл-образец для загрузки в систему учащихся и открытия счетов.xlsx'
         );
     }

@@ -5,7 +5,7 @@ namespace frontend\models\serviceObject;
 /**
  * Форма "Корректировка заявки"
  */
-class CorrectionRequestForm extends RequestForm
+class CorrectionRequest extends Request
 {
     /**
      * @inheritdoc

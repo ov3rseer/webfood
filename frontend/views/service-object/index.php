@@ -55,7 +55,7 @@ if (Yii::$app->user && Yii::$app->user->identity->user_type_id == UserType::SERV
     ]);
     echo Html::endTag('p');
     echo Html::beginTag('p');
-    echo Html::a('Заявки на открытие счетов', 'serviceObject/open-bank-account-request/index', [
+    echo Html::a('Заявки на открытие карт', 'serviceObject/open-card-request/index', [
         'class' => 'btn btn-lg btn-success',
         'style' => 'width:600px;',
     ]);

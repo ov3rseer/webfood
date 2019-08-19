@@ -10,7 +10,7 @@ class CorrectionRequestController extends RequestController
     /**
      * @var string имя класса модели
      */
-    public $modelClass = 'frontend\models\serviceObject\request\CorrectionRequestForm';
+    public $modelClass = 'frontend\models\serviceObject\request\CorrectionRequest';
 
     /**
      * @inheritdoc

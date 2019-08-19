@@ -22,7 +22,7 @@ use yii\web\UploadedFile;
 /**
  * Форма для формирования заявок на открытие счетов
  */
-class OpenBankAccountRequest extends SystemForm
+class OpenCardRequest extends SystemForm
 {
     /**
      * Сценарий для ручного ввода данных
