@@ -185,12 +185,13 @@ function getRequestData(action) {
 };*/
 
 function init() {
-    var tooltips = $('[data-toggle=tooltip]');
+
+    /*var tooltips = $('[data-toggle=tooltip]');
     var popovers = $('[data-toggle=popover]');
 
     // Popover enable
     tooltips.tooltip();
-    popovers.popover().click(function(e) {e.preventDefault()});
+    popovers.popover().click(function(e) {e.preventDefault()});*/
 
     /*$('[data-popover-target]').each(function() {
         let popover = $(this.attributes['data-popover-target'].value);
@@ -204,7 +205,24 @@ function init() {
     });*/
 
     //$('[data-target="#profile_popover"]').popover('show');
-};
+
+    /*var fluent = new FluentUI({
+        '.fluent-object' : {
+            'tools' : {
+                '.fluent-btn' : {
+                    'showTrigger' : 'mouseover focus',
+                    'hideTrigger' : 'mouseout blur',
+                }
+            }
+        },
+        '.fluent-btn' : {}
+    });
+
+    console.log(fluent);*/
+
+    //var fluent = new FluentUI();
+
+}
 
 $().ready(function() {
 

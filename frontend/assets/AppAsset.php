@@ -15,10 +15,11 @@ class AppAsset extends AssetBundle
         'css/site.css',
     ];
     public $js = [
+        'js/fluent.js',
         'js/main.js',
     ];
     public $depends = [
-        'frontend\assets\FontAwesomeAsset',
+        //'frontend\assets\FontAwesomeAsset',
         'common\assets\Html5ShivAsset',
         'common\assets\RespondAsset',
         'yii\web\YiiAsset',
