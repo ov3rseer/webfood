@@ -175,52 +175,9 @@ function getRequestData(action) {
     };
 }
 
-/*$.event.special.navbarresize = {
-    setup: function() {
-
-    },
-    submenu : $("#list_for_navbar"),
-    navbar  : $("#navbar"),
-
-};*/
-
 function init() {
 
-    /*var tooltips = $('[data-toggle=tooltip]');
-    var popovers = $('[data-toggle=popover]');
 
-    // Popover enable
-    tooltips.tooltip();
-    popovers.popover().click(function(e) {e.preventDefault()});*/
-
-    /*$('[data-popover-target]').each(function() {
-        let popover = $(this.attributes['data-popover-target'].value);
-        $(this).popover({
-            //'container' : 'body',
-            'html'      : true,
-            'content'   : popover.html(),
-            'trigger'   : 'hover focus',
-            'title'     : 'title',
-        });
-    });*/
-
-    //$('[data-target="#profile_popover"]').popover('show');
-
-    /*var fluent = new FluentUI({
-        '.fluent-object' : {
-            'tools' : {
-                '.fluent-btn' : {
-                    'showTrigger' : 'mouseover focus',
-                    'hideTrigger' : 'mouseout blur',
-                }
-            }
-        },
-        '.fluent-btn' : {}
-    });
-
-    console.log(fluent);*/
-
-    //var fluent = new FluentUI();
 
 }
 
