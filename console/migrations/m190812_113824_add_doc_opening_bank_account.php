@@ -4,22 +4,14 @@ use common\components\pgsql\Migration;
 
 class m190812_113824_add_doc_opening_bank_account extends Migration
 {
-    private $_permissionsForUploadLists;
-
-    /**
-     * @throws Exception
-     */
-    public function setPermissions()
-    {
-        $this->_permissionsForUploadLists = $this->getPermissions('frontend\controllers\serviceObject\UploadListsController', 'Загрузка списков', 63);
-    }
-
     /**
      * @throws Exception
      */
     public function safeUp()
     {
-        $this->createDocumentTable('{{%doc_open_bank_account}}');
+        $this->createDocumentTable('{{%doc_open_bank_account}}', [
+            'service_object_id' => $this->integer()->notNull()->indexed()->foreignKey('{{%ref_service_object}}', 'id')
+        ]);
         $this->insert('{{%sys_entity}}', ['class_name' => 'common\models\document\OpenBankAccount']);
 
         $this->createTablePartTable('{{%tab_open_bank_account_child}}', '{{%doc_open_bank_account}}', [

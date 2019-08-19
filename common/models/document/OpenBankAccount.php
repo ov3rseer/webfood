@@ -2,11 +2,15 @@
 
 namespace common\models\document;
 
+use common\models\reference\ServiceObject;
 use common\models\tablepart\OpenBankAccountChild;
 use yii\db\ActiveQuery;
 
 /**
  * Модель документа "Открытие счета"
+ *
+ * Свойства:
+ * @property integer $service_object_id
  *
  * Отношения:
  * @property OpenBankAccountChild[] $children
@@ -35,8 +39,17 @@ class OpenBankAccount extends Document
     public function attributeLabels()
     {
         return array_merge(parent::attributeLabels(), [
-            'children' => 'Данные детей для открытия счетов',
+            'children'          => 'Данные детей',
+            'service_object_id' => 'Объект обслуживания',
         ]);
+    }
+
+    /**
+     * @return ActiveQuery
+     */
+    public function getServiceObject()
+    {
+        return $this->hasOne(ServiceObject::className(), ['id' => 'service_object_id']);
     }
 
     /**

@@ -5,8 +5,8 @@ namespace backend\actions\base;
 use backend\actions\BackendModelAction;
 use common\models\ActiveRecord;
 use common\models\document\Document;
-use common\models\enum\DocumentStatus;
 use common\models\reference\Reference;
+use common\models\reference\User;
 use Exception;
 use Throwable;
 use Yii;
@@ -31,13 +31,13 @@ class DeleteCheckedAction extends BackendModelAction
                 $models = $model::findAll($ids);
                 foreach ($models as $model) {
                     if ($model instanceof Reference || $model instanceof Document) {
-                        if ($model instanceof Reference) {
+                        if ($model instanceof User) {
                             $model->is_active = false;
-                        } else if ($model instanceof Document) {
-                            $model->status_id = DocumentStatus::DELETED;
+                            $model->save();
+                        } else {
+                            $model->delete();
                         }
-                        $model->save();
-                    } else {
+                    } else if ($model instanceof Document) {
                         $model->delete();
                     }
                 }

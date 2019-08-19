@@ -1,6 +1,6 @@
 <?php
 
-namespace frontend\controllers\serviceObject\request;
+namespace frontend\controllers\serviceObject;
 
 use common\helpers\ArrayHelper;
 use frontend\controllers\FrontendModelController;

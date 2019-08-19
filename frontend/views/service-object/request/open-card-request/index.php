@@ -1,12 +1,19 @@
 <?php
 
 use backend\widgets\ActiveForm;
-use frontend\models\serviceObject\UploadLists;
+use backend\widgets\GridView\GridView;
+use common\models\document\OpenBankAccount;
+use common\models\enum\DocumentStatus;
+use common\models\enum\UserType;
+use common\models\reference\ServiceObject;
+use frontend\models\serviceObject\OpenCardRequest;
 use yii\bootstrap\Modal;
+use yii\data\ActiveDataProvider;
 use yii\helpers\Html;
+use yii\widgets\Pjax;
 
 /* @var yii\web\View $this */
-/* @var UploadLists $model */
+/* @var OpenCardRequest $model */
 
 $this->title = $model->getName();
 $this->params['breadcrumbs'][] = $this->title;
@@ -16,26 +23,77 @@ $handInputModalId = 'hand-input-modal';
 $uploadFileButtonId = 'upload-file-button';
 $uploadFileModalId = 'upload-file-modal';
 
-echo Html::beginTag('div', ['class' => 'container']);
-echo Html::tag('h1', Html::encode($this->title));
-echo Html::tag('p', 'Здесь можно сформировать заявку на открытие счетов новичкам.');
-echo Html::tag('p', 'Перед использованием сервиса ознакомьтесь с инструкцией.');
+if (Yii::$app->user && Yii::$app->user->identity->user_type_id == UserType::SERVICE_OBJECT) {
+    $serviceObject = ServiceObject::findOne(['user_id' => Yii::$app->user->id]);
+}
 
-echo Html::beginTag('div', ['class' => 'input-group-btn']);
-echo Html::a('Ручной ввод', '#', ['id' => $handInputButtonId, 'class' => 'btn btn-success']);
-echo Html::a('Загрузка из файла', '#', ['id' => $uploadFileButtonId, 'class' => 'btn btn-success']);
-echo Html::endTag('div');
-echo Html::endTag('div');
+if ($serviceObject) {
+    echo Html::beginTag('div', ['class' => 'container-fluid']);
+    echo Html::beginTag('div', ['class' => 'col-xs-4']);
+    echo Html::tag('h1', Html::encode($this->title));
+    echo Html::tag('p', 'Здесь можно сформировать заявку на открытие карт новичкам.');
+    echo Html::tag('p', 'Перед использованием сервиса ознакомьтесь с инструкцией.');
+
+    echo Html::beginTag('div', ['class' => 'input-group-btn']);
+    echo Html::a('Ручной ввод', '#', ['id' => $handInputButtonId, 'class' => 'btn btn-success']);
+    echo Html::a('Загрузка из файла', '#', ['id' => $uploadFileButtonId, 'class' => 'btn btn-success']);
+    echo Html::endTag('div');
+
+    echo Html::endTag('div');
+    echo Html::beginTag('div', ['class' => 'col-xs-8']);
+    echo Html::tag('h1', 'Заявки');
+
+    Pjax::begin();
+    echo GridView::widget([
+        'dataProvider' => new ActiveDataProvider([
+            'query' => OpenBankAccount::find()->andWhere(['service_object_id' => $serviceObject->id])->orderBy('id DESC'),
+        ]),
+        'actionColumn' => false,
+        'checkboxColumn' => false,
+        'columns' => [
+            [
+                'attribute' => 'id',
+                'label' => 'Заявка',
+                'format' => 'raw',
+                'value' => function ($rowModel) {
+                    /** @var OpenBankAccount $rowModel */
+                    return Html::encode((string)$rowModel);
+                },
+            ],
+            [
+                'attribute' => 'status_id',
+                'label' => 'Статус',
+                'format' => 'raw',
+                'value' => function ($rowModel) {
+                    /** @var OpenBankAccount $rowModel */
+                    $status = '';
+                    switch ($rowModel->status_id) {
+                        case DocumentStatus::DRAFT:
+                            $status = 'Принят';
+                            break;
+                        case DocumentStatus::POSTED:
+                            $status = 'Обработан';
+                            break;
+                        case DocumentStatus::DELETED:
+                            $status = 'Удален';
+                            break;
+                    };
+                    return $status;
+                },
+            ],
+        ],
+    ]);
+    Pjax::end();
+
+    echo Html::endTag('div');
+    echo Html::endTag('div');
+}
 
 $this->registerJs("
-    $('#" . $handInputButtonId . "').click(function(e){
-        e.preventDefault();
-        e.stopPropagation();   
+    $('#" . $handInputButtonId . "').click(function(e){ 
         $('#" . $handInputModalId . "').modal('show');
     });
     $('#" . $uploadFileButtonId . "').click(function(e){
-        e.preventDefault();
-        e.stopPropagation();   
         $('#" . $uploadFileModalId . "').modal('show');
     });
 ");
@@ -46,9 +104,7 @@ Modal::begin([
         'id' => $handInputModalId,
     ]
 ]);
-$form = ActiveForm::begin([
-    'id' => 'form-signup',
-]);
+$form = ActiveForm::begin();
 echo Html::beginTag('div', ['class' => 'form-group']);
 echo $form->field($model, 'surname')->textInput();
 echo $form->field($model, 'forename')->textInput();
@@ -72,10 +128,7 @@ Modal::begin([
         'id' => $uploadFileModalId,
     ]
 ]);
-$form = ActiveForm::begin([
-    'id' => 'form-signup',
-]);
-
+$form = ActiveForm::begin();
 echo Html::beginTag('div', ['class' => 'form-group']);
     echo Html::beginTag('div', ['class' => 'row']);
         echo Html::beginTag('div', ['class' => 'col-xs-12']);

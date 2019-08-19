@@ -1,6 +1,6 @@
 <?php
 
-namespace frontend\models\serviceObject\request;
+namespace frontend\models\serviceObject;
 
 use frontend\models\FrontendForm;
 
@@ -12,7 +12,7 @@ use frontend\models\FrontendForm;
  * @property array $logic
  */
 
-class RequestForm extends FrontendForm
+class Request extends FrontendForm
 {
     public $service_object_name;
     //public $service_object_code;

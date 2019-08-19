@@ -1,40 +1,72 @@
 <?php
 
-namespace frontend\actions\form\serviceObject\requesttable;
+namespace frontend\controllers\serviceObject;
 
+use backend\widgets\ActiveForm;
 use common\components\DateTime;
+use common\helpers\ArrayHelper;
 use common\models\cross\RequestDateProduct;
 use common\models\document\Request;
 use common\models\reference\Contract;
-use common\models\reference\ServiceObject;
 use common\models\reference\Product;
-use common\models\tablepart\ServiceObjectContract;
+use common\models\reference\ServiceObject;
 use common\models\tablepart\ContractProduct;
 use common\models\tablepart\RequestDate;
-use Exception;
-use frontend\actions\FrontendModelAction;
-use backend\widgets\ActiveForm;
-use frontend\models\serviceObject\request\RequestTableForm;
+use common\models\tablepart\ServiceObjectContract;
+use frontend\controllers\FrontendModelController;
+use frontend\models\serviceObject\RequestTable;
 use Yii;
 use yii\base\InvalidConfigException;
+use yii\base\UserException;
 use yii\data\ArrayDataProvider;
 use yii\db\Query;
+use yii\filters\AccessControl;
 use yii\web\Response;
 
-/**
- * Действие для вывода формы
- * @method getParent()
- */
-class IndexAction extends FrontendModelAction
+class RequestTableController extends FrontendModelController
 {
     /**
-     * @inheritdoc
-     * @throws InvalidConfigException
-     * @throws Exception
+     * @var string имя класса модели
      */
-    public function run()
+    public $modelClass = 'frontend\models\serviceObject\RequestTable';
+
+    /**
+     * @inheritdoc
+     */
+    public function actions()
     {
-        /** @var RequestTableForm $model */
+        $result = parent::actions();
+        unset($result['index']);
+        return $result;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function behaviors()
+    {
+        return ArrayHelper::merge(parent::behaviors(), [
+            'access' => [
+                'class' => AccessControl::class,
+                'rules' => [
+                    [
+                        'actions' => ['index'],
+                        'allow' => true,
+                        'roles' => ['service-object'],
+                    ],
+                ],
+            ],
+        ]);
+    }
+
+    /**
+     * @return array|string
+     * @throws InvalidConfigException
+     * @throws UserException
+     * @throws \Exception
+     */
+    public function indexAction(){
+        /** @var RequestTable $model */
         $model = new $this->modelClass();
         $action = Yii::$app->request->get('action');
         $requestData = array_merge(Yii::$app->request->post(), Yii::$app->request->get());
@@ -250,6 +282,6 @@ class IndexAction extends FrontendModelAction
             ]);
         }
 
-        return $this->controller->renderUniversal($this->viewPath, ['model' => $model, 'dataProvider' => $dataProvider, 'weekDayDateMap' => $weekDayDateMap]);
+        return $this->renderUniversal('@frontend/views/service-object/request/request-table/index', ['model' => $model, 'dataProvider' => $dataProvider, 'weekDayDateMap' => $weekDayDateMap]);
     }
 }
