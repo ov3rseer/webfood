@@ -14,6 +14,12 @@ $this->title = 'Вход';
 $this->registerJs("
 $().ready(function() {
 
+    $('#login-form').on('afterValidate', function (event, messages, errorAttributes) {
+        console.log(event);
+        console.log(messages);
+        console.log(errorAttributes);
+    });
+
     var loginFluent = new FluentUI({
         '#login-container, #login-container input, #login-container a' : {
             'mouseover focus' : {

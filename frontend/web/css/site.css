@@ -690,6 +690,27 @@ a.desc:after {
     transition: all .3s ease-out;
 }
 
+.hidden-link-lg {
+    cursor: pointer !important;
+    display: inline-block;
+    margin-top: 0px;
+    font-weight: normal;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: middle;
+    font-size: 18px;
+    line-height: 20px;
+    border-radius: 4px;
+    background: rgba(0, 0, 0, 0);
+    border: rgba(0, 0, 0, 0);
+    color: rgba(0, 0, 0, .2);
+    transition: all .2s ease-in;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
 .hidden-btn {
     cursor: pointer !important;
     display: inline-block;
