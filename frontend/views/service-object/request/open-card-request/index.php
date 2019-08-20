@@ -2,11 +2,12 @@
 
 use backend\widgets\ActiveForm;
 use backend\widgets\GridView\GridView;
-use common\models\document\OpenBankAccount;
+use common\models\document\OpenCard;
 use common\models\enum\DocumentStatus;
 use common\models\enum\UserType;
 use common\models\reference\ServiceObject;
 use frontend\models\serviceObject\OpenCardRequest;
+use frontend\models\serviceObject\OpenCardUploadFile;
 use yii\bootstrap\Modal;
 use yii\data\ActiveDataProvider;
 use yii\helpers\Html;
@@ -14,6 +15,7 @@ use yii\widgets\Pjax;
 
 /* @var yii\web\View $this */
 /* @var OpenCardRequest $model */
+/* @var OpenCardUploadFile $uploadFileForm */
 
 $this->title = $model->getName();
 $this->params['breadcrumbs'][] = $this->title;
@@ -46,7 +48,7 @@ if ($serviceObject) {
     Pjax::begin();
     echo GridView::widget([
         'dataProvider' => new ActiveDataProvider([
-            'query' => OpenBankAccount::find()->andWhere(['service_object_id' => $serviceObject->id])->orderBy('id DESC'),
+            'query' => OpenCard::find()->andWhere(['service_object_id' => $serviceObject->id])->orderBy('id DESC'),
         ]),
         'actionColumn' => false,
         'checkboxColumn' => false,
@@ -56,7 +58,7 @@ if ($serviceObject) {
                 'label' => 'Заявка',
                 'format' => 'raw',
                 'value' => function ($rowModel) {
-                    /** @var OpenBankAccount $rowModel */
+                    /** @var OpenCard $rowModel */
                     return Html::encode((string)$rowModel);
                 },
             ],
@@ -65,7 +67,7 @@ if ($serviceObject) {
                 'label' => 'Статус',
                 'format' => 'raw',
                 'value' => function ($rowModel) {
-                    /** @var OpenBankAccount $rowModel */
+                    /** @var OpenCard $rowModel */
                     $status = '';
                     switch ($rowModel->status_id) {
                         case DocumentStatus::DRAFT:
@@ -164,7 +166,7 @@ echo Html::beginTag('div', ['class' => 'form-group']);
     echo Html::endTag('div');
 echo Html::endTag('div');
 
-echo $form->field($model, 'uploadedFile')->fileInput();
+echo $form->field($uploadFileForm, 'uploadedFile')->fileInput();
 echo Html::submitButton('Загрузить данные из файла', [
     'name' => 'action',
     'value' => 'upload-file',

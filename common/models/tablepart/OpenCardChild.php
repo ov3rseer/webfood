@@ -2,12 +2,12 @@
 
 namespace common\models\tablepart;
 
-use common\models\document\OpenBankAccount;
+use common\models\document\OpenCard;
 use common\models\reference\Child;
 use yii\db\ActiveQuery;
 
 /**
- * Модель строки табличной части "Комплексы (состав меню)" справочника "Меню"
+ * Модель строки табличной части "Данные детей" документа "Открытие карт"
  *
  * Свойства:
  * @property integer $parent_id
@@ -16,10 +16,10 @@ use yii\db\ActiveQuery;
  * @property integer $codeword
  *
  * Отношения:
- * @property OpenBankAccount $parent
- * @property Child           $child
+ * @property OpenCard $parent
+ * @property Child    $child
  */
-class OpenBankAccountChild extends TablePart
+class OpenCardChild extends TablePart
 {
     /**
      * @inheritdoc
@@ -50,7 +50,7 @@ class OpenBankAccountChild extends TablePart
      */
     public function getParent()
     {
-        return $this->hasOne(OpenBankAccount::className(), ['id' => 'parent_id']);
+        return $this->hasOne(OpenCard::className(), ['id' => 'parent_id']);
     }
 
     /**

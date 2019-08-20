@@ -14,7 +14,7 @@ use common\models\tablepart\ContractProduct;
 use common\models\tablepart\RequestDate;
 use common\models\tablepart\ServiceObjectContract;
 use frontend\controllers\FrontendModelController;
-use frontend\models\serviceObject\RequestTable;
+use frontend\models\serviceObject\request\RequestTable;
 use Yii;
 use yii\base\InvalidConfigException;
 use yii\base\UserException;

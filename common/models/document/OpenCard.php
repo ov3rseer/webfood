@@ -3,19 +3,19 @@
 namespace common\models\document;
 
 use common\models\reference\ServiceObject;
-use common\models\tablepart\OpenBankAccountChild;
+use common\models\tablepart\OpenCardChild;
 use yii\db\ActiveQuery;
 
 /**
- * Модель документа "Открытие счета"
+ * Модель документа "Открытие карт"
  *
  * Свойства:
  * @property integer $service_object_id
  *
  * Отношения:
- * @property OpenBankAccountChild[] $children
+ * @property OpenCardChild[] $children
  */
-class OpenBankAccount extends Document
+class OpenCard extends Document
 {
     /**
      * @inheritdoc
@@ -57,7 +57,7 @@ class OpenBankAccount extends Document
      */
     public function getChildren()
     {
-        return $this->hasMany(OpenBankAccountChild::className(), ['parent_id' => 'id'])
+        return $this->hasMany(OpenCardChild::className(), ['parent_id' => 'id'])
             ->orderBy('id ASC');
     }
 
@@ -67,7 +67,7 @@ class OpenBankAccount extends Document
     public function getTableParts()
     {
         return array_merge([
-            'children' => OpenBankAccountChild::className(),
+            'children' => OpenCardChild::className(),
         ], parent::getTableParts());
     }
 }

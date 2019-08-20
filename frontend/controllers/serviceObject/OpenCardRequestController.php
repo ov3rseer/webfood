@@ -2,15 +2,14 @@
 
 namespace frontend\controllers\serviceObject;
 
-use backend\widgets\ActiveForm;
 use common\helpers\ArrayHelper;
 use frontend\controllers\FrontendModelController;
-use frontend\models\serviceObject\OpenCardRequest;
+use frontend\models\serviceObject\openCard\OpenCardRequest;
+use frontend\models\serviceObject\openCard\OpenCardUploadFile;
 use Yii;
-use yii\base\Exception;
 use yii\base\UserException;
 use yii\filters\AccessControl;
-use yii\web\Response;
+use yii\web\UploadedFile;
 
 /**
  * Контроллер для формы "Загрузка списков"
@@ -20,7 +19,7 @@ class OpenCardRequestController extends FrontendModelController
     /**
      * @var string имя класса модели
      */
-    public $modelClass = 'frontend\models\serviceObject\OpenCardRequest';
+    public $modelClass = 'frontend\models\serviceObject\openCard\OpenCardRequest';
 
     /**
      * @inheritdoc
@@ -48,8 +47,8 @@ class OpenCardRequestController extends FrontendModelController
                     ],
                     [
                         'actions' => ['download-example-file'],
-                        'allow'   => true,
-                        'roles'   => ['service-object'],
+                        'allow' => true,
+                        'roles' => ['service-object'],
                     ],
                 ],
             ]
@@ -58,37 +57,33 @@ class OpenCardRequestController extends FrontendModelController
 
     /**
      * @return array|string
+     * @throws UserException
      * @throws \PhpOffice\PhpSpreadsheet\Exception
      * @throws \PhpOffice\PhpSpreadsheet\Reader\Exception
-     * @throws Exception
-     * @throws UserException
      */
     public function actionIndex()
     {
         /** @var OpenCardRequest $model */
         $model = new $this->modelClass();
         $requestData = array_merge(Yii::$app->request->post(), Yii::$app->request->get());
+        $action = Yii::$app->request->post('action');
         $model->load($requestData);
-        if (Yii::$app->request->isAjax && !Yii::$app->request->isPjax && $model->load($requestData)) {
-            Yii::$app->response->format = Response::FORMAT_JSON;
-            return ActiveForm::validate($model);
-        }
-        if (Yii::$app->request->isPost) {
-            $action = Yii::$app->request->post('action');
-            if ($action == OpenCardRequest::SCENARIO_HAND_INPUT) {
-                $model->scenario = $action;
-                if ($model->validate()) {
-                    $model->submit();
-                }
-            }
-            if ($action == OpenCardRequest::SCENARIO_UPLOAD_FILE) {
-                $model->scenario = $action;
-                if ($model->validate()) {
-                    $model->proceed();
-                }
+        if ($action == OpenCardRequest::SCENARIO_HAND_INPUT) {
+            $model->scenario = $action;
+            if ($model->validate()) {
+                $model->proceed();
             }
         }
-        return $this->renderUniversal('@frontend/views/service-object/request/open-card-request/index', ['model' => $model]);
+        $openCardUploadFile = new OpenCardUploadFile();
+        if (Yii::$app->request->post('OpenCardUploadFile') && $action == OpenCardRequest::SCENARIO_UPLOAD_FILE) {
+            $openCardUploadFile->uploadedFile = UploadedFile::getInstance($openCardUploadFile, 'uploadedFile');
+            $model->scenario = $action;
+            if ($openCardUploadFile->validate()) {
+                $openCardUploadFile->proceed();
+            }
+        }
+        $model->scenario = OpenCardRequest::SCENARIO_HAND_INPUT;
+        return $this->renderUniversal('@frontend/views/service-object/request/open-card-request/index', ['model' => $model, 'uploadFileForm' => $openCardUploadFile]);
     }
 
     /**
@@ -97,7 +92,7 @@ class OpenCardRequestController extends FrontendModelController
     public function actionDownloadExampleFile()
     {
         return Yii::$app->response->sendFile(
-            Yii::getAlias('@frontend/web/samples/open-account/open-account.xlsx'),
+            Yii::getAlias('@frontend/web/samples/open-card-request/open-card.xlsx'),
             'Файл-образец для загрузки в систему учащихся и открытия счетов.xlsx'
         );
     }
