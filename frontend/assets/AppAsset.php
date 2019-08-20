@@ -13,11 +13,14 @@ class AppAsset extends AssetBundle
     public $baseUrl = '@web';
     public $css = [
         'css/site.css',
+        'css/fluent.css',
     ];
     public $js = [
+        'js/fluent.js',
         'js/main.js',
     ];
     public $depends = [
+        //'frontend\assets\FontAwesomeAsset',
         'common\assets\Html5ShivAsset',
         'common\assets\RespondAsset',
         'yii\web\YiiAsset',

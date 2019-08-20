@@ -32,6 +32,8 @@
         "ext-json": "*",
         "ext-zip": "*",
         "yii2tech/crontab": "^1.0",
+        "yiisoft/yii2-bootstrap4": "^2.0",
+        "bower-asset/font-awesome": "~5.1",
         "bower-asset/html5shiv": "*",
         "bower-asset/respond": "*"
     },

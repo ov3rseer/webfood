@@ -2,6 +2,7 @@
 
 namespace common\components\pgsql;
 
+use common\models\system\Structure;
 use Yii;
 use yii\rbac\Permission;
 
@@ -32,6 +33,11 @@ class Migration extends \yii\db\Migration
      * @var array список таблиц, по которым нужно обновить схему после подтверждения/отката транзакции
      */
     protected $tablesForSchemaRefresh = [];
+
+    public function __construct($config = [])
+    {
+        parent::__construct($config);
+    }
 
     /**
      * @inheritdoc

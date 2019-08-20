@@ -175,7 +175,14 @@ function getRequestData(action) {
     };
 }
 
+function init() {
+
+
+
+}
+
 $().ready(function() {
-    var rememberFields = new RememberFields();
-    //console.log(rememberFields);
+
+    init();
+
 });

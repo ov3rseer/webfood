@@ -3,6 +3,7 @@ namespace frontend\controllers;
 
 use common\models\enum\UserType;
 use frontend\models\site\PasswordResetRequestForm;
+use frontend\models\site\ResendVerificationEmailForm;
 use frontend\models\site\ResetPasswordForm;
 use frontend\models\site\SignupForm;
 use frontend\models\site\VerifyEmailForm;
@@ -245,24 +246,24 @@ class SiteController extends Controller
         return $this->goHome();
     }
 
-//    /**
-//     * Resend verification email
-//     *
-//     * @return mixed
-//     */
-//    public function actionResendVerificationEmail()
-//    {
-//        $model = new ResendVerificationEmailForm();
-//        if ($model->load(Yii::$app->request->post()) && $model->validate()) {
-//            if ($model->sendEmail()) {
-//                Yii::$app->session->setFlash('success', 'Check your email for further instructions.');
-//                return $this->goHome();
-//            }
-//            Yii::$app->session->setFlash('error', 'Sorry, we are unable to resend verification email for the provided email address.');
-//        }
-//
-//        return $this->render('resendVerificationEmail', [
-//            'model' => $model
-//        ]);
-//    }
+    /**
+     * Resend verification email
+     *
+     * @return mixed
+     */
+    public function actionResendVerificationEmail()
+    {
+        $model = new ResendVerificationEmailForm();
+        if ($model->load(Yii::$app->request->post()) && $model->validate()) {
+            if ($model->sendEmail()) {
+                Yii::$app->session->setFlash('success', 'Check your email for further instructions.');
+                return $this->goHome();
+            }
+            Yii::$app->session->setFlash('error', 'Sorry, we are unable to resend verification email for the provided email address.');
+        }
+
+        return $this->render('resendVerificationEmail', [
+            'model' => $model
+        ]);
+    }
 }

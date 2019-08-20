@@ -1,6 +1,5 @@
 <?php
 
-
 namespace common\models\reference;
 
 use yii\db\ActiveQuery;
