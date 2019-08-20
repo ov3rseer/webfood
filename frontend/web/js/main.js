@@ -175,11 +175,58 @@ function getRequestData(action) {
     };
 }
 
+var afterValidateFormsEventsTrigger = function() {
+
+    this.forms = {};
+
+    this.formProperties = {};
+
+    this.constructor();
+
+};
+
+afterValidateFormsEventsTrigger.prototype.constructor = function() {
+
+    this.forms = $('form');
+    var ValidateForms = this;
+
+    this.forms.each(function() {
+        ValidateForms.formProperties[this.id] = {
+            'validatingStatus' : 'invalid'
+        }
+    });
+
+    this.createHandlers();
+
+};
+
+afterValidateFormsEventsTrigger.prototype.createHandlers = function() {
+
+    this.forms.each(function() {
+        let form = $(this);
+        form.on('afterValidate', function(event, messages) {
+            let validatingStatus = 'valid';
+            setTimeout(function() {
+                for (let fieldName in messages) {
+                    let field = $('.field-' + fieldName);
+                    if (field.hasClass('required') && !field.hasClass('has-success') || field.hasClass('has-error')) {
+                        validatingStatus = 'invalid';
+                        break;
+                    }
+                }
+                form.find('button[type=submit]').trigger(validatingStatus + '-' + form.attr('id'));
+            }, 100);
+        });
+    });
+
+};
+
 function init() {
 
-
+    var validateForms = new afterValidateFormsEventsTrigger();
 
 }
+
 $().ready(function() {
 
     init();

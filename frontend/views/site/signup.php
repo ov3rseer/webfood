@@ -16,27 +16,35 @@ $().ready(function() {
 
     var signupFluent = new FluentUI({
         '#signup-container, #signup-container input, #signup-container a' : {
-            'mouseover focus' : {
-                '#signup-submit-btn, #signup-tooltip-block' : {
-                    'addClass' : 'highlight'
-                }
+            'mouseover focus' : function() {
+                let el = $('#signup-submit-btn, #signup-tooltip-block');
+                el.addClass('highlight'); 
             },
-            'mouseout blur' : {
-                '#signup-submit-btn, #signup-tooltip-block' : {
-                    'removeClass' : 'highlight'
-                }
+            'mouseout blur' : function() {
+                let el = $('#signup-submit-btn, #signup-tooltip-block');
+                el.removeClass('highlight'); 
             }
         },
         '#signup-submit-btn' : {
-            'mouseover focus' : {
-                '#signup-submit-btn' : {
-                    'addClass' : 'hover'
-                }
+            'mouseover focus' : function() {
+                let el = $('#signup-submit-btn');
+                el.addClass('hover'); 
             },
-            'mouseout blur' : {
-                '#signup-submit-btn' : {
-                    'removeClass' : 'hover'
-                }
+            'mouseout blur' : function() {
+                let el = $('#signup-submit-btn');
+                el.removeClass('hover'); 
+            },
+            'valid-form-signup' : function() {
+                let el = $('#signup-submit-btn');
+                el.addClass('success');
+                el.removeClass('disabled');
+                el.removeAttr('disabled');
+            },
+            'invalid-form-signup' : function() {
+                let el = $('#signup-submit-btn');
+                el.removeClass('success');
+                el.addClass('disabled');
+                el.attr({'disabled' : true});
             }
         }
     });
@@ -82,8 +90,9 @@ $().ready(function() {
         <?=
         Html::submitButton('Зарегистрироваться', [
             'id' => 'signup-submit-btn',
-            'class' => 'hidden-btn',
-            'name' => 'signup-button'
+            'class' => 'hidden-btn disabled',
+            'name' => 'signup-button',
+            'disabled' => true
         ])
         ?>
     </div>

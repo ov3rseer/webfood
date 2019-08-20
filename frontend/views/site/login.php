@@ -14,35 +14,37 @@ $this->title = 'Вход';
 $this->registerJs("
 $().ready(function() {
 
-    $('#login-form').on('afterValidate', function (event, messages, errorAttributes) {
-        console.log(event);
-        console.log(messages);
-        console.log(errorAttributes);
-    });
-
     var loginFluent = new FluentUI({
         '#login-container, #login-container input, #login-container a' : {
-            'mouseover focus' : {
-                '#login-submit-btn, #login-tooltip-block' : {
-                    'addClass' : 'highlight'
-                }
+            'mouseover focus' : function() {
+                let el = $('#login-submit-btn, #login-tooltip-block');
+                el.addClass('highlight'); 
             },
-            'mouseout blur' : {
-                '#login-submit-btn, #login-tooltip-block' : {
-                    'removeClass' : 'highlight'
-                }
+            'mouseout blur' : function() {
+                let el = $('#login-submit-btn, #login-tooltip-block');
+                el.removeClass('highlight'); 
             }
         },
         '#login-submit-btn' : {
-            'mouseover focus' : {
-                '#login-submit-btn' : {
-                    'addClass' : 'hover'
-                }
+            'mouseover focus' : function() {
+                let el = $('#login-submit-btn');
+                el.addClass('hover'); 
             },
-            'mouseout blur' : {
-                '#login-submit-btn' : {
-                    'removeClass' : 'hover'
-                }
+            'mouseout blur' : function() {
+                let el = $('#login-submit-btn');
+                el.removeClass('hover'); 
+            },
+            'valid-login-form' : function() {
+                let el = $('#login-submit-btn');
+                el.addClass('success');
+                el.removeClass('disabled');
+                el.removeAttr('disabled');
+            },
+            'invalid-login-form' : function() {
+                let el = $('#login-submit-btn');
+                el.removeClass('success');
+                el.addClass('disabled');
+                el.attr({'disabled' : true});
             }
         }
     });
@@ -77,8 +79,9 @@ $().ready(function() {
                 <?=
                 Html::submitButton('Вход', [
                     'id' => 'login-submit-btn',
-                    'class' => 'hidden-btn',
-                    'name' => 'login-button'
+                    'class' => 'hidden-btn disabled',
+                    'name' => 'login-button',
+                    'disabled' => true
                 ])
                 ?>
             </div>

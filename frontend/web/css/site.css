@@ -746,6 +746,31 @@ a.desc:after {
     transition: all .3s ease-out;
 }
 
+.hidden-btn.success {
+    background: rgba(92, 184, 92, .8);
+    color: rgba(48, 48, 48, .6);
+    transition: all .3s ease-out;
+}
+
+.hidden-btn.highlight.success {
+    background: rgba(92, 184, 92, .8);
+    transition: all .3s ease-out;
+}
+
+.hidden-btn.hover.success {
+    transform: translateY(-2px);
+    background: rgba(92, 184, 92, .8);
+    transition: all .3s ease-out;
+}
+
+.hidden-btn.highlight.disabled, .hidden-btn.hover.disabled {
+    cursor: default !important;
+    background: rgba(0, 0, 0, 0);
+    border: rgba(0, 0, 0, 0);
+    color: rgba(0, 0, 0, .2);
+    transform: translateY(0px);
+}
+
 .pointer {
     cursor: pointer !important;
 }

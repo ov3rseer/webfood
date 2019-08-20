@@ -17,75 +17,63 @@ $().ready(function() {
 
     var navbarFluent = new FluentUI({
         '#navbar' : {
-            'mouseover' : {
-                '#signup-link-btn, #login-link-btn, #profile-link-btn, #logout-submit-btn, #navbar' : {
-                    'addClass' : 'highlight'
-                }
+            'mouseover' : function() {
+                let el = $('#signup-link-btn, #login-link-btn, #profile-link-btn, #logout-submit-btn, #navbar');
+                el.addClass('highlight'); 
             },
-            'mouseout' : {
-                '#signup-link-btn, #login-link-btn, #profile-link-btn, #logout-submit-btn, #navbar' : {
-                    'removeClass' : 'highlight'
-                }
+            'mouseout' : function() {
+                let el = $('#signup-link-btn, #login-link-btn, #profile-link-btn, #logout-submit-btn, #navbar');
+                el.removeClass('highlight'); 
             }
         },
         '#signup-link-btn' : {
-            'mouseover focus' : {
-                '#signup-link-btn' : {
-                    'addClass' : 'hover'
-                }
+            'mouseover focus' : function() {
+                let el = $('#signup-link-btn');
+                el.addClass('hover'); 
             },
-            'mouseout blur' : {
-                '#signup-link-btn' : {
-                    'removeClass' : 'hover'
-                }
+            'mouseout blur' : function() {
+                let el = $('#signup-link-btn');
+                el.removeClass('hover'); 
             }
         },
         '#login-link-btn' : {
-            'mouseover focus' : {
-                '#login-link-btn' : {
-                    'addClass' : 'hover'
-                }
+            'mouseover focus' : function() {
+                let el = $('#login-link-btn');
+                el.addClass('hover'); 
             },
-            'mouseout blur' : {
-                '#login-link-btn' : {
-                    'removeClass' : 'hover'
-                }
+            'mouseout blur' : function() {
+                let el = $('#login-link-btn');
+                el.removeClass('hover'); 
             }
         },
         '#profile-link-btn' : {
-            'mouseover focus' : {
-                '#profile-link-btn' : {
-                    'addClass' : 'hover'
-                }
+            'mouseover focus' : function() {
+                let el = $('#profile-link-btn');
+                el.addClass('hover'); 
             },
-            'mouseout blur' : {
-                '#profile-link-btn' : {
-                    'removeClass' : 'hover'
-                }
+            'mouseout blur' : function() {
+                let el = $('#profile-link-btn');
+                el.removeClass('hover'); 
             }
         },
         '#logout-submit-btn' : {
-            'mouseover focus' : {
-                '#logout-submit-btn' : {
-                    'addClass' : 'hover'
-                }
+            'mouseover focus' : function() {
+                let el = $('#logout-submit-btn');
+                el.addClass('hover'); 
             },
-            'mouseout blur' : {
-                '#logout-submit-btn' : {
-                    'removeClass' : 'hover'
-                }
+            'mouseout blur' : function() {
+                let el = $('#logout-submit-btn');
+                el.removeClass('hover'); 
             }
         },
         '#login-link-btn, #signup-link-btn, #profile-link-btn, #logout-submit-btn' : {
-            'focus' : {
-                '#navbar' : {
-                    'addClass' : 'highlight'
-                }
+            'focus' : function() {
+                let el = $('#navbar');
+                el.addClass('highlight'); 
             },
-            'blur' : {
-                '#navbar' : {
-                    'removeClass' : 'highlight'
-                }
+            'blur' : function() {
+                let el = $('#navbar');
+                el.removeClass('highlight'); 
             }
         }
     });

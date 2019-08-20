@@ -24,18 +24,9 @@ FluentUI.prototype.constructor = function(config) {
 
 FluentUI.prototype.createHandlers = function() {
 
-    var fluentUi = this;
-
     for (let obj in this.config) {
         for (let trigger in this.config[obj]) {
-            this.fluentObjects[obj].on(trigger, function() {
-                for (let target in fluentUi.config[obj][trigger]) {
-                    let element = $(target);
-                    for (let action in fluentUi.config[obj][trigger][target]) {
-                        element[action](fluentUi.config[obj][trigger][target][action]);
-                    }
-                }
-            });
+            this.fluentObjects[obj].on(trigger, this.config[obj][trigger]);
         }
     }
 

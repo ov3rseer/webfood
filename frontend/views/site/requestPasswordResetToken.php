@@ -14,27 +14,35 @@ $().ready(function() {
 
     var resetPassFluent = new FluentUI({
         '#reset-password-container, #reset-password-container input' : {
-            'mouseover focus' : {
-                '#reset-password-submit-btn' : {
-                    'addClass' : 'highlight'
-                }
+            'mouseover focus' : function() {
+                let el = $('#reset-password-submit-btn');
+                el.addClass('highlight'); 
             },
-            'mouseout blur' : {
-                '#reset-password-submit-btn' : {
-                    'removeClass' : 'highlight'
-                }
+            'mouseout blur' : function() {
+                let el = $('#reset-password-submit-btn');
+                el.removeClass('highlight'); 
             }
         },
         '#reset-password-submit-btn' : {
-            'mouseover focus' : {
-                '#reset-password-submit-btn' : {
-                    'addClass' : 'hover'
-                }
+            'mouseover focus' : function() {
+                let el = $('#reset-password-submit-btn');
+                el.addClass('hover'); 
             },
-            'mouseout blur' : {
-                '#reset-password-submit-btn' : {
-                    'removeClass' : 'hover'
-                }
+            'mouseout blur' : function() {
+                let el = $('#reset-password-submit-btn');
+                el.removeClass('hover'); 
+            },
+            'valid-request-password-reset-form' : function() {
+                let el = $('#reset-password-submit-btn');
+                el.addClass('success');
+                el.removeClass('disabled');
+                el.removeAttr('disabled');
+            },
+            'invalid-request-password-reset-form' : function() {
+                let el = $('#reset-password-submit-btn');
+                el.removeClass('success');
+                el.addClass('disabled');
+                el.attr({'disabled' : true});
             }
         }
     });
@@ -58,7 +66,8 @@ $().ready(function() {
                     <?=
                     Html::submitButton('Отправить', [
                         'id' => 'reset-password-submit-btn',
-                        'class' => 'hidden-btn'
+                        'class' => 'hidden-btn disabled',
+                        'disabled' => true
                     ])
                     ?>
                 </div>
