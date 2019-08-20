@@ -6,8 +6,8 @@ use common\models\document\OpenCard;
 use common\models\enum\DocumentStatus;
 use common\models\enum\UserType;
 use common\models\reference\ServiceObject;
-use frontend\models\serviceObject\OpenCardRequest;
-use frontend\models\serviceObject\OpenCardUploadFile;
+use frontend\models\serviceObject\openCard\OpenCardRequest;
+use frontend\models\serviceObject\openCard\OpenCardUploadFile;
 use yii\bootstrap\Modal;
 use yii\data\ActiveDataProvider;
 use yii\helpers\Html;
@@ -25,6 +25,7 @@ $handInputModalId = 'hand-input-modal';
 $uploadFileButtonId = 'upload-file-button';
 $uploadFileModalId = 'upload-file-modal';
 
+$serviceObject = null;
 if (Yii::$app->user && Yii::$app->user->identity->user_type_id == UserType::SERVICE_OBJECT) {
     $serviceObject = ServiceObject::findOne(['user_id' => Yii::$app->user->id]);
 }
@@ -89,9 +90,9 @@ if ($serviceObject) {
 
     echo Html::endTag('div');
     echo Html::endTag('div');
-}
 
-$this->registerJs("
+
+    $this->registerJs("
     $('#" . $handInputButtonId . "').click(function(e){ 
         $('#" . $handInputModalId . "').modal('show');
     });
@@ -100,77 +101,78 @@ $this->registerJs("
     });
 ");
 
-Modal::begin([
-    'header' => '<h2>Ручной ввод</h2>',
-    'options' => [
-        'id' => $handInputModalId,
-    ]
-]);
-$form = ActiveForm::begin();
-echo Html::beginTag('div', ['class' => 'form-group']);
-echo $form->field($model, 'surname')->textInput();
-echo $form->field($model, 'forename')->textInput();
-echo $form->field($model, 'patronymic')->textInput();
-echo $form->field($model, 'class_number')->textInput(['type' => 'number']);
-echo $form->field($model, 'class_litter')->textInput();
-echo $form->field($model, 'codeword')->textInput();
-echo $form->field($model, 'snils')->textInput();
-echo Html::submitButton('Сохранить данные', [
-    'name' => 'action',
-    'value' => 'hand-input',
-    'class' => 'btn btn-success',
-]);
-echo Html::endTag('div');
-ActiveForm::end();
-Modal::end();
+    Modal::begin([
+        'header' => '<h2>Ручной ввод</h2>',
+        'options' => [
+            'id' => $handInputModalId,
+        ]
+    ]);
+    $form = ActiveForm::begin();
+    echo Html::beginTag('div', ['class' => 'form-group']);
+    echo $form->field($model, 'surname')->textInput();
+    echo $form->field($model, 'forename')->textInput();
+    echo $form->field($model, 'patronymic')->textInput();
+    echo $form->field($model, 'class_number')->textInput(['type' => 'number']);
+    echo $form->field($model, 'class_litter')->textInput();
+    echo $form->field($model, 'codeword')->textInput();
+    echo $form->field($model, 'snils')->textInput();
+    echo Html::submitButton('Сохранить данные', [
+        'name' => 'action',
+        'value' => 'hand-input',
+        'class' => 'btn btn-success',
+    ]);
+    echo Html::endTag('div');
+    ActiveForm::end();
+    Modal::end();
 
-Modal::begin([
-    'header' => '<h2>Загрузка из файла</h2>',
-    'options' => [
-        'id' => $uploadFileModalId,
-    ]
-]);
-$form = ActiveForm::begin();
-echo Html::beginTag('div', ['class' => 'form-group']);
-    echo Html::beginTag('div', ['class' => 'row']);
-        echo Html::beginTag('div', ['class' => 'col-xs-12']);
-            echo Html::beginTag('div', ['class' => 'alert alert-info']);
-                echo Html::beginTag('ul');
-                    echo Html::beginTag('li');
-                        echo Html::tag('strong', 'Формат файла: ');
-                        echo 'Excel (*.xls, *.xlsx), CSV (*.csv)';
-                    echo Html::endTag('li');
-                    echo Html::beginTag('li');
-                        echo Html::tag('strong', 'Колонки файла: ');
-                        echo Html::beginTag('ol');
-                            echo Html::tag('li', 'Фамилия');
-                            echo Html::tag('li', 'Имя');
-                            echo Html::tag('li', 'Отчество');
-                            echo Html::tag('li', 'Номер класса');
-                            echo Html::tag('li', 'Литера класса');
-                            echo Html::tag('li', 'Кодовое слово');
-                            echo Html::tag('li', 'СНИЛС');
-                        echo Html::endTag('ol');
-                    echo Html::endTag('li');
-                    echo Html::beginTag('li');
-                        echo Html::tag('strong', 'Первая строка ');
-                        echo 'предназначена для заголовков колонок и пропускается при загрузке';
-                    echo Html::endTag('li');
-                    echo Html::beginTag('li');
-                        echo Html::tag('strong', 'Файл-образец: ');
-                        echo Html::a('Скачать', ['download-example-file'], ['target' => '_blank']);
-                    echo Html::endTag('li');
-                echo Html::endTag('ul');
+    Modal::begin([
+        'header' => '<h2>Загрузка из файла</h2>',
+        'options' => [
+            'id' => $uploadFileModalId,
+        ]
+    ]);
+    $form = ActiveForm::begin();
+    echo Html::beginTag('div', ['class' => 'form-group']);
+        echo Html::beginTag('div', ['class' => 'row']);
+            echo Html::beginTag('div', ['class' => 'col-xs-12']);
+                echo Html::beginTag('div', ['class' => 'alert alert-info']);
+                    echo Html::beginTag('ul');
+                        echo Html::beginTag('li');
+                            echo Html::tag('strong', 'Формат файла: ');
+                            echo 'Excel (*.xls, *.xlsx), CSV (*.csv)';
+                        echo Html::endTag('li');
+                        echo Html::beginTag('li');
+                            echo Html::tag('strong', 'Колонки файла: ');
+                            echo Html::beginTag('ol');
+                                echo Html::tag('li', 'Фамилия');
+                                echo Html::tag('li', 'Имя');
+                                echo Html::tag('li', 'Отчество');
+                                echo Html::tag('li', 'Номер класса');
+                                echo Html::tag('li', 'Литера класса');
+                                echo Html::tag('li', 'Кодовое слово');
+                                echo Html::tag('li', 'СНИЛС');
+                            echo Html::endTag('ol');
+                        echo Html::endTag('li');
+                        echo Html::beginTag('li');
+                            echo Html::tag('strong', 'Первая строка ');
+                            echo 'предназначена для заголовков колонок и пропускается при загрузке';
+                        echo Html::endTag('li');
+                        echo Html::beginTag('li');
+                            echo Html::tag('strong', 'Файл-образец: ');
+                            echo Html::a('Скачать', ['download-example-file'], ['target' => '_blank']);
+                        echo Html::endTag('li');
+                    echo Html::endTag('ul');
+                echo Html::endTag('div');
             echo Html::endTag('div');
         echo Html::endTag('div');
     echo Html::endTag('div');
-echo Html::endTag('div');
 
-echo $form->field($uploadFileForm, 'uploadedFile')->fileInput();
-echo Html::submitButton('Загрузить данные из файла', [
-    'name' => 'action',
-    'value' => 'upload-file',
-    'class' => 'btn btn-success',
-]);
-ActiveForm::end();
-Modal::end();
+    echo $form->field($uploadFileForm, 'uploadedFile')->fileInput();
+    echo Html::submitButton('Загрузить данные из файла', [
+        'name' => 'action',
+        'value' => 'upload-file',
+        'class' => 'btn btn-success',
+    ]);
+    ActiveForm::end();
+    Modal::end();
+}
