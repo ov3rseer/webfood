@@ -28,6 +28,12 @@ class m190807_105733_add_ref_father extends Migration
             'user_id' => $this->integer()->indexed()->foreignKey('{{%ref_user}}', 'id'),
         ]);
         $this->insert('{{%sys_entity}}', ['class_name' => 'common\models\reference\Father']);
+
+        // Добавляем роль родителя
+        $auth = Yii::$app->authManager;
+        $role = $auth->createRole('father');
+        $role->description = 'Родитель';
+        $auth->add($role);
     }
 
     /**

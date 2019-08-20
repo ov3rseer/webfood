@@ -56,6 +56,12 @@ class m190806_114634_rename_contractor_to_service_object extends Migration
             ->scalar();
         $this->update('{{%ref_service_object}}', ['service_object_type_id' => $serviceObjectTypeId], ['id' => $serviceObjectIds]);
         $this->alterColumn('{{%ref_service_object}}', 'service_object_type_id', 'SET NOT NULL');
+
+        // Добавляем роль поставщика
+        $auth = Yii::$app->authManager;
+        $role = $auth->createRole('other');
+        $role->description = 'Прочее';
+        $auth->add($role);
     }
 
     /**

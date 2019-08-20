@@ -29,6 +29,12 @@ class m190807_122142_add_ref_product_provider extends Migration
         $this->createTablePartTable('{{%tab_product_provider_service_object}}','{{%ref_product_provider}}',[
             'service_object_id' => $this->integer()->notNull()->indexed()->foreignKey('{{%ref_service_object}}', 'id'),
         ]);
+
+        // Добавляем роль поставщика
+        $auth = Yii::$app->authManager;
+        $role = $auth->createRole('product-provider');
+        $role->description = 'Поставщик продуктов';
+        $auth->add($role);
     }
 
     /**

@@ -44,7 +44,7 @@ class FrontendModelController extends Controller
     {
         return array_merge(parent::actions(), [
             'index' => [
-                'class' => 'frontend\actions\base\IndexAction',
+                'class' => 'frontend\actions\form\base\IndexAction',
                 'modelClass' => $this->modelClass,
                 'viewPath' => '@frontend/views/base/index',
             ],

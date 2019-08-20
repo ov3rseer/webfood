@@ -42,7 +42,7 @@ class ProfileController extends FrontendModelController
                     [
                         'actions' => ['index'],
                         'allow' => true,
-                        'roles' => ['service-object'],
+                        'roles' => ['super-admin', 'service-object', 'other', 'employee', 'father', 'product-provider'],
                     ],
                 ],
             ],

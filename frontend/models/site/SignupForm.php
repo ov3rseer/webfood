@@ -141,7 +141,7 @@ class SignupForm extends Model
             )
             ->setFrom([Yii::$app->params['supportEmail'] => Yii::$app->name . ' robot'])
             ->setTo($this->email)
-            ->setSubject('Account registration at ' . Yii::$app->name)
+            ->setSubject('Зарегистрирована учетная запись в системе ' . Yii::$app->name)
             ->send();
     }
 }

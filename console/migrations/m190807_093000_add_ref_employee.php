@@ -32,6 +32,12 @@ class m190807_093000_add_ref_employee extends Migration
         $this->createTablePartTable('{{%tab_service_object_employee}}','{{%ref_service_object}}',[
             'employee_id' => $this->integer()->notNull()->indexed()->foreignKey('{{%ref_employee}}', 'id'),
         ]);
+
+        // Добавляем роль сотрудника
+        $auth = Yii::$app->authManager;
+        $role = $auth->createRole('employee');
+        $role->description = 'Сотрудник';
+        $auth->add($role);
     }
 
     /**

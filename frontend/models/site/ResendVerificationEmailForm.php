@@ -62,8 +62,7 @@ class ResendVerificationEmailForm extends Model
             )
             ->setFrom([Yii::$app->params['supportEmail'] => Yii::$app->name . ' robot'])
             ->setTo($this->email)
-            ->setSubject('Account registration at ' . Yii::$app->name)
-            ->setTextBody('Сброс пароля')
+            ->setSubject('Зарегистрирована учетная запись в системе ' . Yii::$app->name)
             ->send();
     }
 }
