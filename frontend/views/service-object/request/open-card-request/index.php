@@ -20,17 +20,17 @@ use yii\widgets\Pjax;
 $this->title = $model->getName();
 $this->params['breadcrumbs'][] = $this->title;
 
-$handInputButtonId = 'hand-input-button';
-$handInputModalId = 'hand-input-modal';
-$uploadFileButtonId = 'upload-file-button';
-$uploadFileModalId = 'upload-file-modal';
-
 $serviceObject = null;
 if (Yii::$app->user && Yii::$app->user->identity->user_type_id == UserType::SERVICE_OBJECT) {
     $serviceObject = ServiceObject::findOne(['user_id' => Yii::$app->user->id]);
 }
 
 if ($serviceObject) {
+    $handInputButtonId = 'hand-input-button';
+    $handInputModalId = 'hand-input-modal';
+    $uploadFileButtonId = 'upload-file-button';
+    $uploadFileModalId = 'upload-file-modal';
+
     echo Html::beginTag('div', ['class' => 'container-fluid']);
     echo Html::beginTag('div', ['class' => 'col-xs-4']);
     echo Html::tag('h1', Html::encode($this->title));

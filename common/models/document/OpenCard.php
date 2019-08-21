@@ -14,6 +14,7 @@ use yii\db\ActiveQuery;
  *
  * Отношения:
  * @property OpenCardChild[] $children
+ * @property ServiceObject   $serviceObject
  */
 class OpenCard extends Document
 {

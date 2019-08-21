@@ -7,7 +7,7 @@ use common\models\reference\ServiceObject;
 use common\models\tablepart\ServiceObjectContract;
 use frontend\actions\FrontendModelAction;
 use backend\widgets\ActiveForm;
-use frontend\models\serviceObject\request\RequestForm;
+use frontend\models\serviceObject\request\Request;
 use Yii;
 use yii\base\InvalidConfigException;
 use yii\db\Query;
@@ -24,7 +24,7 @@ class IndexAction extends FrontendModelAction
      */
     public function run()
     {
-        /** @var RequestForm $model */
+        /** @var Request $model */
         $model = new $this->modelClass();
         $requestData = array_merge(Yii::$app->request->post(), Yii::$app->request->get());
         if (Yii::$app->request->isAjax && !Yii::$app->request->isPjax && $model->load($requestData)) {

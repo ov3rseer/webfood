@@ -4,6 +4,7 @@
 
 use common\models\enum\ContractType;
 use common\models\enum\UserType;
+use common\models\reference\ServiceObject;
 use yii\bootstrap\Html;
 use yii\bootstrap\Modal;
 
@@ -11,8 +12,12 @@ $modalId = 'choice_contract_type_for_request';
 
 $this->title = 'WebFood';
 
+$serviceObject = null;
 if (Yii::$app->user && Yii::$app->user->identity->user_type_id == UserType::SERVICE_OBJECT) {
+    $serviceObject = ServiceObject::findOne(['user_id' => Yii::$app->user->id]);
+}
 
+if ($serviceObject) {
     $this->registerJs(" 
         $('[data-action=\"serviceObject/request/preliminary-request/index\"], [data-action=\"serviceObject/request/correction-request/index\"]').click(function(e) {
             var action = this.attributes['data-action'].value;
@@ -62,5 +67,4 @@ if (Yii::$app->user && Yii::$app->user->identity->user_type_id == UserType::SERV
     echo Html::endTag('p');
     echo Html::endTag('div');
     echo Html::endTag('div');
-
 }
