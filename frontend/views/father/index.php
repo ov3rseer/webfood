@@ -50,9 +50,41 @@ if ($father) {
 
     <?php
 
-    $this->registerJs("
+    /*$this->registerJs("
         $('#" . $addChildButtonId . "').click(function(e){ 
             $('#" . $addChildModalId . "').modal('show');
+        });
+    ");*/
+
+    $this->registerJs("
+        $().ready(function() {
+
+            var childSearchFluent = new FluentUI({
+                '#" . $addChildButtonId . "' : {
+                    'click' : function() {
+                        $('#" . $addChildModalId . "').modal('show');
+                    }
+                },
+                '#add-child-input' : {
+                    'input' : function() {
+                        let el = $(this);
+                        let userInput = el.val();
+                        console.log(userInput)
+                        $.ajax({
+                            url: 'site/search-child',
+                            data: {
+                                'userInput' : userInput
+                            },
+                            dataType: 'json',
+                            type: 'POST',                           
+                            success: function(data) {
+                                console.log(data);
+                            },
+                        });
+                    }
+                }
+            });
+        
         });
     ");
 
@@ -62,13 +94,18 @@ if ($father) {
             'id' => $addChildModalId
         ]
     ]);
+
+    echo Html::textInput(null, null, ['id' => 'add-child-input', 'class' => 'form-control', 'placeholder' => 'Введите ФИО ребёнка']);
+
     Pjax::begin();
 
     echo Typeahead::widget([
         'name' => 'child',
         'pluginOptions' => [
             'highlight' => true,
-            'minLength' => 3,
+        ],
+        'pluginEvents' => [
+            "typeahead:select" => "function(ev, resp) { console.log(ev, resp)}"
         ],
         'options' => [
             'placeholder' => 'Введите ФИО ребенка',
@@ -88,6 +125,8 @@ if ($father) {
             ]
         ],
     ]);
+
+    echo Html::hiddenInput('selectedChildId', null, ['id' => 'selectedChildId']);
 
     Pjax::end();
     Modal::end();

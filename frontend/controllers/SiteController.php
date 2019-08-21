@@ -101,6 +101,13 @@ class SiteController extends Controller
      */
     public function actionSearchChild($userInput = null)
     {
+        if (!$userInput) {
+            $requestData = array_merge(Yii::$app->request->post(), Yii::$app->request->get());
+            $userInput = $requestData['userInput'];
+            /*if ($userInput) {
+                $userInput = json_decode($userInput, $assoc = true)['userInput'];
+            }*/
+        }
         $search = explode(' ', $userInput);
         $sql = ['OR'];
         foreach ($search as $word) {
@@ -116,12 +123,13 @@ class SiteController extends Controller
             ->innerJoin(SchoolClass::tableName() . ' AS sc', 'sc.id = c.school_class_id')
             ->andWhere(['c.is_active' => true])
             ->filterWhere($sql)
+            ->indexBy('c.id')
             ->asArray()
             ->column();
 
         $out = [];
         foreach ($childrenQuery as $childId => $childName) {
-            $out[$childId] = ['value' => $childName];
+            $out[] = ['value' => $childName, 'childId' => $childId];
         }
         return Json::encode($out);
     }
