@@ -24,5 +24,6 @@ class AppAsset extends AssetBundle
         'backend\widgets\IframeDialog\IframeDialogAsset',
         'backend\widgets\Select2\Select2CustomAsset',
         'backend\widgets\BootstrapDateRangePicker\BootstrapDateRangePickerAsset',
+        'common\assets\MainAsset',
     ];
 }

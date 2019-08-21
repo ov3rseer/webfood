@@ -97,7 +97,7 @@ $().ready(function() {
 
 <div class="wrap">
 
-    <nav class="hidden-navbar" role="navigation" id="navbar">
+    <nav class="hidden-navbar navbar-sticky-top" role="navigation" id="navbar">
         <div class="container">
             <div class="navbar-header">
                 <a href="/site/index" class="hidden-link-lg navbar-brand"><?= Yii::$app->name ?></a>

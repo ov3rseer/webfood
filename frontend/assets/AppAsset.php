@@ -13,10 +13,8 @@ class AppAsset extends AssetBundle
     public $baseUrl = '@web';
     public $css = [
         'css/site.css',
-        'css/fluent.css',
     ];
     public $js = [
-        'js/fluent.js',
         'js/main.js',
     ];
     public $depends = [
@@ -25,5 +23,6 @@ class AppAsset extends AssetBundle
         'common\assets\RespondAsset',
         'yii\web\YiiAsset',
         'yii\bootstrap\BootstrapAsset',
+        'common\assets\MainAsset',
     ];
 }

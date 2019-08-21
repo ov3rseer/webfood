@@ -23,5 +23,6 @@ class AppAsset extends AssetBundle
         'common\assets\RespondAsset',
         'yii\web\YiiAsset',
         'yii\bootstrap\BootstrapAsset',
+        'common\assets\MainAsset',
     ];
 }
