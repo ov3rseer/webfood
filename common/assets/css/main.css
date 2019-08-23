@@ -691,6 +691,10 @@ lead {
     line-height: 1.2;
 }
 
+.d-none {
+    display: none;
+}
+
 .area {
     border-radius: 4px !important;
     background-color: rgba(0, 0, 0, .05);
