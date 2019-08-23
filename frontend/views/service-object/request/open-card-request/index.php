@@ -93,13 +93,13 @@ if ($serviceObject) {
 
 
     $this->registerJs("
-    $('#" . $handInputButtonId . "').click(function(e){ 
-        $('#" . $handInputModalId . "').modal('show');
-    });
-    $('#" . $uploadFileButtonId . "').click(function(e){
-        $('#" . $uploadFileModalId . "').modal('show');
-    });
-");
+        $('#" . $handInputButtonId . "').click(function(e){ 
+            $('#" . $handInputModalId . "').modal('show');
+        });
+        $('#" . $uploadFileButtonId . "').click(function(e){
+            $('#" . $uploadFileModalId . "').modal('show');
+        });
+    ");
 
     Modal::begin([
         'header' => '<h2>Ручной ввод</h2>',

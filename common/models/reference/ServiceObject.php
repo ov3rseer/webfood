@@ -2,6 +2,7 @@
 
 namespace common\models\reference;
 
+use backend\widgets\ActiveField;
 use common\models\enum\ServiceObjectType;
 use common\models\tablepart\ServiceObjectContract;
 use common\models\tablepart\ServiceObjectEmployee;
@@ -125,16 +126,32 @@ class ServiceObject extends Reference
 
     /**
      * @inheritdoc
+     */
+    public function getFieldsOptions()
+    {
+        if ($this->_fieldsOptions === []) {
+            parent::getFieldsOptions();
+            if ($this->user_id) {
+                $this->_fieldsOptions['user_id']['displayType'] = ActiveField::READONLY;
+            } else {
+                $this->_fieldsOptions['user_id']['displayType'] = ActiveField::REFERENCE;
+            }
+        }
+        return $this->_fieldsOptions;
+    }
+
+    /**
+     * @inheritdoc
      * @throws UserException
      */
     public function beforeSave($insert)
     {
         $parentResult = parent::beforeSave($insert);
         if ($parentResult) {
+            if ($this->getOldAttribute('user_id') != $this->user_id) {
+                throw new UserException('Пользователь уже прикреплен, изменение невозможно');
+            }
             if ($this->user_id) {
-                if ($this->user->getProfile()) {
-                    throw new UserException('Этот пользователь уже занят');
-                }
                 $this->is_active = true;
             } else {
                 $this->is_active = false;

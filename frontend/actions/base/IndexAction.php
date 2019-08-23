@@ -1,6 +1,6 @@
 <?php
 
-namespace frontend\actions\form\base;
+namespace frontend\actions\base;
 
 use frontend\actions\FrontendModelAction;
 use backend\models\form\SystemForm;

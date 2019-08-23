@@ -23,7 +23,7 @@ class ProfileController extends FrontendModelController
     {
         return array_merge(parent::actions(), [
             'index' => [
-                'class' => 'frontend\actions\form\base\IndexAction',
+                'class' => 'frontend\actions\base\IndexAction',
                 'modelClass' => $this->modelClass,
                 'viewPath' => '@frontend/views/user/profile/index',
             ],

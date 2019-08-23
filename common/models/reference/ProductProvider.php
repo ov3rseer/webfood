@@ -3,6 +3,7 @@
 
 namespace common\models\reference;
 
+use backend\widgets\ActiveField;
 use common\models\tablepart\ProductProviderServiceObject;
 use yii\base\UserException;
 use yii\db\ActiveQuery;
@@ -10,11 +11,11 @@ use yii\db\ActiveQuery;
 /**
  * Модель справочника "Поставщик продуктов"
  *
- * @property integer  $user_id
+ * @property integer $user_id
  *
  * Отношения:
- * @property User                               $user
- * @property ProductProviderServiceObject[]     $productProviderServiceObjects
+ * @property User $user
+ * @property ProductProviderServiceObject[] $productProviderServiceObjects
  */
 class ProductProvider extends Reference
 {
@@ -50,7 +51,7 @@ class ProductProvider extends Reference
     public function attributeLabels()
     {
         return array_merge(parent::attributeLabels(), [
-            'user_id'                       => 'Прикреплённый пользователь',
+            'user_id' => 'Прикреплённый пользователь',
             'productProviderServiceObjects' => 'Объекты обслуживания',
         ]);
     }
@@ -84,16 +85,32 @@ class ProductProvider extends Reference
 
     /**
      * @inheritdoc
+     */
+    public function getFieldsOptions()
+    {
+        if ($this->_fieldsOptions === []) {
+            parent::getFieldsOptions();
+            if ($this->user_id) {
+                $this->_fieldsOptions['user_id']['displayType'] = ActiveField::READONLY;
+            } else {
+                $this->_fieldsOptions['user_id']['displayType'] = ActiveField::REFERENCE;
+            }
+        }
+        return $this->_fieldsOptions;
+    }
+
+    /**
+     * @inheritdoc
      * @throws UserException
      */
     public function beforeSave($insert)
     {
         $parentResult = parent::beforeSave($insert);
         if ($parentResult) {
+            if ($this->getOldAttribute('user_id') != $this->user_id) {
+                throw new UserException('Пользователь уже прикреплен, изменение невозможно');
+            }
             if ($this->user_id) {
-                if ($this->user->getProfile()) {
-                    throw new UserException('Этот пользователь уже занят');
-                }
                 $this->is_active = true;
             } else {
                 $this->is_active = false;
