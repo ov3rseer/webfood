@@ -15,7 +15,7 @@ $this->registerJs("
 $().ready(function() {
 
     var loginFluent = new FluentUI({
-        '#login-container, #login-container input, #login-container a' : {
+        '#login-container, #login-container input, #login-container a, #login-container button' : {
             'mouseover focus' : function() {
                 let el = $('#login-submit-btn, #login-tooltip-block');
                 el.addClass('highlight'); 

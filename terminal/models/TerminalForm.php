@@ -9,5 +9,5 @@ use yii\base\Model;
  */
 class TerminalForm extends Model
 {
-
+    public $cardNumber;
 }

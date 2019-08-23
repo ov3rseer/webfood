@@ -5,7 +5,7 @@
 
 /* @var $model SignupForm */
 
-use frontend\models\SignupForm;
+use frontend\models\site\SignupForm;
 use yii\helpers\Html;
 use yii\bootstrap\ActiveForm;
 
@@ -15,7 +15,7 @@ $this->registerJs("
 $().ready(function() {
 
     var signupFluent = new FluentUI({
-        '#signup-container, #signup-container input, #signup-container a' : {
+        '#signup-container, #signup-container input, #signup-container a, #signup-container button' : {
             'mouseover focus' : function() {
                 let el = $('#signup-submit-btn, #signup-tooltip-block');
                 el.addClass('highlight'); 

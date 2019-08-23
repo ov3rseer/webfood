@@ -27,7 +27,7 @@ return [
             'linkAssets' => true,
         ],
         'user' => [
-            'identityClass' => 'common\models\reference\User',
+            'identityClass' => 'common\models\reference\CardChild',
             'enableAutoLogin' => true,
             'identityCookie' => ['name' => '_identity-terminal', 'httpOnly' => true],
         ],

@@ -29,6 +29,18 @@ AppAsset::register($this);
 
 <div class="wrap">
     <?php
+    if (Yii::$app->user->isGuest) {
+        $menuItems = [];
+    } else {
+        $menuItems[] = '<li>'
+            . Html::beginForm(['/site/logout'], 'post')
+            . Html::submitButton(
+                'Выход (' . Yii::$app->user->identity->name_full . ')',
+                ['class' => 'btn btn-link logout']
+            )
+            . Html::endForm()
+            . '</li>';
+    }
     NavBar::begin([
         'brandLabel' => Yii::$app->name,
         'brandUrl' => Yii::$app->homeUrl,
@@ -36,7 +48,7 @@ AppAsset::register($this);
             'class' => 'navbar-inverse navbar-sticky-top',
         ],
     ]);
-    echo Nav::widget(['options' => ['class' => 'navbar-nav navbar-right']]);
+    echo Nav::widget(['options' => ['class' => 'navbar-nav navbar-right'], 'items' => $menuItems]);
     NavBar::end();
     ?>
 
