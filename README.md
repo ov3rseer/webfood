@@ -151,7 +151,7 @@
 
 В папке где будет находиться проект нужно выполнить команду:
 
-`git clone http://adlibtech.ru/git/alvastudio/WebFood.git`
+`git clone http://adlibtech.ru/git/SergeyDashko/WebFood_extend.git`
 
 Чтобы заполнить базу данных таблицами:
 
