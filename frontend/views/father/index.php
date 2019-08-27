@@ -6,11 +6,8 @@ $this->title = 'WebFood';
 
 use common\models\enum\UserType;
 use common\models\reference\Father;
-use kartik\widgets\Typeahead;
 use yii\bootstrap\Html;
 use yii\bootstrap\Modal;
-use yii\helpers\Url;
-use yii\widgets\Pjax;
 
 $father = null;
 if (Yii::$app->user && Yii::$app->user->identity->user_type_id == UserType::FATHER) {
@@ -35,26 +32,18 @@ if ($father) {
                     </span>
                 </div>
                 <?php
-                    if ($father->fatherChildren) {
-                        echo '<div class="panel-body">';
-
-                        foreach ($father->fatherChildren as $fatherChild) {
-                            echo Html::encode($fatherChild->child);
-                        }
-                        echo '</div>';
+                if ($father->fatherChildren) {
+                    echo '<div class="panel-body">';
+                    foreach ($father->fatherChildren as $fatherChild) {
+                        echo Html::encode($fatherChild->child);
                     }
+                    echo '</div>';
+                }
                 ?>
             </div>
         </div>
     </div>
-
     <?php
-
-    /*$this->registerJs("
-        $('#" . $addChildButtonId . "').click(function(e){ 
-            $('#" . $addChildModalId . "').modal('show');
-        });
-    ");*/
 
     $this->registerJs("
         $().ready(function() {
@@ -69,22 +58,27 @@ if ($father) {
                     'input' : function() {
                         let el = $(this);
                         let userInput = el.val();
-                        console.log(userInput)
                         $.ajax({
                             url: 'site/search-child',
                             data: {
                                 'userInput' : userInput
                             },
-                            dataType: 'json',
+                            dataType: 'html',
                             type: 'POST',                           
                             success: function(data) {
-                                console.log(data);
+                                $('#search-result-area').html(data);
+                                $('#search-result-area .list-group-item').on('click', function() {
+                                    var child = $(this).text();                                   
+                                    var childId = $(this).data('id');                                 
+                                    $('#add-child-input').val(child);                                   
+                                    $('#add-child-input').attr('data-id', childId);
+                                    $('#search-result-area').empty();                 
+                                });
                             },
                         });
                     }
                 }
             });
-        
         });
     ");
 
@@ -94,41 +88,13 @@ if ($father) {
             'id' => $addChildModalId
         ]
     ]);
-
-    echo Html::textInput(null, null, ['id' => 'add-child-input', 'class' => 'form-control', 'placeholder' => 'Введите ФИО ребёнка']);
-
-    Pjax::begin();
-
-    echo Typeahead::widget([
-        'name' => 'child',
-        'pluginOptions' => [
-            'highlight' => true,
-        ],
-        'pluginEvents' => [
-            "typeahead:select" => "function(ev, resp) { console.log(ev, resp)}"
-        ],
-        'options' => [
-            'placeholder' => 'Введите ФИО ребенка',
-            'class' => 'form-control'
-        ],
-        'dataset' => [
-            [
-                'datumTokenizer' => "Bloodhound.tokenizers.obj.whitespace('value')",
-                'display' => 'value',
-                'remote' => [
-                    'url' => Url::to(['site/search-child']) . '?userInput=%QUERY',
-                    'wildcard' => '%QUERY',
-                ],
-                'templates' => [
-                    'notFound' => '<div class="text-danger" style="padding:0 8px">Ничего не найдено.</div>',
-                ]
-            ]
-        ],
-    ]);
-
-    echo Html::hiddenInput('selectedChildId', null, ['id' => 'selectedChildId']);
-
-    Pjax::end();
+    echo Html::beginTag('div', ['class' => 'input-group']);
+    echo Html::textInput(null, null, ['id' => 'add-child-input', 'aria-describedby' => 'basic-addon2', 'class' => 'form-control', 'placeholder' => 'Введите ФИО ребёнка']);
+    echo Html::beginTag('span', ['class' => 'input-group-btn']);
+    echo Html::button('<span class="glyphicon glyphicon-ok"></span>', ['class' => 'btn btn-success']);
+    echo Html::endTag('span');
+    echo Html::endTag('div');
+    echo Html::tag('div', null, ['id' => 'search-result-area', 'class' => 'mt-3']);
     Modal::end();
 }
 ?>

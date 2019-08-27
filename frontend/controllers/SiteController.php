@@ -1,4 +1,5 @@
 <?php
+
 namespace frontend\controllers;
 
 use common\models\enum\UserType;
@@ -15,7 +16,7 @@ use yii\base\Exception;
 use yii\base\InvalidArgumentException;
 use yii\base\InvalidConfigException;
 use yii\base\UserException;
-use yii\helpers\Json;
+use yii\bootstrap\Html;
 use yii\web\BadRequestHttpException;
 use yii\web\Controller;
 use yii\filters\VerbFilter;
@@ -85,53 +86,64 @@ class SiteController extends Controller
             return $this->redirect(['site/login']);
         }
         switch (Yii::$app->user->identity->user_type_id) {
-            case UserType::ADMIN: return $this->render('@frontend/views/admin/index');
-            case UserType::SERVICE_OBJECT: return $this->render('@frontend/views/service-object/index');
-            case UserType::EMPLOYEE: return $this->render('@frontend/views/employee/index');
-            case UserType::FATHER: return $this->render('@frontend/views/father/index');
-            case UserType::PRODUCT_PROVIDER: return $this->render('@frontend/views/product-provider/index');
-            default: return $this->render('index');
+            case UserType::ADMIN:
+                return $this->render('@frontend/views/admin/index');
+            case UserType::SERVICE_OBJECT:
+                return $this->render('@frontend/views/service-object/index');
+            case UserType::EMPLOYEE:
+                return $this->render('@frontend/views/employee/index');
+            case UserType::FATHER:
+                return $this->render('@frontend/views/father/index');
+            case UserType::PRODUCT_PROVIDER:
+                return $this->render('@frontend/views/product-provider/index');
+            default:
+                return $this->render('index');
         }
     }
 
     /**
-     * @param null $userInput
      * @return string
      * @throws InvalidConfigException
      */
-    public function actionSearchChild($userInput = null)
+    public function actionSearchChild()
     {
-        if (!$userInput) {
-            $requestData = array_merge(Yii::$app->request->post(), Yii::$app->request->get());
-            $userInput = $requestData['userInput'];
-            /*if ($userInput) {
-                $userInput = json_decode($userInput, $assoc = true)['userInput'];
-            }*/
-        }
-        $search = explode(' ', $userInput);
-        $sql = ['OR'];
-        foreach ($search as $word) {
-            $sql[] = ['ilike', 'c.surname', $word];
-            $sql[] = ['ilike', 'c.forename', $word];
-            $sql[] = ['ilike', 'c.patronymic', $word];
-        }
+        $requestData = array_merge(Yii::$app->request->post(), Yii::$app->request->get());
+        $userInput = $requestData['userInput'];
+        $list = [];
+        if ($userInput) {
+            $search = explode(' ', $userInput);
+            $sql = ['OR'];
+            foreach ($search as $word) {
+                $sql[] = ['ilike', 'c.surname', $word];
+                $sql[] = ['ilike', 'c.forename', $word];
+                $sql[] = ['ilike', 'c.patronymic', $word];
+            }
 
-        $childrenQuery = Child::find()
-            ->alias('c')
-            ->select(['concat(c.name, \', \',sc.name, \', \', so.name) as name'])
-            ->innerJoin(ServiceObject::tableName() . ' AS so', 'so.id = c.service_object_id')
-            ->innerJoin(SchoolClass::tableName() . ' AS sc', 'sc.id = c.school_class_id')
-            ->andWhere(['c.is_active' => true])
-            ->filterWhere($sql)
-            ->indexBy('c.id')
-            ->asArray()
-            ->column();
+            $childrenQuery = Child::find()
+                ->alias('c')
+                ->select(['concat(c.name, \', \',sc.name, \', \', so.name) as name'])
+                ->innerJoin(ServiceObject::tableName() . ' AS so', 'so.id = c.service_object_id')
+                ->innerJoin(SchoolClass::tableName() . ' AS sc', 'sc.id = c.school_class_id')
+                ->andWhere(['c.is_active' => true])
+                ->filterWhere($sql)
+                ->indexBy('id')
+                ->asArray()
+                ->column();
 
-        $out = [];
-        foreach ($childrenQuery as $childId => $childName) {
-            $out[] = ['value' => $childName, 'childId' => $childId];
+            foreach ($childrenQuery as $childId => $childName) {
+                $list[] = ['value' => $childName, 'id' => $childId];
+            }
         }
-        return Json::encode($out);
+        $result = Html::beginTag('div', ['class' => 'list-group']);
+        if (!empty($list)) {
+            foreach ($list as $key => $item) {
+                $result .= Html::a($item['value'], '#', ['class' => 'list-group-item', 'data-id' => $item['id']]);
+            }
+        } else {
+            $result .= Html::a('Ничего не найдено!', '#', ['class' => 'list-group-item']);
+        }
+        $result .= Html::endTag('div');
+        return $result;
     }
 
     /**

@@ -2,8 +2,9 @@
 
 namespace common\components\pgsql;
 
-use common\models\system\Structure;
 use Yii;
+use yii\base\NotSupportedException;
+use yii\db\Exception;
 use yii\rbac\Permission;
 
 /**
@@ -219,8 +220,8 @@ class Migration extends \yii\db\Migration
      * Сброс значения последовательности таблицы
      * @param string $table название таблицы
      * @param mixed $value новое значение последовательности
-     * @throws \yii\base\NotSupportedException
-     * @throws \yii\db\Exception
+     * @throws NotSupportedException
+     * @throws Exception
      */
     protected function resetSequence($table, $value = null)
     {
@@ -281,8 +282,8 @@ class Migration extends \yii\db\Migration
      * Создание таблицы для модели перечисления
      * @param string $table
      * @param array $values
-     * @throws \yii\db\Exception
-     * @throws \yii\base\NotSupportedException
+     * @throws Exception
+     * @throws NotSupportedException
      */
     protected function createEnumTable($table, $values)
     {
@@ -352,6 +353,7 @@ class Migration extends \yii\db\Migration
             'document_basis_id' => $this->integer(),
         ];
         $columnsAfter = [
+            'data'           => $this->text(),
             'create_user_id' => $this->integer()->foreignKey('{{%ref_user}}', 'id'),
             'update_user_id' => $this->integer()->foreignKey('{{%ref_user}}', 'id'),
             'create_date'    => $this->timestamp()->notNull()->defaultExpression('NOW()'),
