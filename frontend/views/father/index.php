@@ -17,12 +17,13 @@ if (Yii::$app->user && Yii::$app->user->identity->user_type_id == UserType::FATH
 
 if ($father) {
     $addChildButtonId = 'add-child-button';
+    $deleteChildButtonId = 'delete-child-button';
     $addChildModalId = 'add-child-modal';
     $searchChildInputId = 'search-child-input';
     $addChildInputId = 'add-child-input';
 
     echo Html::beginTag('div', ['class' => 'container']);
-    echo Html::beginTag('div', ['class' => 'col-lg-3']);
+    echo Html::beginTag('div', ['class' => 'col-xs-3']);
     echo Html::beginTag('div', ['class' => 'panel panel-default']);
     echo Html::beginTag('div', ['class' => 'panel-heading']);
     echo Html::beginTag('span', ['style' => 'display: flex; justify-content: space-between;']);
@@ -30,17 +31,40 @@ if ($father) {
     echo Html::a(' <span class="glyphicon glyphicon-plus"></span><span class="glyphicon glyphicon-user"></span>',
         '#', ['id' => $addChildButtonId, 'class' => 'text-success']);
     echo Html::endTag('span');
-    echo Html::endTag('div');
+    echo Html::endTag('div'); // panel-heading
+
     if ($father->fatherChildren) {
-        echo Html::beginTag('div', ['class' => 'panel-body']);
+
+        echo Html::beginTag('div', ['class' => 'list-group accordion', 'id' => 'accordionExample']);
         foreach ($father->fatherChildren as $fatherChild) {
-            echo Html::encode($fatherChild->child->name).'<br>';
+            echo Html::beginTag('div', ['class' => 'list-group-item list-group-item-action']);
+            echo Html::beginTag('div', ['id' => 'heading' . $fatherChild->child_id, 'class' => 'card-header']);
+            echo Html::beginTag('div', [
+                'data-toggle' => 'collapse',
+                'data-target' => '#collapse' . $fatherChild->child_id,
+                'aria-expanded' => true,
+                'aria-controls' => 'collapse' . $fatherChild->child_id
+            ]);
+            echo Html::beginTag('span', ['style' => 'display: flex; justify-content: space-between;']);
+            echo Html::encode($fatherChild->child->name);
+            echo Html::a('<span class="glyphicon glyphicon-minus"></span><span class="glyphicon glyphicon-user"></span>',
+                '#', ['class' => $deleteChildButtonId.' text-danger', 'data' => ['child-id' => $fatherChild->child_id]]);
+            echo Html::endTag('span');
+            echo Html::endTag('div');
+            echo Html::endTag('div');
+
+            echo Html::beginTag('div', ['id' => 'collapse' . $fatherChild->child_id, 'class' => 'collapse', 'aria-labelledby' => 'heading' . $fatherChild->child_id, 'data-parent' => '#accordionExample']);
+            echo 'Тратататат';
+            echo Html::endTag('div');
+
+            echo Html::endTag('div');
         }
         echo Html::endTag('div');
+
     }
-    echo Html::endTag('div');
-    echo Html::endTag('div');
-    echo Html::endTag('div');
+    echo Html::endTag('div'); // panel panel-default
+    echo Html::endTag('div'); // col-lg-3
+    echo Html::endTag('div'); // container
 
 
     $this->registerJs("
@@ -65,9 +89,9 @@ if ($father) {
                                 $('#search-result-area').html(data);
                                 $('#search-result-area .list-group-item').on('click', function() {                             
                                     var child = $(this).text();                                   
-                                    var childId = $(this).data('id');                                 
+                                    var childId = $(this).data('child-id');                                 
                                     $('#" . $searchChildInputId . "').val(child);                                   
-                                    $('#" . $searchChildInputId . "').attr('data-id', childId);
+                                    $('#" . $searchChildInputId . "').attr('data-child-id', childId);
                                     $('#search-result-area').empty();                 
                                 });
                             },
@@ -76,20 +100,40 @@ if ($father) {
                 },
                 '#" . $addChildInputId . "' : {
                     'click' : function() {           
-                        var childId = $('#" . $searchChildInputId . "').data('id');
+                        var childId = $('#" . $searchChildInputId . "').data('child-id');
                         $.ajax({
                             url: 'father/my-child/add-child',
-                            data: {
-                                'childId' : childId
-                            },
-                            dataType: 'html',
+                            data: {'childId' : childId},
+                            dataType: 'json',
                             type: 'POST', 
                             success: function () {
                                 location.reload();
-                            }                       
+                            },        
+                            error: function (data) {                     
+                                alert(data.responseText);
+                            },               
                         });
                     }  
-                },              
+                }, 
+                '." . $deleteChildButtonId . "' : {
+                    'click' : function(e) {          
+                        e.stopPropagation();
+                        e.preventDefault();
+                        var childId = $(this).data('child-id');
+                        $.ajax({
+                            url: 'father/my-child/delete-child',
+                            data: {'childId' : childId},
+                            dataType: 'json',
+                            type: 'POST', 
+                            success: function () {
+                                location.reload();
+                            },               
+                            error: function (data) { 
+                                alert(data.responseText);                      
+                            },               
+                        });
+                    }  
+                },                
             });
         });
     ");

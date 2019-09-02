@@ -13,6 +13,7 @@ use Yii;
 use yii\base\InvalidConfigException;
 use yii\base\UserException;
 use yii\bootstrap\Html;
+use yii\db\StaleObjectException;
 use yii\filters\AccessControl;
 use yii\web\Controller;
 
@@ -31,7 +32,7 @@ class MyChildController extends Controller
                 'class' => AccessControl::class,
                 'rules' => [
                     [
-                        'actions' => ['add-child', 'search-child'],
+                        'actions' => ['add-child', 'delete-child', 'search-child'],
                         'allow' => true,
                         'roles' => ['father'],
                     ],
@@ -76,7 +77,7 @@ class MyChildController extends Controller
         $result = Html::beginTag('div', ['class' => 'list-group']);
         if (!empty($list)) {
             foreach ($list as $key => $item) {
-                $result .= Html::a($item['value'], '#', ['class' => 'list-group-item', 'data-id' => $item['id']]);
+                $result .= Html::a($item['value'], '#', ['class' => 'list-group-item', 'data' => ['child-id' => $item['id']]]);
             }
         } else {
             $result .= Html::a('Ничего не найдено!', '#', ['class' => 'list-group-item']);
@@ -94,20 +95,54 @@ class MyChildController extends Controller
         $requestData = array_merge(Yii::$app->request->post(), Yii::$app->request->get());
         if (!empty($requestData['childId'])) {
             $child = Child::findOne(['id' => $requestData['childId']]);
+            if (!$child) {
+                return 'Ребёнок не найден.';
+            }
             $father = null;
             if (Yii::$app->user && Yii::$app->user->identity->user_type_id == UserType::FATHER) {
                 /** @var Father $father */
                 $father = Father::findOne(['user_id' => Yii::$app->user->id]);
             }
-            if ($child && $father) {
-                $fatherChild = FatherChild::findOne(['parent_id' => $father->id, 'child_id' => $child->id]);
-                if (!$fatherChild) {
-                    $fatherChild = new FatherChild();
-                    $fatherChild->parent_id = $father->id;
-                    $fatherChild->child_id = $child->id;
-                    $fatherChild->save();
-                    return true;
-                }
+            if (!$father) {
+                return 'Вы не являетесь родителем.';
+            }
+            $fatherChild = FatherChild::findOne(['parent_id' => $father->id, 'child_id' => $child->id]);
+            if (!$fatherChild) {
+                $fatherChild = new FatherChild();
+                $fatherChild->parent_id = $father->id;
+                $fatherChild->child_id = $child->id;
+                $fatherChild->save();
+                return true;
+            } else {
+                return 'Ребенок уже находится в списке ваших детей.';
+            }
+        }
+        return 'Вы не выбрали ребёнка.';
+    }
+
+    /**
+     * @return string
+     * @throws \Throwable
+     * @throws StaleObjectException
+     */
+    public function actionDeleteChild()
+    {
+        $requestData = array_merge(Yii::$app->request->post(), Yii::$app->request->get());
+        if (!empty($requestData['childId'])) {
+            $father = null;
+            if (Yii::$app->user && Yii::$app->user->identity->user_type_id == UserType::FATHER) {
+                /** @var Father $father */
+                $father = Father::findOne(['user_id' => Yii::$app->user->id]);
+            }
+            if ($father) {
+                return 'Вы не являетесь родителем.';
+            }
+            $fatherChild = FatherChild::findOne(['parent_id' => $father->id, 'child_id' => $requestData['childId']]);
+            if ($fatherChild) {
+                $fatherChild->delete();
+                return true;
+            } else {
+                return 'Этого ребенка не существует в списке ваших детей.';
             }
         }
         return false;
