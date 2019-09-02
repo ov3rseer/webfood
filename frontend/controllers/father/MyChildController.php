@@ -134,7 +134,7 @@ class MyChildController extends Controller
                 /** @var Father $father */
                 $father = Father::findOne(['user_id' => Yii::$app->user->id]);
             }
-            if ($father) {
+            if (!$father) {
                 return 'Вы не являетесь родителем.';
             }
             $fatherChild = FatherChild::findOne(['parent_id' => $father->id, 'child_id' => $requestData['childId']]);
