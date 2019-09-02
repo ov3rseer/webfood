@@ -121,9 +121,9 @@
 
 `ALTER USER postgres WITH PASSWORD '1234';`
 
-`CREATE DATABASE webfood ENCODING 'UTF-8' LC_COLLATE 'ru_RU.UTF-8' LC_CTYPE 'ru_RU.UTF-8';`
+`CREATE DATABASE webfood_extend ENCODING 'UTF-8' LC_COLLATE 'ru_RU.UTF-8' LC_CTYPE 'ru_RU.UTF-8';`
 
-`GRANT ALL PRIVILEGES ON DATABASE  webfood TO postgres;`
+`GRANT ALL PRIVILEGES ON DATABASE  webfood_extend TO postgres;`
 
 #### Настройка локалей, если возникает ошибка при создании базы:
 
@@ -151,7 +151,7 @@
 
 В папке где будет находиться проект нужно выполнить команду:
 
-`git clone http://adlibtech.ru/git/alvastudio/WebFood.git`
+`git clone http://adlibtech.ru/git/SergeyDashko/WebFood_extend.git`
 
 Чтобы заполнить базу данных таблицами:
 
