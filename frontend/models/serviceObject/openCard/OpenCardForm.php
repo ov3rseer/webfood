@@ -17,7 +17,7 @@ use yii\base\UserException;
 /**
  * Форма для формирования заявок на открытие счетов
  */
-class OpenCardRequest extends SystemForm
+class OpenCardForm extends SystemForm
 {
     /**
      * Сценарий для ручного ввода данных

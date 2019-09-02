@@ -4,8 +4,10 @@ namespace frontend\controllers\serviceObject;
 
 use common\helpers\ArrayHelper;
 use frontend\controllers\FrontendModelController;
-use frontend\models\serviceObject\openCard\OpenCardRequest;
-use frontend\models\serviceObject\openCard\OpenCardUploadFile;
+use frontend\models\serviceObject\openCard\OpenCardForm;
+use frontend\models\serviceObject\openCard\OpenCardUploadFileForm;
+use PhpOffice\PhpSpreadsheet\Exception as SpreedsheetException;
+use PhpOffice\PhpSpreadsheet\Reader\Exception;
 use Yii;
 use yii\base\UserException;
 use yii\filters\AccessControl;
@@ -14,12 +16,12 @@ use yii\web\UploadedFile;
 /**
  * Контроллер для формы "Загрузка списков"
  */
-class OpenCardRequestController extends FrontendModelController
+class OpenCardController extends FrontendModelController
 {
     /**
      * @var string имя класса модели
      */
-    public $modelClass = 'frontend\models\serviceObject\openCard\OpenCardRequest';
+    public $modelClass = 'frontend\models\serviceObject\openCard\OpenCardForm';
 
     /**
      * @inheritdoc
@@ -58,31 +60,31 @@ class OpenCardRequestController extends FrontendModelController
     /**
      * @return array|string
      * @throws UserException
-     * @throws \PhpOffice\PhpSpreadsheet\Exception
-     * @throws \PhpOffice\PhpSpreadsheet\Reader\Exception
+     * @throws SpreedsheetException
+     * @throws Exception
      */
     public function actionIndex()
     {
-        /** @var OpenCardRequest $model */
+        /** @var OpenCardForm $model */
         $model = new $this->modelClass();
         $requestData = array_merge(Yii::$app->request->post(), Yii::$app->request->get());
         $action = Yii::$app->request->post('action');
         $model->load($requestData);
-        if ($action == OpenCardRequest::SCENARIO_HAND_INPUT) {
+        if ($action == OpenCardForm::SCENARIO_HAND_INPUT) {
             $model->scenario = $action;
             if ($model->validate()) {
                 $model->proceed();
             }
         }
-        $openCardUploadFile = new OpenCardUploadFile();
-        if (Yii::$app->request->post('OpenCardUploadFile') && $action == OpenCardRequest::SCENARIO_UPLOAD_FILE) {
+        $openCardUploadFile = new OpenCardUploadFileForm();
+        if (Yii::$app->request->post('OpenCardUploadFile') && $action == OpenCardForm::SCENARIO_UPLOAD_FILE) {
             $openCardUploadFile->uploadedFile = UploadedFile::getInstance($openCardUploadFile, 'uploadedFile');
             $model->scenario = $action;
             if ($openCardUploadFile->validate()) {
                 $openCardUploadFile->proceed();
             }
         }
-        $model->scenario = OpenCardRequest::SCENARIO_HAND_INPUT;
+        $model->scenario = OpenCardForm::SCENARIO_HAND_INPUT;
         return $this->renderUniversal('@frontend/views/service-object/request/open-card-request/index', ['model' => $model, 'uploadFileForm' => $openCardUploadFile]);
     }
 

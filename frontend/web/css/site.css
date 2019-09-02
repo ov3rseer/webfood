@@ -774,3 +774,17 @@ a.desc:after {
 .pointer {
     cursor: pointer !important;
 }
+
+/* Стили приложения */
+
+.panel-heading {
+    padding: 10px;
+}
+
+.gridview-toolbar {
+    padding: 10px;
+    background-color: #f5f5f5;
+    border: 1px solid #ddd;
+    border-radius: 4px 4px 0 0;
+    border-bottom: none;
+}

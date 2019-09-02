@@ -18,7 +18,7 @@ use Yii;
 use yii\base\UserException;
 use yii\web\UploadedFile;
 
-class OpenCardUploadFile extends SystemForm
+class OpenCardUploadFileForm extends SystemForm
 {
     /**
      * @var UploadedFile файл для загрузки
@@ -127,7 +127,6 @@ class OpenCardUploadFile extends SystemForm
 
                     if (!$child) {
                         $child = new Child();
-                        $child->name = $surname . ' ' . $forename . ' ' . $patronymic;
                         $child->surname = $surname;
                         $child->forename = $forename;
                         $child->patronymic = $patronymic;

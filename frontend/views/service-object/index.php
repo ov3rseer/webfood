@@ -18,15 +18,33 @@ if (Yii::$app->user && Yii::$app->user->identity->user_type_id == UserType::SERV
 }
 
 if ($serviceObject) {
-    $this->registerJs(" 
-        $('[data-action=\"serviceObject/request/preliminary-request/index\"], [data-action=\"serviceObject/request/correction-request/index\"]').click(function(e) {
-            var action = this.attributes['data-action'].value;
-            $('#" . $modalId . " a').each(function() {
-                this.href = action + '?contractTypeId=' + this.attributes['data-contract-type'].value;
-            });
-            $('#" . $modalId . "').modal('show');
-        });"
-    );
+    echo Html::beginTag('div', ['class' => 'site-index']);
+    echo Html::beginTag('div', ['class' => 'jumbotron']);
+    echo Html::beginTag('p');
+    echo  Html::a('Предварительная заявка', null, [
+        'id' => 'preliminary-request',
+        'class' => 'btn btn-lg btn-success',
+        'data-action' => 'serviceObject/request/index',
+        'style' => 'width:300px;',
+    ]);
+    echo Html::endTag('p');
+    echo Html::beginTag('p');
+    echo Html::a('Корректировка заявки', null, [
+        'id' => 'correction-request',
+        'class' => 'btn btn-lg btn-success',
+        'data-action' => 'serviceObject/request/index',
+        'style' => 'width:300px;',
+    ]);
+    echo Html::endTag('p');
+    echo Html::beginTag('p');
+    echo Html::a('Заявки на открытие карт', 'serviceObject/open-card-request/index', [
+        'class' => 'btn btn-lg btn-success',
+        'style' => 'width:600px;',
+    ]);
+    echo Html::endTag('p');
+    echo Html::endTag('div');
+    echo Html::endTag('div');
+
     Modal::begin([
         'options' => [
             'id' => $modalId,
@@ -43,28 +61,15 @@ if ($serviceObject) {
     ]);
     Modal::end();
 
-    echo Html::beginTag('div', ['class' => 'site-index']);
-    echo Html::beginTag('div', ['class' => 'jumbotron']);
-    echo Html::beginTag('p');
-    echo Html::a('Предварительная заявка', null, [
-        'class' => 'btn btn-lg btn-success',
-        'data-action' => 'serviceObject/request/preliminary-request/index',
-        'style' => 'width:600px;',
-    ]);
-    echo Html::endTag('p');
-    echo Html::beginTag('p');
-    echo Html::a('Корректировка заявки', null, [
-        'class' => 'btn btn-lg btn-success',
-        'data-action' => 'serviceObject/request/correction-request/index',
-        'style' => 'width:600px;',
-    ]);
-    echo Html::endTag('p');
-    echo Html::beginTag('p');
-    echo Html::a('Заявки на открытие карт', 'serviceObject/open-card-request/index', [
-        'class' => 'btn btn-lg btn-success',
-        'style' => 'width:600px;',
-    ]);
-    echo Html::endTag('p');
-    echo Html::endTag('div');
-    echo Html::endTag('div');
+    $this->registerJs(" 
+        $('#preliminary-request, #correction-request').click(function(e) {
+            var url = this.attributes['data-action'].value;
+            var action = this.id;
+            $('#".$modalId." a').each(function() {
+                var contractTypeId = this.attributes['data-contract-type'].value;
+                this.href = url + '?contractTypeId=' + contractTypeId + '&action=' + action;
+            });
+            $('#".$modalId."').modal('show');
+        });"
+    );
 }
