@@ -1,10 +1,11 @@
 <?php
 
-/* @var $this \yii\web\View */
+/* @var $this View */
 /* @var $content string */
-/* @throws \Exception */
+/* @throws Exception */
 
 use yii\helpers\Html;
+use yii\web\View;
 use yii\widgets\Breadcrumbs;
 use frontend\assets\AppAsset;
 use common\widgets\Alert;
@@ -13,72 +14,71 @@ AppAsset::register($this);
 $this->beginPage();
 
 $this->registerJs("
-$().ready(function() {
-
-    var navbarFluent = new FluentUI({
-        '#navbar' : {
-            'mouseover' : function() {
-                let el = $('#signup-link-btn, #login-link-btn, #profile-link-btn, #logout-submit-btn, #navbar');
-                el.addClass('highlight'); 
+    $().ready(function() {
+   
+        var navbarFluent = new FluentUI({
+            '#navbar' : {
+                'mouseover' : function() {
+                    let el = $('#signup-link-btn, #login-link-btn, #profile-link-btn, #logout-submit-btn, #navbar');
+                    el.addClass('highlight'); 
+                },
+                'mouseout' : function() {
+                    let el = $('#signup-link-btn, #login-link-btn, #profile-link-btn, #logout-submit-btn, #navbar');
+                    el.removeClass('highlight'); 
+                }
             },
-            'mouseout' : function() {
-                let el = $('#signup-link-btn, #login-link-btn, #profile-link-btn, #logout-submit-btn, #navbar');
-                el.removeClass('highlight'); 
-            }
-        },
-        '#signup-link-btn' : {
-            'mouseover focus' : function() {
-                let el = $('#signup-link-btn');
-                el.addClass('hover'); 
+            '#signup-link-btn' : {
+                'mouseover focus' : function() {
+                    let el = $('#signup-link-btn');
+                    el.addClass('hover'); 
+                },
+                'mouseout blur' : function() {
+                    let el = $('#signup-link-btn');
+                    el.removeClass('hover'); 
+                }
             },
-            'mouseout blur' : function() {
-                let el = $('#signup-link-btn');
-                el.removeClass('hover'); 
-            }
-        },
-        '#login-link-btn' : {
-            'mouseover focus' : function() {
-                let el = $('#login-link-btn');
-                el.addClass('hover'); 
+            '#login-link-btn' : {
+                'mouseover focus' : function() {
+                    let el = $('#login-link-btn');
+                    el.addClass('hover'); 
+                },
+                'mouseout blur' : function() {
+                    let el = $('#login-link-btn');
+                    el.removeClass('hover'); 
+                }
             },
-            'mouseout blur' : function() {
-                let el = $('#login-link-btn');
-                el.removeClass('hover'); 
-            }
-        },
-        '#profile-link-btn' : {
-            'mouseover focus' : function() {
-                let el = $('#profile-link-btn');
-                el.addClass('hover'); 
+            '#profile-link-btn' : {
+                'mouseover focus' : function() {
+                    let el = $('#profile-link-btn');
+                    el.addClass('hover'); 
+                },
+                'mouseout blur' : function() {
+                    let el = $('#profile-link-btn');
+                    el.removeClass('hover'); 
+                }
             },
-            'mouseout blur' : function() {
-                let el = $('#profile-link-btn');
-                el.removeClass('hover'); 
-            }
-        },
-        '#logout-submit-btn' : {
-            'mouseover focus' : function() {
-                let el = $('#logout-submit-btn');
-                el.addClass('hover'); 
+            '#logout-submit-btn' : {
+                'mouseover focus' : function() {
+                    let el = $('#logout-submit-btn');
+                    el.addClass('hover'); 
+                },
+                'mouseout blur' : function() {
+                    let el = $('#logout-submit-btn');
+                    el.removeClass('hover'); 
+                }
             },
-            'mouseout blur' : function() {
-                let el = $('#logout-submit-btn');
-                el.removeClass('hover'); 
+            '#login-link-btn, #signup-link-btn, #profile-link-btn, #logout-submit-btn' : {
+                'focus' : function() {
+                    let el = $('#navbar');
+                    el.addClass('highlight'); 
+                },
+                'blur' : function() {
+                    let el = $('#navbar');
+                    el.removeClass('highlight'); 
+                }
             }
-        },
-        '#login-link-btn, #signup-link-btn, #profile-link-btn, #logout-submit-btn' : {
-            'focus' : function() {
-                let el = $('#navbar');
-                el.addClass('highlight'); 
-            },
-            'blur' : function() {
-                let el = $('#navbar');
-                el.removeClass('highlight'); 
-            }
-        }
+        });
     });
-
-});
 ");
 
 ?>
@@ -105,14 +105,10 @@ $().ready(function() {
             <div class="navbar-form navbar-right">
                 <?php
                 if (Yii::$app->user->isGuest) {
-                    ?>
-                    <button id="signup-link-btn" class="hidden-btn" onclick="location.href = '/site/signup'">Регистрация</button>
-                    <button id="login-link-btn" class="hidden-btn" onclick="location.href = '/site/login'">Вход</button>
-                    <?php
+                    echo Html::a('Регистрация', ['site/signup'], ['id' => 'signup-link-btn', 'class' => 'hidden-btn']);
+                    echo Html::a('Вход', ['site/login'], ['id' => 'login-link-btn', 'class' => 'hidden-btn']);
                 } else {
-                    ?>
-                    <button id="profile-link-btn" class="hidden-btn" onclick="location.href = '/user/profile/index'"><?= Yii::$app->user->identity->name_full ?></button>
-                    <?php
+                    echo Html::a(Yii::$app->user->identity->name_full, ['user/profile/index'], ['id' => 'profile-link-btn', 'class' => 'hidden-btn']);
                     echo Html::beginForm(['/site/logout'], 'post', ['style' => 'display: inline-block;']);
                     echo Html::submitButton('Выход', [
                         'id' => 'logout-submit-btn',

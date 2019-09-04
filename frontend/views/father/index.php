@@ -23,12 +23,12 @@ if ($father) {
     $addChildInputId = 'add-child-input';
 
     echo Html::beginTag('div', ['class' => 'container']);
-    echo Html::beginTag('div', ['class' => 'col-xs-3']);
+    echo Html::beginTag('div', ['class' => 'col-xs-4']);
     echo Html::beginTag('div', ['class' => 'panel panel-default']);
     echo Html::beginTag('div', ['class' => 'panel-heading']);
     echo Html::beginTag('span', ['style' => 'display: flex; justify-content: space-between;']);
     echo Html::tag('span', 'Ваши дети', ['class' => 'panel-title h2']);
-    echo Html::a(' <span class="glyphicon glyphicon-plus"></span><span class="glyphicon glyphicon-user"></span>',
+    echo Html::a('<span class="glyphicon glyphicon-plus"></span><span class="glyphicon glyphicon-user"></span>',
         '#', ['id' => $addChildButtonId, 'class' => 'text-success']);
     echo Html::endTag('span');
     echo Html::endTag('div'); // panel-heading
@@ -38,7 +38,6 @@ if ($father) {
         echo Html::beginTag('div', ['class' => 'list-group accordion', 'id' => 'accordionExample']);
         foreach ($father->fatherChildren as $fatherChild) {
             echo Html::beginTag('div', ['class' => 'list-group-item list-group-item-action']);
-            echo Html::beginTag('div', ['id' => 'heading' . $fatherChild->child_id, 'class' => 'card-header']);
             echo Html::beginTag('div', [
                 'data-toggle' => 'collapse',
                 'data-target' => '#collapse' . $fatherChild->child_id,
@@ -46,24 +45,21 @@ if ($father) {
                 'aria-controls' => 'collapse' . $fatherChild->child_id
             ]);
             echo Html::beginTag('span', ['style' => 'display: flex; justify-content: space-between;']);
-            echo Html::encode($fatherChild->child->name);
+            echo Html::encode($fatherChild->child);
             echo Html::a('<span class="glyphicon glyphicon-minus"></span><span class="glyphicon glyphicon-user"></span>',
                 '#', ['class' => $deleteChildButtonId.' text-danger', 'data' => ['child-id' => $fatherChild->child_id]]);
             echo Html::endTag('span');
             echo Html::endTag('div');
+            echo Html::beginTag('div', ['id' => 'collapse' . $fatherChild->child_id, 'class' => 'collapse', 'data-parent' => '#accordionExample']);
+            echo 'Пока здесь ничего нет, но в скором времени появится!';
             echo Html::endTag('div');
-
-            echo Html::beginTag('div', ['id' => 'collapse' . $fatherChild->child_id, 'class' => 'collapse', 'aria-labelledby' => 'heading' . $fatherChild->child_id, 'data-parent' => '#accordionExample']);
-            echo 'Тратататат';
-            echo Html::endTag('div');
-
             echo Html::endTag('div');
         }
         echo Html::endTag('div');
 
     }
     echo Html::endTag('div'); // panel panel-default
-    echo Html::endTag('div'); // col-lg-3
+    echo Html::endTag('div'); // col-xs-4
     echo Html::endTag('div'); // container
 
 

@@ -3,14 +3,14 @@
 namespace backend\controllers\reference;
 
 /**
- * Контроллер для справочника "Категории продуктов"
+ * Контроллер для справочника "Категории блюд"
  */
-class ProductCategoryController extends CategoryController
+class MealCategoryController extends CategoryController
 {
     /**
      * @var string имя класса модели
      */
-    public $modelClass = 'common\models\reference\ProductCategory';
+    public $modelClass = 'common\models\reference\MealCategory';
 
     /**
      * @inheritdoc
@@ -21,7 +21,7 @@ class ProductCategoryController extends CategoryController
             'index' => [
                 'class' => 'backend\actions\base\IndexAction',
                 'modelClass' => $this->modelClass,
-                'viewPath' => '@backend/views/reference/product-category/index',
+                'viewPath' => '@backend/views/reference/meal-category/index',
             ],
         ]);
     }

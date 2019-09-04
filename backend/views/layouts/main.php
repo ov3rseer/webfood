@@ -112,6 +112,11 @@ AppAsset::register($this);
                             'visible' => Yii::$app->user->can('super-admin'),
                         ],
                         [
+                            'label' => 'Карты детей',
+                            'url' => ['/reference/card-child/index'],
+                            'visible' => Yii::$app->user->can('super-admin'),
+                        ],
+                        [
                             'label' => 'Единицы измерения',
                             'url' => ['/reference/unit/index'],
                             'visible' => Yii::$app->user->can('super-admin'),
@@ -129,6 +134,11 @@ AppAsset::register($this);
                         [
                             'label' => 'Блюда',
                             'url' => ['/reference/meal/index'],
+                            'visible' => Yii::$app->user->can('super-admin'),
+                        ],
+                        [
+                            'label' => 'Категории блюд',
+                            'url' => ['/reference/meal-category/index'],
                             'visible' => Yii::$app->user->can('super-admin'),
                         ],
                         [
