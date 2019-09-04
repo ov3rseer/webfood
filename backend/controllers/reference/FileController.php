@@ -116,7 +116,6 @@ class FileController extends ReferenceController
                     return $result;
                 },
             ],
-            'name_full' => 'name_full',
         ], parent::generateAutoColumns($model, $filterModel));
     }
 }

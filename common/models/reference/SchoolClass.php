@@ -9,6 +9,7 @@ use yii\db\ActiveQuery;
 /**
  * Модель справочника "Класс"
  *
+ * @property string   $name_full
  * @property integer  $service_object_id
  * @property integer  $teacher_id
  * @property integer  $number
@@ -43,6 +44,8 @@ class SchoolClass extends Reference
     {
         return array_merge(parent::rules(), [
             [['service_object_id', 'number'], 'integer'],
+            [['name_full'], 'string'],
+            [['name_full'], 'filter', 'filter' => 'trim'],
             [['number'], 'in', 'range' => range(1, 11), 'message' => 'Значение не должно быть больше 11.'],
             [['litter'], 'string', 'max' => 1],
             [['service_object_id', 'number', 'litter'], 'required'],
@@ -55,6 +58,7 @@ class SchoolClass extends Reference
     public function attributeLabels()
     {
         return array_merge(parent::attributeLabels(), [
+            'name_full'             => 'Полное наименование',
             'number'                => 'Номер',
             'litter'                => 'Литера',
             'service_object_id'     => 'Объект обслуживания',
@@ -88,8 +92,7 @@ class SchoolClass extends Reference
             parent::getFieldsOptions();
             if ($this->scenario != self::SCENARIO_SEARCH) {
                 $this->_fieldsOptions['name_full']['displayType'] = ActiveField::READONLY;
-            } else {
-                $this->_fieldsOptions['name_full']['displayType'] = ActiveField::STRING;
+                $this->_fieldsOptions['name']['displayType'] = ActiveField::READONLY;
             }
         }
         return $this->_fieldsOptions;

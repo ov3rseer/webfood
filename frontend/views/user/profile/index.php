@@ -36,6 +36,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 if ($profile && ($profile instanceof Father) || ($profile instanceof Employee)) {
                     echo $form->field($model, 'surname')->textInput();
                     echo $form->field($model, 'forename')->textInput();
+                    echo $form->field($model, 'patronymic')->textInput();
                 }
                 echo $form->field($model, 'email');
                 echo $form->field($model, 'password')->passwordInput();

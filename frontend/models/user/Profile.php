@@ -33,6 +33,11 @@ class Profile extends FrontendForm
     /**
      * @var string
      */
+    public $patronymic;
+
+    /**
+     * @var string
+     */
     public $email;
 
     /**
@@ -61,6 +66,7 @@ class Profile extends FrontendForm
         if ($profile && ($profile instanceof Father) || ($profile instanceof Employee)) {
             $this->surname = $profile->surname;
             $this->forename = $profile->forename;
+            $this->patronymic = $profile->patronymic;
         }
     }
 
@@ -79,6 +85,9 @@ class Profile extends FrontendForm
 
             ['surname', 'trim'],
             ['surname', 'string', 'min' => 2, 'max' => 255],
+
+            ['patronymic', 'trim'],
+            ['patronymic', 'string', 'min' => 2, 'max' => 255],
 
             ['email', 'trim'],
             ['email', 'email'],
@@ -124,6 +133,7 @@ class Profile extends FrontendForm
             'name'              => 'Логин',
             'surname'           => 'Фамилия',
             'forename'          => 'Имя',
+            'patronymic'        => 'Отчество',
             'email'             => 'Email',
             'password'          => 'Пароль',
             'password_repeat'   => 'Повторите пароль',
@@ -143,14 +153,12 @@ class Profile extends FrontendForm
             $user = User::findIdentity($userId);
             if ($user) {
                 if ($user->email) {
+                    /** @var Father|Employee $profile */
                     $profile = $user->getProfile();
                     if ($profile && ($profile instanceof Father) || ($profile instanceof Employee)) {
-                        $name_full = ucfirst($this->surname) . ' ' . ucfirst($this->forename);
-                        $profile->name_full = $name_full;
-                        $profile->name = $name_full;
-                        $user->name_full = $name_full;
-                        $profile->forename = ucfirst($this->forename);
-                        $profile->surname = ucfirst($this->surname);
+                        $profile->forename = $this->forename;
+                        $profile->surname = $this->surname;
+                        $profile->patronymic = $this->patronymic;
                         $profile->save();
                     }
                     $user->name = $this->name;

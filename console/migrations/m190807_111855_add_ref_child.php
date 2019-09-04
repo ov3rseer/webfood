@@ -10,6 +10,7 @@ class m190807_111855_add_ref_child extends Migration
     public function safeUp()
     {
         $this->createReferenceTable('{{%ref_child}}', [
+            'name_full' => $this->string(1024),
             'surname' => $this->string(256),
             'forename' => $this->string(256),
             'patronymic' => $this->string(256),

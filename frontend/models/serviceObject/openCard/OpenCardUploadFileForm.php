@@ -100,13 +100,13 @@ class OpenCardUploadFileForm extends SystemForm
             $serviceObject = ServiceObject::findOne(['user_id' => Yii::$app->user->id]);
             if ($serviceObject) {
                 foreach ($cells as $row => $column) {
-                    $surname = trim($column[0]) ? trim($column[0]) : null;
-                    $forename = trim($column[1]) ? trim($column[1]) : null;
-                    $patronymic = trim($column[2]) ? trim($column[2]) : null;
-                    $classNumber = trim($column[3]) ? trim($column[3]) : null;
-                    $classLitter = trim($column[4]) ? trim($column[4]) : null;
-                    $codeword = trim($column[5]) ? trim($column[5]) : null;
-                    $snils = trim($column[6]) ? trim($column[6]) : null;
+                    $surname = trim($column[0]) ?? null;
+                    $forename = trim($column[1]) ?? null;
+                    $patronymic = trim($column[2]) ?? null;
+                    $classNumber = trim($column[3]) ?? null;
+                    $classLitter = trim($column[4]) ?? null;
+                    $codeword = trim($column[5]) ?? null;
+                    $snils = trim($column[6]) ?? null;
 
                     $schoolClass = SchoolClass::findOne(['number' => $classNumber, 'litter' => $classLitter, 'service_object_id' => $serviceObject->id]);
                     if (!$schoolClass) {

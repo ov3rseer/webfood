@@ -10,6 +10,7 @@ class m190807_095706_add_ref_school_class extends Migration
     public function safeUp()
     {
         $this->createReferenceTable('{{%ref_school_class}}', [
+            'name_full' => $this->string(1024),
             'number' => $this->integer(2)->notNull(),
             'litter' => $this->char(1)->notNull(),
             'service_object_id' => $this->integer()->notNull()->indexed()->foreignKey('{{%ref_service_object}}', 'id'),

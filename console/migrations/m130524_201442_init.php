@@ -18,12 +18,17 @@ class m130524_201442_init extends Migration
         $this->createReferenceTable('{{%ref_user}}', [
             'forename' => $this->string(256),
             'surname' => $this->string(256),
-            'user_type_id'  => $this->integer()->notNull()->indexed()->foreignKey('{{%enum_user_type}}', 'id'),
+            'user_type_id' => $this->integer()->notNull()->indexed()->foreignKey('{{%enum_user_type}}', 'id'),
             'email' => $this->string()->notNull(),
             'auth_key' => $this->string(32),
             'password_hash' => $this->string()->notNull(),
             'password_reset_token' => $this->string()->unique(),
         ]);
+
+        $table = Yii::$app->db->schema->getTableSchema('{{%ref_user}}');
+        if (!isset($table->columns['name_full'])) {
+            $this->addColumn('{{%ref_user}}', 'name_full', $this->string(1024));
+        }
 
         $this->createSystemTable('{{%sys_entity}}', [
             'class_name' => $this->string()->notNull()

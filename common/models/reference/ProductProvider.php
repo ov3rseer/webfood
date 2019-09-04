@@ -5,7 +5,6 @@ namespace common\models\reference;
 
 use backend\widgets\ActiveField;
 use common\models\tablepart\ProductProviderServiceObject;
-use yii\base\UserException;
 use yii\db\ActiveQuery;
 
 /**
@@ -101,15 +100,13 @@ class ProductProvider extends Reference
 
     /**
      * @inheritdoc
-     * @throws UserException
+     * @param $insert
+     * @return bool
      */
     public function beforeSave($insert)
     {
         $parentResult = parent::beforeSave($insert);
         if ($parentResult) {
-            if ($this->getOldAttribute('user_id') != $this->user_id) {
-                throw new UserException('Пользователь уже прикреплен, изменение невозможно');
-            }
             if ($this->user_id) {
                 $this->is_active = true;
             } else {
@@ -123,7 +120,7 @@ class ProductProvider extends Reference
     {
         parent::afterSave($insert, $changedAttributes);
         if ($this->user) {
-            $this->user->name_full = $this->name_full;
+            $this->user->name_full = $this->name;
             $this->user->save();
         }
     }

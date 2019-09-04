@@ -60,11 +60,16 @@ $().ready(function() {
     <?php $form = ActiveForm::begin(['id' => 'form-signup']); ?>
 
     <div class="row">
+        <div class="col-lg-6">
+            <?= $form->field($model, 'surname')->textInput() ?>
+        </div>
+    </div>
+    <div class="row">
         <div class="col-lg-3">
             <?= $form->field($model, 'forename')->textInput() ?>
         </div>
         <div class="col-lg-3">
-            <?= $form->field($model, 'surname')->textInput() ?>
+            <?= $form->field($model, 'patronymic')->textInput() ?>
         </div>
     </div>
     <div class="row">

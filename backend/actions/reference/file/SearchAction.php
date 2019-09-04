@@ -22,7 +22,7 @@ class SearchAction extends \backend\actions\reference\base\SearchAction
         foreach ($models as $model) {
             $result[] = [
                 'id' => $model->primaryKey,
-                'text' => (string)$model . ($model->name_full ? ' (' . $model->name_full . ')' : ''),
+                'text' => (string)$model . ($model->name ? ' (' . $model->name . ')' : ''),
             ];
         }
         return $result;

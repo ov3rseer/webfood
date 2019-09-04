@@ -16,11 +16,10 @@ use yii\helpers\Url;
 /**
  * Базовая модель элемента справочника
  *
- * @property string   $name
- * @property string   $name_full
- * @property boolean  $is_active
- * @property integer  $create_user_id
- * @property integer  $update_user_id
+ * @property string $name
+ * @property boolean $is_active
+ * @property integer $create_user_id
+ * @property integer $update_user_id
  * @property DateTime $create_date
  * @property DateTime $update_date
  *
@@ -41,9 +40,8 @@ abstract class Reference extends ActiveRecord
     public function rules()
     {
         return array_merge(parent::rules(), [
-            [['name', 'name_full'], 'filter', 'filter' => 'trim'],
+            [['name'], 'filter', 'filter' => 'trim'],
             [['name'], 'string', 'max' => 256],
-            [['name_full'], 'string', 'max' => 1024],
             [['is_active'], 'boolean'],
             [['is_active'], 'default', 'value' => true],
         ]);
@@ -75,26 +73,26 @@ abstract class Reference extends ActiveRecord
         $result = [];
         if (User::isBackendUser()) {
             $result['blameable'] = [
-                'class'              => BlameableBehavior::class,
+                'class' => BlameableBehavior::class,
                 'createdByAttribute' => $this->hasAttribute('create_user_id') ? 'create_user_id' : false,
                 'updatedByAttribute' => $this->hasAttribute('update_user_id') ? 'update_user_id' : false,
-                'value'              => Yii::$app->user->id,
+                'value' => Yii::$app->user->id,
             ];
         }
         $result['create_timestamp'] = [
-            'class'              => TimestampBehavior::class,
+            'class' => TimestampBehavior::class,
             'createdAtAttribute' => $this->hasAttribute('create_date') ? 'create_date' : false,
             'updatedAtAttribute' => false,
-            'value'              => function() {
+            'value' => function () {
                 return $this->create_date ?: new yii\db\Expression('NOW()');
             },
         ];
         $result['update_timestamp'] = [
-            'class'              => TimestampBehavior::class,
+            'class' => TimestampBehavior::class,
             'createdAtAttribute' => false,
             'updatedAtAttribute' => $this->hasAttribute('update_date') ? 'update_date' : false,
-            'skipUpdateOnClean'  => false,
-            'value'              => function() {
+            'skipUpdateOnClean' => false,
+            'value' => function () {
                 return $this->scenario == static::SCENARIO_SYSTEM ? $this->update_date : new yii\db\Expression('NOW()');
             },
         ];
@@ -108,7 +106,6 @@ abstract class Reference extends ActiveRecord
     {
         return array_merge(parent::attributeLabels(), [
             'name'           => 'Наименование',
-            'name_full'      => 'Полное наименование',
             'is_active'      => 'Активен',
             'create_date'    => 'Дата создания',
             'update_date'    => 'Дата изменения',
@@ -130,20 +127,6 @@ abstract class Reference extends ActiveRecord
     }
 
     /**
-     * @inheritdoc
-     */
-    public function beforeSave($insert)
-    {
-        if (parent::beforeSave($insert)) {
-            if (!$this->name_full && get_class($this) != User::class) {
-                $this->name_full = $this->name;
-            }
-            return true;
-        }
-        return false;
-    }
-
-    /**
      * Генерация нового наименования элемента справочника
      * @return string
      */
@@ -158,7 +141,7 @@ abstract class Reference extends ActiveRecord
      */
     public function __toString()
     {
-        return $this->isNewRecord ? '(новый)' : ($this->name_full ? $this->name_full: $this->name);
+        return $this->isNewRecord ? '(новый)' : $this->name;
     }
 
     /**
@@ -201,7 +184,6 @@ abstract class Reference extends ActiveRecord
                 $this->_fieldsOptions['create_date']['displayType'] = ActiveField::READONLY;
                 $this->_fieldsOptions['update_date']['displayType'] = ActiveField::READONLY;
             }
-            $this->_fieldsOptions['name_full']['displayType'] = ActiveField::HIDDEN;
         }
         return $this->_fieldsOptions;
     }

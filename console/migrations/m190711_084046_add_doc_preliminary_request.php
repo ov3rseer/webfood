@@ -22,6 +22,12 @@ class m190711_084046_add_doc_preliminary_request extends Migration
             'code' => $this->string(3)->notNull()->indexed()->unsigned(),
             'international_abbreviation' => $this->string(3)->notNull()->indexed(),
         ]);
+
+        $table = Yii::$app->db->schema->getTableSchema('{{%ref_unit}}');
+        if (!isset($table->columns['name_full'])) {
+            $this->addColumn('{{%ref_unit}}', 'name_full', $this->string(1024));
+        }
+
         $units = [
             ['г',    'грамм',            '163', 'GRM'],
             ['кг',   'килограмм',        '166', 'KGM'],

@@ -14,13 +14,14 @@ use yii\web\IdentityInterface;
 /**
  * Модель спарвочника "Пользователи"
  *
- * @property string $email
- * @property string $password_hash
- * @property string $auth_key
- * @property string $name
- * @property integer $user_type_id
- * @property string $password_reset_token
- * @property string $verification_token
+ * @property string     $email
+ * @property string     $password_hash
+ * @property string     $auth_key
+ * @property string     $name
+ * @property string     $name_full
+ * @property integer    $user_type_id
+ * @property string     $password_reset_token
+ * @property string     $verification_token
  */
 class User extends Reference implements IdentityInterface
 {
@@ -61,6 +62,7 @@ class User extends Reference implements IdentityInterface
             [['password'], 'filter', 'filter' => 'trim', 'skipOnEmpty' => true],
             [['email'], 'string', 'max' => 255],
             [['name_full'], 'string', 'max' => 1024],
+            [['name_full'], 'filter', 'filter' => 'trim'],
             [['email'], 'unique', 'message' => 'Этот адрес электронной почты уже занят.'],
             [['user_type_id'], 'integer'],
             [['is_password_block'], 'boolean'],
@@ -73,12 +75,12 @@ class User extends Reference implements IdentityInterface
     public function attributeLabels()
     {
         return array_merge(parent::attributeLabels(), [
-            'name'          => 'Логин',
-            'name_full'     => 'Полное имя',
-            'password'      => 'Пароль',
-            'email'         => 'Email',
-            'user_type_id'  => 'Тип пользователя',
-            'is_password_block'  => 'Блокировка смены пароля',
+            'name'              => 'Логин',
+            'name_full'         => 'Полное имя',
+            'password'          => 'Пароль',
+            'email'             => 'Email',
+            'user_type_id'      => 'Тип пользователя',
+            'is_password_block' => 'Блокировка смены пароля',
         ]);
     }
 
@@ -308,13 +310,10 @@ class User extends Reference implements IdentityInterface
         switch ($this->user_type_id) {
             case UserType::SERVICE_OBJECT:
                 return ServiceObject::findOne(['user_id' => $this->id]);
-                break;
             case UserType::EMPLOYEE:
                 return Employee::findOne(['user_id' => $this->id]);
-                break;
             case UserType::FATHER:
                 return Father::findOne(['user_id' => $this->id]);
-                break;
             case UserType::PRODUCT_PROVIDER:
                 return ProductProvider::findOne(['user_id' => $this->id]);
         }
@@ -397,8 +396,6 @@ class User extends Reference implements IdentityInterface
             parent::getFieldsOptions();
             if ($this->scenario != self::SCENARIO_SEARCH) {
                 $this->_fieldsOptions['name_full']['displayType'] = ActiveField::READONLY;
-            }else{
-                $this->_fieldsOptions['name_full']['displayType'] = ActiveField::STRING;
             }
             $this->_fieldsOptions['password']['displayType'] = ActiveField::READONLY;
             $this->_fieldsOptions['is_password_block']['displayType'] = ActiveField::BOOL;

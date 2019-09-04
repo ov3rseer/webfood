@@ -31,12 +31,23 @@ class Unit extends Reference
     }
 
     /**
+     * Магическая функция приведения объекта к строке
+     * @return string
+     */
+    public function __toString()
+    {
+        return $this->isNewRecord ? '(новый)' : ($this->name_full ?? $this->name);
+    }
+
+    /**
      * @inheritdoc
      */
     public function rules()
     {
         return array_merge(parent::rules(), [
             [['code', 'international_abbreviation'], 'string', 'max' => 3],
+            [['name_full'], 'string', 'max' => 1024],
+            [['name_full'], 'filter', 'filter' => 'trim'],
             [['international_abbreviation'], 'filter', 'filter' => 'strtoupper'],
             [['code', 'international_abbreviation'], 'required'],
         ]);

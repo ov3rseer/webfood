@@ -22,8 +22,9 @@ class m190807_105733_add_ref_father extends Migration
         $this->resetSequence('{{%enum_user_type}}');
 
         $this->createReferenceTable('{{%ref_father}}', [
-            'forename' => $this->string(256),
+            'name_full' => $this->string(1024),
             'surname' => $this->string(256),
+            'forename' => $this->string(256),
             'patronymic' => $this->string(256),
             'user_id' => $this->integer()->indexed()->foreignKey('{{%ref_user}}', 'id'),
         ]);

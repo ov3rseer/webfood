@@ -16,6 +16,12 @@ class m190715_104919_add_console_task extends Migration
         $this->createReferenceTable('{{%ref_system_setting}}', [
             'data' => $this->text(),
         ]);
+
+        $table = Yii::$app->db->schema->getTableSchema('{{%ref_system_setting}}');
+        if (!isset($table->columns['name_full'])) {
+            $this->addColumn('{{%ref_system_setting}}', 'name_full', $this->string(1024));
+        }
+
         $this->insert('{{%sys_entity}}', ['class_name' => 'common\models\reference\SystemSetting']);
 
         $this->createEnumTable('{{%enum_console_task_status}}', [

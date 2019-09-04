@@ -3,12 +3,12 @@
 namespace common\models\reference;
 
 use backend\widgets\ActiveField;
-use yii\base\UserException;
 use yii\db\ActiveQuery;
 
 /**
  * Модель справочника "Сотрудник"
  *
+ * @property string   $name_full
  * @property string   $forename
  * @property string   $surname
  * @property string   $patronymic
@@ -43,8 +43,11 @@ class Employee extends Reference
     public function rules()
     {
         return array_merge(parent::rules(), [
+            [['name_full'], 'string', 'max' => 1024],
+            [['name_full'], 'filter', 'filter' => 'trim'],
             [['service_object_id', 'user_id'], 'integer'],
             [['forename', 'surname', 'patronymic'], 'string'],
+            [['forename', 'surname', 'patronymic'], 'filter', 'filter' => 'ucfirst'],
             [['forename', 'surname', 'service_object_id'], 'required'],
         ]);
     }
@@ -56,6 +59,7 @@ class Employee extends Reference
     {
         return array_merge(parent::attributeLabels(), [
             'name'              => 'ФИО',
+            'name_full'         => 'ФИО полностью',
             'forename'          => 'Имя',
             'surname'           => 'Фамилия',
             'patronymic'        => 'Отчество',
@@ -92,33 +96,30 @@ class Employee extends Reference
             } else {
                 $this->_fieldsOptions['user_id']['displayType'] = ActiveField::REFERENCE;
             }
+            if ($this->scenario != self::SCENARIO_SEARCH) {
+                $this->_fieldsOptions['name_full']['displayType'] = ActiveField::READONLY;
+                $this->_fieldsOptions['name']['displayType'] = ActiveField::READONLY;
+            }
         }
         return $this->_fieldsOptions;
     }
 
     /**
      * @inheritdoc
-     * @throws UserException
+     * @param $insert
+     * @return bool
      */
     public function beforeSave($insert)
     {
         $parentResult = parent::beforeSave($insert);
         if ($parentResult) {
-            if ($this->getOldAttribute('user_id') != $this->user_id) {
-                throw new UserException('Пользователь уже прикреплен, изменение невозможно');
-            }
             if ($this->user_id) {
                 $this->is_active = true;
             } else {
                 $this->is_active = false;
             }
-            if ($this->surname || $this->forename) {
-                if ($this->surname || $this->forename) {
-                    $nameFull = $this->surname . ' ' . $this->forename. ' ' .$this->patronymic;
-                    $this->name_full = $nameFull;
-                    $this->name = $nameFull;
-                }
-            }
+            $this->name = $this->surname . ' ' . mb_substr($this->forename, 0, 1) . '. ' . mb_substr($this->patronymic, 0, 1) . '.';
+            $this->name_full = $this->surname . ' ' . $this->forename . ' ' . $this->patronymic;
         }
         return $parentResult;
     }
@@ -127,7 +128,7 @@ class Employee extends Reference
     {
         parent::afterSave($insert, $changedAttributes);
         if ($this->user) {
-            $this->user->name_full = $this->name;
+            $this->user->name_full = $this->name_full;
             $this->user->save();
         }
     }

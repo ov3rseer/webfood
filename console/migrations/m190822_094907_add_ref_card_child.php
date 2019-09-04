@@ -17,8 +17,6 @@ class m190822_094907_add_ref_card_child extends Migration
             'child_id' => $this->integer()->indexed()->foreignKey('{{%ref_child}}', 'id'),
             'auth_key' => $this->string(32),
         ]);
-        $this->dropColumn('{{%ref_card_child}}','name_full');
-        $this->dropColumn('{{%ref_card_child}}','name');
         $this->insert('{{%sys_entity}}', ['class_name' => 'common\models\reference\CardChild']);
     }
 

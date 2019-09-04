@@ -55,6 +55,7 @@ class SystemSetting extends Reference
     public function rules()
     {
         return array_merge(parent::rules(), [
+            [['name_full'], 'string', 'max' => 1024],
             [['name'], 'unique'],
         ]);
     }

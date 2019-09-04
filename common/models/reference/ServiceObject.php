@@ -7,7 +7,6 @@ use common\models\enum\ServiceObjectType;
 use common\models\tablepart\ServiceObjectContract;
 use common\models\tablepart\ServiceObjectEmployee;
 use common\models\tablepart\ServiceObjectSchoolClass;
-use yii\base\UserException;
 use yii\db\ActiveQuery;
 
 /**
@@ -142,15 +141,13 @@ class ServiceObject extends Reference
 
     /**
      * @inheritdoc
-     * @throws UserException
+     * @param $insert
+     * @return bool
      */
     public function beforeSave($insert)
     {
         $parentResult = parent::beforeSave($insert);
         if ($parentResult) {
-            if ($this->getOldAttribute('user_id') != $this->user_id) {
-                throw new UserException('Пользователь уже прикреплен, изменение невозможно');
-            }
             if ($this->user_id) {
                 $this->is_active = true;
             } else {
@@ -164,7 +161,7 @@ class ServiceObject extends Reference
     {
         parent::afterSave($insert, $changedAttributes);
         if ($this->user) {
-            $this->user->name_full = $this->name_full;
+            $this->user->name_full = $this->name;
             $this->user->save();
         }
     }

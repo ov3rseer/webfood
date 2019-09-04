@@ -8,12 +8,13 @@ use yii\db\ActiveQuery;
 /**
  * Модель справочника "Ребенок"
  *
- * @property string   $forename
- * @property string   $surname
- * @property string   $patronymic
- * @property integer  $service_object_id
- * @property integer  $school_class_id
- * @property integer  $father_id
+ * @property string  $name_full
+ * @property string  $forename
+ * @property string  $surname
+ * @property string  $patronymic
+ * @property integer $service_object_id
+ * @property integer $school_class_id
+ * @property integer $father_id
  *
  * Отношения:
  * @property ServiceObject  $serviceObject
@@ -44,7 +45,10 @@ class Child extends Reference
     public function rules()
     {
         return array_merge(parent::rules(), [
+            [['name_full'], 'string', 'max' => 1024],
+            [['name_full'], 'filter', 'filter' => 'trim'],
             [['forename', 'surname', 'patronymic'], 'string'],
+            [['forename', 'surname', 'patronymic'], 'filter', 'filter' => 'ucfirst'],
             [['service_object_id', 'school_class_id', 'father_id'], 'integer'],
             [['forename', 'surname', 'patronymic', 'service_object_id', 'school_class_id'], 'required'],
         ]);
@@ -56,8 +60,8 @@ class Child extends Reference
     public function attributeLabels()
     {
         return array_merge(parent::attributeLabels(), [
-            'name_full'         => 'ФИО полностью',
             'name'              => 'ФИО',
+            'name_full'         => 'ФИО полностью',
             'forename'          => 'Имя',
             'surname'           => 'Фамилия',
             'patronymic'        => 'Отчество',
@@ -98,9 +102,7 @@ class Child extends Reference
     {
         if ($this->_fieldsOptions === []) {
             parent::getFieldsOptions();
-            if ($this->scenario == self::SCENARIO_SEARCH) {
-                $this->_fieldsOptions['name_full']['displayType'] = ActiveField::STRING;
-            } else {
+            if ($this->scenario != self::SCENARIO_SEARCH) {
                 $this->_fieldsOptions['name_full']['displayType'] = ActiveField::READONLY;
                 $this->_fieldsOptions['name']['displayType'] = ActiveField::READONLY;
             }
@@ -114,10 +116,8 @@ class Child extends Reference
     public function beforeSave($insert)
     {
         if (parent::beforeSave($insert)) {
-            if (!$this->name_full && get_class($this) != User::class) {
-                $this->name_full = $this->surname . ' ' . $this->forename . '. ' . $this->patronymic . '.';
-                $this->name = $this->surname . ' ' . substr($this->forename, 0, 1) . ' ' . substr($this->patronymic, 0, 1);
-            }
+            $this->name = $this->surname . ' ' . mb_substr($this->forename, 0, 1) . '. ' . mb_substr($this->patronymic, 0, 1).'.';
+            $this->name_full = $this->surname . ' ' . $this->forename . ' ' . $this->patronymic;
             return true;
         }
         return false;

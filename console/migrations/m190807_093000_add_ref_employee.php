@@ -22,8 +22,10 @@ class m190807_093000_add_ref_employee extends Migration
         $this->resetSequence('{{%enum_user_type}}');
 
         $this->createReferenceTable('{{%ref_employee}}', [
-            'forename' => $this->string(256),
+            'name_full' => $this->string(1024),
             'surname' => $this->string(256),
+            'forename' => $this->string(256),
+            'patronymic' => $this->string(256),
             'user_id' => $this->integer()->indexed()->foreignKey('{{%ref_user}}', 'id'),
             'service_object_id' => $this->integer()->notNull()->indexed()->foreignKey('{{%ref_service_object}}', 'id'),
         ]);

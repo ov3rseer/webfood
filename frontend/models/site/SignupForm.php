@@ -33,6 +33,11 @@ class SignupForm extends Model
     /**
      * @var string
      */
+    public $patronymic;
+
+    /**
+     * @var string
+     */
     public $email;
 
     /**
@@ -64,6 +69,10 @@ class SignupForm extends Model
             ['surname', 'required'],
             ['surname', 'string', 'min' => 2, 'max' => 255],
 
+            ['patronymic', 'trim'],
+            ['patronymic', 'required'],
+            ['patronymic', 'string', 'min' => 2, 'max' => 255],
+
             ['email', 'trim'],
             ['email', 'required'],
             ['email', 'email'],
@@ -86,6 +95,7 @@ class SignupForm extends Model
             'name'              => 'Логин',
             'surname'           => 'Фамилия',
             'forename'          => 'Имя',
+            'patronymic'        => 'Отчество',
             'email'             => 'Email',
             'password'          => 'Пароль',
             'password_repeat'   => 'Повторите пароль',
@@ -104,11 +114,9 @@ class SignupForm extends Model
         if (!$this->validate()) {
             return null;
         }
-        $name_full = ucfirst($this->surname) . ' ' . ucfirst($this->forename);
         $user = new User();
         $user->email = $this->email;
         $user->name = $this->name;
-        $user->name_full = $name_full;
         $user->user_type_id = UserType::FATHER;
         $user->is_active = false;
         $user->setPassword($this->password);
@@ -118,12 +126,12 @@ class SignupForm extends Model
         $this->sendEmail($user);
 
         $father = new Father();
-        $father->name = $name_full;
-        $father->name = $name_full;
         $father->user_id = $user->id;
-        $father->forename = ucfirst($this->forename);
-        $father->surname = ucfirst($this->surname);
-        return $father->save();
+        $father->surname = $this->surname;
+        $father->forename = $this->forename;
+        $father->patronymic = $this->patronymic;
+        $father->save();
+        return true;
     }
 
     /**
