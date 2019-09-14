@@ -8,7 +8,7 @@
 
 Из корня / выполнить команды:
 
-`cd etc`
+`cd /etc`
 
 `sudo gedit hosts`
 
