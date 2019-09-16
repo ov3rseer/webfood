@@ -62,7 +62,7 @@ $pjaxTreeWidgetId = 'pjax-' . $treeWidgetId;
                     },
                     'edit' => function () use ($treeWidgetId) {
                         $templateToken = 'xxx';
-                        $categoryUpdateUrlTemplate = Url::to(['/reference/product-category/update', 'id' => $templateToken]);
+                        $categoryUpdateUrlTemplate = Url::to(['/reference/meal-category/update', 'id' => $templateToken]);
                         Yii::$app->view->registerJs("
                             $('#categoryEdit').click(function(e){
                                 e.preventDefault();
@@ -104,14 +104,14 @@ $pjaxTreeWidgetId = 'pjax-' . $treeWidgetId;
                                 return true;
                             }
                         "),
-                        'multiple' => true,
+                        'multiple' => false,
                     ],
                     'checkbox' => [
-                        'visible' => true,
+                        'visible' => false,
                         'three_state' => false,
                     ],
                     'dnd' => [
-                        'is_draggable' => true,
+                        'is_draggable' => false,
                         'copy' => false,
                     ],
                     'search' => [

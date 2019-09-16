@@ -22,6 +22,4 @@ class MealCategory extends Category
     {
         return 'Категории блюд';
     }
-
-
 }

@@ -3,23 +3,22 @@
 namespace common\models\reference;
 
 use Yii;
-use yii\base\NotSupportedException;
-use yii\web\IdentityInterface;
+use yii\base\Exception;
 
 /**
  * Модель справочника "Карты детей"
  *
- * @property string  $card_number_hash
- * @property string  $card_keyword_hash
- * @property float   $balance
- * @property float   $limit_per_day
+ * @property string $card_number_hash
+ * @property string $card_keyword_hash
+ * @property float $balance
+ * @property float $limit_per_day
  * @property integer $child_id
- * @property string  $auth_key
+ * @property string $auth_key
  *
  * Отношения:
- * @property Child   $child
+ * @property Child $child
  */
-class CardChild extends Reference implements IdentityInterface
+class CardChild extends Reference
 {
     /**
      * @inheritdoc
@@ -43,7 +42,7 @@ class CardChild extends Reference implements IdentityInterface
     public function rules()
     {
         return array_merge(parent::rules(), [
-            [['card_number_hash', 'card_keyword_hash'], 'string'],
+            [['card_number_hash', /*'card_keyword_hash'*/], 'string'],
             [['balance', 'limit_per_day'], 'number'],
             [['child_id'], 'integer'],
             [['card_number_hash', 'card_keyword_hash', 'child_id'], 'required'],
@@ -56,11 +55,11 @@ class CardChild extends Reference implements IdentityInterface
     public function attributeLabels()
     {
         return array_merge(parent::attributeLabels(), [
-            'card_number_hash' => 'Номер карты',
-            'card_keyword_hash' => 'Кодовое слово',
-            'balance' => 'Баланс',
-            'limit_per_day' => 'Лимит в день',
-            'child_id' => 'Ребёнок',
+            'card_number_hash'  => 'Номер карты',
+            /*'card_keyword_hash' => 'Кодовое слово',*/
+            'balance'           => 'Баланс',
+            'limit_per_day'     => 'Лимит в день',
+            'child_id'          => 'Ребёнок',
         ]);
     }
 
@@ -70,15 +69,6 @@ class CardChild extends Reference implements IdentityInterface
     public static function findIdentity($id)
     {
         return static::findOne(['id' => $id]);
-    }
-
-    /**
-     * @inheritdoc
-     * @throws NotSupportedException
-     */
-    public static function findIdentityByAccessToken($token, $type = null)
-    {
-        throw new NotSupportedException('"findIdentityByAccessToken" is not implemented.');
     }
 
     /**
@@ -110,7 +100,7 @@ class CardChild extends Reference implements IdentityInterface
      *
      * @param string $keyword keyword to validate
      * @return boolean if keyword provided is valid for current user
-     * @throws \yii\base\Exception
+     * @throws Exception
      */
     public function validateKeyword($keyword)
     {
@@ -120,14 +110,9 @@ class CardChild extends Reference implements IdentityInterface
     /**
      * @inheritdoc
      */
-    public static function getChild($cardNumber)
+    public function getChild()
     {
-        $card = self::findOne(['card_number_hash' => $cardNumber]);
-        if ($card) {
-            $child = Child::findOne(['id' => $card->id]);
-            return $child;
-        }
-        return false;
+        return $this->hasOne(Child::className(), ['id' => 'child_id']);
     }
 
     /**

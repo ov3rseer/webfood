@@ -7,7 +7,10 @@ use common\components\DateTime;
 use common\models\enum\ConsoleTaskStatus;
 use common\models\enum\ConsoleTaskType;
 use common\models\reference\ConsoleTask;
+use common\models\form\Report;
+use yii\base\InvalidConfigException;
 use yii\data\ActiveDataProvider;
+use yii\db\ActiveQuery;
 use yii\helpers\Html;
 
 /**
@@ -88,8 +91,8 @@ class Tasks extends Report
     }
 
     /**
-     * @return \yii\db\ActiveQuery
-     * @throws \yii\base\InvalidConfigException
+     * @return ActiveQuery
+     * @throws InvalidConfigException
      */
     public function getTaskType()
     {
@@ -97,8 +100,8 @@ class Tasks extends Report
     }
 
     /**
-     * @return \yii\db\ActiveQuery
-     * @throws \yii\base\InvalidConfigException
+     * @return ActiveQuery
+     * @throws InvalidConfigException
      */
     public function getTaskStatus()
     {
@@ -115,7 +118,7 @@ class Tasks extends Report
 
     /**
      * @inheritdoc
-     * @throws \yii\base\InvalidConfigException
+     * @throws InvalidConfigException
      */
     public function getDataProvider()
     {

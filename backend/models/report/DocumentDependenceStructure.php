@@ -4,8 +4,11 @@ namespace backend\models\report;
 
 use backend\widgets\ActiveField;
 use common\models\document\Document;
+use common\models\form\Report;
 use common\models\system\Entity;
+use yii\base\InvalidConfigException;
 use yii\data\ArrayDataProvider;
+use yii\db\ActiveQuery;
 
 /**
  * Отчет "Связаные документы"
@@ -60,8 +63,8 @@ class DocumentDependenceStructure extends Report
     }
 
     /**
-     * @return \yii\db\ActiveQuery
-     * @throws \yii\base\InvalidConfigException
+     * @return ActiveQuery
+     * @throws InvalidConfigException
      */
     public function getDocumentBasis()
     {
@@ -94,7 +97,7 @@ class DocumentDependenceStructure extends Report
 
     /**
      * @inheritdoc
-     * @throws \yii\base\InvalidConfigException
+     * @throws InvalidConfigException
      */
     public function getDataProvider()
     {

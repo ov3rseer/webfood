@@ -3,6 +3,7 @@
 namespace backend\models\form;
 
 use backend\widgets\ActiveField;
+use common\models\form\Form;
 use common\models\reference\File;
 use yii\web\UploadedFile;
 

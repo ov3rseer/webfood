@@ -9,13 +9,16 @@ class m190807_082518_add_ref_meal extends Migration
      */
     public function safeUp()
     {
-        $this->createReferenceTable('{{%ref_meal}}');
+        $this->createReferenceTable('{{%ref_meal}}', [
+            'price' => $this->decimal(10, 2)->notNull(),
+            'description' => $this->text(),
+        ]);
         $this->insert('{{%sys_entity}}', ['class_name' => 'common\models\reference\Meal']);
 
-        $this->createTablePartTable('{{%tab_meal_product}}','{{%ref_meal}}',[
+        $this->createTablePartTable('{{%tab_meal_product}}', '{{%ref_meal}}', [
             'product_id' => $this->integer()->notNull()->indexed()->foreignKey('{{%ref_product}}', 'id'),
-            'unit_id' => $this->integer()->notNull()->indexed()->foreignKey('{{%ref_unit}}','id'),
-            'product_quantity' => $this->decimal(10,2)->notNull(),
+            'unit_id' => $this->integer()->notNull()->indexed()->foreignKey('{{%ref_unit}}', 'id'),
+            'product_quantity' => $this->decimal(10, 2)->notNull(),
         ]);
     }
 

@@ -1,8 +1,7 @@
 <?php
 
-namespace backend\models\report;
+namespace common\models\form;
 
-use backend\models\form\Form;
 use yii\data\BaseDataProvider;
 
 /**

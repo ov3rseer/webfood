@@ -122,8 +122,8 @@ class MyChildController extends Controller
 
     /**
      * @return string
-     * @throws \Throwable
      * @throws StaleObjectException
+     * @throws \Throwable
      */
     public function actionDeleteChild()
     {

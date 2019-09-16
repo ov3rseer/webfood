@@ -10,7 +10,7 @@ use common\models\reference\Child;
 use common\models\reference\SchoolClass;
 use common\models\reference\ServiceObject;
 use common\models\tablepart\OpenCardChild;
-use frontend\models\SystemForm;
+use common\models\form\SystemForm;
 use Yii;
 use yii\base\UserException;
 

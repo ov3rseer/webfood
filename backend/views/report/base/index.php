@@ -8,7 +8,7 @@ use yii\helpers\Html;
 use yii\helpers\Url;
 
 /* @var yii\web\View $this */
-/* @var backend\models\report\Report $model */
+/* @var common\models\form\Report $model */
 
 $this->title = $model->name;
 $this->params['breadcrumbs'][] = $this->title;

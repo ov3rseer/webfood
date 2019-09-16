@@ -2,7 +2,8 @@
 
 namespace backend\models\system;
 
-use backend\models\form\SystemForm;
+use common\models\enum\ContractType;
+use common\models\form\SystemForm;
 use backend\widgets\ActiveField;
 use common\components\DateTime;
 use common\models\enum\ConsoleTaskStatus;
@@ -37,6 +38,11 @@ class ImportServiceObjectAndContractForm extends SystemForm
     public $file_id;
 
     /**
+     * @var integer id типа договора
+     */
+    public $contract_type_id;
+
+    /**
      * @inheritdoc
      */
     public function getName()
@@ -50,13 +56,15 @@ class ImportServiceObjectAndContractForm extends SystemForm
     public function rules()
     {
         return array_merge(parent::rules(), [
-            [['uploadedFiles'], 'file', 'maxFiles' => 0, 'extensions' => 'xml', 'when' => function () {
+            [['uploadedFiles'], 'file', 'maxFiles' => 20, 'extensions' => 'xml', 'when' => function () {
                 if (!$this->file_id) {
                     return true;
                 }
                 return false;
             }],
             [['file_id'], 'integer'],
+            [['contract_type_id'], 'integer'],
+            [['contract_type_id'], 'required'],
         ]);
     }
 
@@ -67,6 +75,7 @@ class ImportServiceObjectAndContractForm extends SystemForm
     {
         return array_merge(parent::attributeLabels(), [
             'uploadedFiles' => 'Файлы для загрузки',
+            'contract_type_id' => 'Тип договора',
         ]);
     }
 
@@ -90,6 +99,15 @@ class ImportServiceObjectAndContractForm extends SystemForm
     public function getFile()
     {
         return File::find()->andWhere(['id' => $this->file_id]);
+    }
+
+    /**
+     * @return ActiveQuery
+     * @throws InvalidConfigException
+     */
+    public function getContractType()
+    {
+        return ContractType::find()->andWhere(['id' => $this->contract_type_id]);
     }
 
     /**
@@ -118,6 +136,7 @@ class ImportServiceObjectAndContractForm extends SystemForm
             $consoleTask->status_id = ConsoleTaskStatus::PLANNED;
             $consoleTask->params = Json::encode([
                 'files_id' => $files_id,
+                'contract_type_id' => $this->contract_type_id,
             ]);
             $consoleTask->start_date = new DateTime('now');
             $consoleTask->save();

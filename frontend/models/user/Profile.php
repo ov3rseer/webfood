@@ -2,10 +2,10 @@
 
 namespace frontend\models\user;
 
+use common\models\form\Form;
 use common\models\reference\Employee;
 use common\models\reference\Father;
 use common\models\reference\User;
-use frontend\models\FrontendForm;
 use Yii;
 use yii\base\Exception;
 use yii\base\InvalidConfigException;
@@ -13,7 +13,7 @@ use yii\base\InvalidConfigException;
 /**
  * Форма "Профиль"
  */
-class Profile extends FrontendForm
+class Profile extends Form
 {
     /**
      * @var string

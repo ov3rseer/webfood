@@ -1,6 +1,6 @@
 <?php
 
-namespace frontend\models;
+namespace common\models\form;
 
 use backend\widgets\ActiveField;
 use common\models\enum\Enum;
@@ -11,9 +11,9 @@ use yii\helpers\Inflector;
 use yii\web\UploadedFile;
 
 /**
- * Базовый класс формы фронтэнда
+ * Базовый класс формы
  */
-class FrontendForm extends Model
+class Form extends Model
 {
     /**
      * Сценарий для поиска моделей в журналах (для совместимости с ActiveForm)
@@ -89,8 +89,8 @@ class FrontendForm extends Model
                         $query = $this->$getter();
                         if ($query instanceof ActiveQuery) {
                             $this->_attributesWithRelations[$attribute] = [
-                                'name' => lcfirst($relation),
-                                'class' => $query->modelClass,
+                                'name'   => lcfirst($relation),
+                                'class'  => $query->modelClass,
                                 'method' => $getter,
                             ];
                         }

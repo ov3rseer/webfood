@@ -1,77 +1,43 @@
 <?php
 
-/* @var $this yii\web\View */
+/* @var  yii\web\View $this */
+/* @var  Form $model */
+/* @var  integer $categoryId */
 
-/* @var $model \terminal\models\TerminalForm */
+use common\models\enum\MealType;
+use common\models\reference\Meal;
+use common\models\reference\MealCategory;
+use common\models\form\Form;
+use yii\helpers\Html;
 
-use yii\bootstrap\Html;
-use yii\bootstrap\Modal;
-use yii\widgets\Pjax;
 
-$this->title = 'WebFood';
+$this->title = 'Terminal WebFood';
 
-$balanceModalId = 'balance-modal';
+if (isset($categoryId)) {
+    $category = MealCategory::findOne(['id' => $categoryId]);
+    echo Html::tag('h1', $category);
 
-$this->registerJs("
-$().ready(function() {
-
-    var loginFluent = new FluentUI({
-        '#check-balance' : {
-            'click' : function() {
-                $('#update-balance').click();
-                $('#$balanceModalId').modal('show');
-            }
-        }
-    });
-
-});
-");
-
-?>
-
-<div class="site-index">
-
-    <div class="jumbotron">
-        <div class="my-3" style="display: flex; justify-content: center;">
-            <?=
-            Html::button('Проверить баланс', [
-                'class' => 'btn btn-lg btn-success col-xs-6',
-                'id' => 'check-balance',
-            ])
-            ?>
-        </div>
-        <div class="my-3" style="display: flex; justify-content: center;">
-            <?=
-            Html::button('Меню', [
-                'class' => 'btn btn-lg btn-success col-xs-6',
-                'id' => 'menu',
-                'onclick' => 'location.href = "menu"'
-            ])
-            ?>
-        </div>
-        <?= \yii\helpers\Html::beginForm(['/site/logout'], 'post', ['class' => 'my-3', 'style' => 'display: flex; justify-content: center;']) ?>
-        <?=
-        Html::submitButton('Выход', [
-            'class' => 'btn btn-lg btn-success col-xs-6',
+    /** @var Meal[] $meals */
+    $meals = Meal::find()
+        ->andWhere([
+            'is_active' => true,
+            'meal_category_id' => $categoryId,
+            'meal_type_id' => MealType::BUFFET_MEALS
         ])
-        ?>
-        <?= \yii\helpers\Html::endForm() ?>
-    </div>
-
-    <?php
-    Modal::begin([
-        'options' => [
-            'id' => $balanceModalId,
-        ],
-        'header' => 'Ваш баланс',
-    ]);
-    ?>
-    <?php Pjax::begin(); ?>
-    <?= Html::a("", ['site/index'], ['class' => 'd-none', 'id' => 'update-balance']) ?>
-    <h1 class="display-1 text-center"><?= Yii::$app->user->identity->balance ?><span class="glyphicon glyphicon-ruble lead text-muted"></span></h1>
-    <?php Pjax::end(); ?>
-    <?php
-    Modal::end();
-    ?>
-
-</div>
+        ->orderBy('id ASC')
+        ->all();
+    echo Html::beginTag('div', ['class' => 'row']);
+    foreach ($meals as $meal) {
+        echo Html::beginTag('div', ['class' => 'col-xs-12 col-md-3']);
+        echo Html::beginTag('div', ['class' => 'card', 'style' => 'width: 18rem;']);
+        echo Html::beginTag('div', ['class' => 'card-body']);
+        echo Html::tag('h5', Html::encode($meal), ['class' => 'card-title']);
+        echo Html::tag('p', Html::encode($meal->description), ['class' => 'card-text']);
+        echo Html::tag('p', Html::encode($meal->price). ' &#8381;', ['class' => 'card-text price']);
+        echo Html::a('Добавить', ['meal-form/index', 'mealId' => $meal->id, 'categoryId' => $categoryId], ['class' => 'btn btn-success']);
+        echo Html::endTag('div');
+        echo Html::endTag('div');
+        echo Html::endTag('div');
+    }
+    echo Html::endTag('div');
+}

@@ -3,7 +3,7 @@
 namespace backend\actions\report\base;
 
 use backend\actions\BackendModelAction;
-use backend\models\report\Report;
+use common\models\form\Report;
 use backend\widgets\ActiveForm;
 use yii;
 use yii\web\Response;

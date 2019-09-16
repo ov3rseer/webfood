@@ -2,13 +2,10 @@
 
 namespace terminal\controllers;
 
-use common\helpers\ArrayHelper;
 use common\models\ActiveRecord;
-use frontend\models\FrontendForm;
+use common\models\form\Form;
 use Yii;
 use yii\base\InvalidConfigException;
-use yii\filters\AccessControl;
-use yii\filters\VerbFilter;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\web\Response;
@@ -31,7 +28,7 @@ class TerminalModelController extends Controller
             throw new InvalidConfigException(get_class($this) . '::$modelClass не указан.');
         }
         if (!is_subclass_of($this->modelClass, ActiveRecord::class, true) &&
-            !is_subclass_of($this->modelClass, FrontendForm::class, true)) {
+            !is_subclass_of($this->modelClass, Form::class, true)) {
             throw new InvalidConfigException(get_class($this) . '::$modelClass не является подклассом ' .
                 ActiveRecord::class . '.');
         }
@@ -47,32 +44,6 @@ class TerminalModelController extends Controller
                 'class' => 'terminal\actions\base\IndexAction',
                 'modelClass' => $this->modelClass,
                 'viewPath' => '@terminal/views/base/index',
-            ],
-        ]);
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function behaviors()
-    {
-        return ArrayHelper::merge(parent::behaviors(), [
-            'access' => [
-                'class' => AccessControl::class,
-                'rules' => [
-                    [
-                        'actions' => ['index'],
-                        'allow' => true,
-                        'roles' => ['@'],
-                    ],
-                ],
-            ],
-            'verbs' => [
-                'class' => VerbFilter::class,
-                'actions' => [
-                    'delete' => ['POST'],
-                    'delete-checked' => ['POST'],
-                ],
             ],
         ]);
     }

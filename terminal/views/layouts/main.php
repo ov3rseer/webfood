@@ -1,15 +1,18 @@
 <?php
 
-/* @var $this \yii\web\View */
-/* @var $content string */
-/* @throws \Exception */
+/* @var $this View */
 
+/* @var $content string */
+
+use common\models\enum\MealType;
+use common\models\reference\Meal;
+use common\models\reference\MealCategory;
 use yii\helpers\Html;
 use yii\bootstrap\Nav;
 use yii\bootstrap\NavBar;
-use yii\widgets\Breadcrumbs;
 use terminal\assets\AppAsset;
 use common\widgets\Alert;
+use yii\web\View;
 
 AppAsset::register($this);
 ?>
@@ -25,41 +28,58 @@ AppAsset::register($this);
     <?php $this->head() ?>
 </head>
 <body>
-<?php $this->beginBody() ?>
+<?php
 
-<div class="wrap">
-    <?php
-    if (Yii::$app->user->isGuest) {
-        $menuItems = [];
-    } else {
-        $menuItems[] = '<li>'
-            . Html::beginForm(['/site/logout'], 'post')
-            . Html::submitButton(
-                'Выход (' . Yii::$app->user->identity->name_full . ')',
-                ['class' => 'btn btn-link logout']
-            )
-            . Html::endForm()
-            . '</li>';
-    }
-    NavBar::begin([
-        'brandLabel' => Yii::$app->name,
-        'brandUrl' => Yii::$app->homeUrl,
-        'options' => [
-            'class' => 'navbar-inverse navbar-sticky-top',
-        ],
-    ]);
-    echo Nav::widget(['options' => ['class' => 'navbar-nav navbar-right'], 'items' => $menuItems]);
-    NavBar::end();
-    ?>
+$this->beginBody();
+$session = Yii::$app->session;
+if (!empty($session['meals'])) {
+    $menuItems[] = Html::a('ОТМЕНИТЬ ПОКУПКУ <span class="glyphicon glyphicon-remove"></span>', ['cart-form/delete-all-meals'], ['class' => 'btn btn-danger']);
+}
+$menuItems[] = Html::a('КОРЗИНА <span class="glyphicon glyphicon-shopping-cart"></span>  
+<span class="badge">' . (!empty($session['meals']) ? count($session['meals']) : 0) . '</span>', ['cart-form/index'], ['class' => 'btn btn-success']);
 
-    <div class="container">
-        <?= Breadcrumbs::widget(['links' => isset($this->params['breadcrumbs']) ? $this->params['breadcrumbs'] : []]) ?>
-        <?= Alert::widget() ?>
-        <?= $content ?>
-    </div>
-</div>
+NavBar::begin([
+    'brandLabel' => Yii::$app->name,
+    'brandUrl' => Yii::$app->homeUrl,
+    'options' => [
+        'class' => 'navbar-inverse navbar-sticky-top',
+    ],
+]);
+echo Nav::widget(['options' => ['class' => 'navbar-nav navbar-right'], 'items' => $menuItems]);
+NavBar::end();
 
-<?php $this->endBody() ?>
+
+/** @var MealCategory $category */
+$categories = MealCategory::find()
+    ->alias('mc')
+    ->innerJoin(Meal::tableName() . ' AS m', 'mc.id = m.meal_category_id')
+    ->andWhere([
+        'mc.is_active' => true,
+        'm.is_active' => true,
+        'm.meal_type_id' => MealType::BUFFET_MEALS
+    ])
+    ->all();
+
+echo Html::beginTag('div', ['style' => 'position: relative;']);
+echo Html::beginTag('div', ['class' => 'left-sidebar']);
+echo Html::tag('h3', 'Категории блюд');
+foreach ($categories as $category) {
+    echo Html::a(Html::encode($category), ['site/index', 'categoryId' => $category->id], ['title' => Html::encode($category), 'class' => 'btn btn-success']);
+}
+echo Html::endTag('div');
+
+echo Html::beginTag('div', ['class' => 'right-placeholder']);
+echo Html::beginTag('div', ['class' => 'container-fluid']);
+echo Alert::widget();
+echo $content;
+echo Html::endTag('div');
+echo Html::endTag('div');
+echo Html::endTag('div');
+echo Html::endTag('div');
+
+$this->endBody();
+
+?>
 </body>
 </html>
 <?php $this->endPage() ?>

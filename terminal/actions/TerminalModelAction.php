@@ -2,8 +2,8 @@
 
 namespace terminal\actions;
 
+use common\models\form\Form;
 use terminal\controllers\TerminalModelController;
-use terminal\models\form\Form;
 use common\models\ActiveRecord;
 use yii\base\Action;
 use yii\base\InvalidConfigException;

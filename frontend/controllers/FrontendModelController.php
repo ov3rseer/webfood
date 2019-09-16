@@ -4,7 +4,7 @@ namespace frontend\controllers;
 
 use common\helpers\ArrayHelper;
 use common\models\ActiveRecord;
-use frontend\models\FrontendForm;
+use common\models\form\Form;
 use Yii;
 use yii\base\InvalidConfigException;
 use yii\filters\AccessControl;
@@ -31,7 +31,7 @@ class FrontendModelController extends Controller
             throw new InvalidConfigException(get_class($this) . '::$modelClass не указан.');
         }
         if (!is_subclass_of($this->modelClass, ActiveRecord::class, true) &&
-            !is_subclass_of($this->modelClass, FrontendForm::class, true)) {
+            !is_subclass_of($this->modelClass, Form::class, true)) {
             throw new InvalidConfigException(get_class($this) . '::$modelClass не является подклассом ' .
                 ActiveRecord::class . '.');
         }

@@ -4,7 +4,6 @@ namespace common\components\import;
 
 use common\components\DateTime;
 use common\components\TaskProcessorInterface;
-use common\models\enum\ContractType;
 use common\models\enum\ServiceObjectType;
 use common\models\reference\ConsoleTask;
 use common\models\reference\Contract;
@@ -36,6 +35,9 @@ class ImportServiceObjectAndContract extends BaseObject implements TaskProcessor
         $params = Json::decode($consoleTask->params);
         if (empty($params['files_id'])) {
             throw new UserException('Не указан(ы) файл(ы) для загрузки');
+        }
+        if (empty($params['contract_type_id'])) {
+            throw new UserException('Не указан тип договора');
         }
         /** @var File $file */
         $files = File::find()->where(['id' => $params['files_id']])->all();
@@ -73,7 +75,7 @@ class ImportServiceObjectAndContract extends BaseObject implements TaskProcessor
             $serviceObjects[$service_object_code]['contracts'][$contract_code] = [
                 'name' => trim($xml['НаименованиеДоговора']),
                 'contract_code' => trim($xml['КодДоговора']),
-                'contract_type_id' => ContractType::CHILD,
+                'contract_type_id' => $params['contract_type_id'],
                 'address' => trim($xml['АдресДоставки']),
                 'date_from' => $xml['ДатаДоговора'],
                 'products' => [],

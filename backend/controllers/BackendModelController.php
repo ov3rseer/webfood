@@ -2,7 +2,7 @@
 
 namespace backend\controllers;
 
-use backend\models\form\Form;
+use common\models\form\Form;
 use backend\widgets\ActiveField;
 use backend\widgets\ActiveForm;
 use BadMethodCallException;

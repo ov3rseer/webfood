@@ -3,8 +3,8 @@
 namespace frontend\actions;
 
 use common\models\ActiveRecord;
+use common\models\form\Form;
 use frontend\controllers\FrontendModelController;
-use frontend\models\FrontendForm;
 use yii\base\Action;
 use yii\base\InvalidConfigException;
 
@@ -39,7 +39,7 @@ abstract class FrontendModelAction extends Action
             throw new InvalidConfigException(get_class($this) . '::$modelClass не указан.');
         }
         if (!is_subclass_of($this->modelClass, ActiveRecord::class, true) &&
-            !is_subclass_of($this->modelClass, FrontendForm::class, true)) {
+            !is_subclass_of($this->modelClass, Form::class, true)) {
             throw new InvalidConfigException(get_class($this) . '::$modelClass не является подклассом ' .
                 ActiveRecord::class . '.');
         }

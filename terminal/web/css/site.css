@@ -94,55 +94,111 @@ a.desc:after {
     margin: 0 0 15px 0;
 }
 
+/* Стили приложения */
+
+.panel-heading {
+    padding: 10px;
+}
+
+.gridview-toolbar {
+    padding: 10px;
+    background-color: #f5f5f5;
+    border: 1px solid #ddd;
+    border-radius: 4px 4px 0 0;
+    border-bottom: none;
+}
+
+.navbar {
+    border-radius: 0;
+    margin: 0;
+}
+
 /* align the logout "link" (button in form) of the navbar */
-.nav li > form > button.logout {
+.nav > a {
     padding: 15px;
     border: none;
 }
 
-@media(max-width:767px) {
-    .nav li > form > button.logout {
-        display:block;
-        text-align: left;
-        width: 100%;
-        padding: 10px 15px;
-    }
-}
-
-.nav > li > form > button.logout:focus,
-.nav > li > form > button.logout:hover {
+.nav > a:focus,
+.nav > a:hover {
     text-decoration: none;
 }
 
-.nav > li > form > button.logout:focus {
+.nav > a:focus {
     outline: none;
 }
 
-.navbar-inverse {
-    background-color: #669966;
+.left-sidebar {
+    width: 250px;
+    height: 100%;
+    float: left;
+    position: fixed;
+    display: block;
+    background-color: #222;
+    padding: 15px;
+    overflow: auto;
 }
 
-.navbar-inverse .navbar-nav > li > a,
-.navbar-inverse .navbar-brand,
-.navbar-inverse .btn-link
-{
-    color: #ffffff;
+.left-sidebar > a {
+    border-radius: 20px;
+    margin: 0 0 5px 0;
+    min-width: 100%;
+    max-width: 100%;
+    font-weight: bold;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
 }
 
-.navbar-inverse .navbar-toggle {
-    border-color: #ffffff;
+.left-sidebar > h3 {
+    color: #fff;
+    text-align: center;
 }
 
-.navbar-inverse .navbar-brand:hover,
-.navbar-inverse .navbar-brand:focus,
-.navbar-inverse .navbar-nav > li > a:hover,
-.navbar-inverse .navbar-nav > li > a:focus,
-.navbar-inverse .btn-link:hover,
-.navbar-inverse .btn-link:focus
-{
-    color: #000000;
+.right-placeholder{
+    height: 100%;
+    position: fixed;
+    width: calc(100% - 250px);
+    right: 0;
+    display: block;
+    padding: 15px;
+    overflow: auto;
+}
+.card {
+    position: relative;
+    min-width: 0;
+    word-wrap: break-word;
+    background-color: #fff;
+    background-clip: border-box;
+    border: 1px solid rgba(0,0,0,.125);
+    border-radius: .25rem;
 }
 
-.pointer {
-    cursor: pointer;
+.card-body{
+    padding: 1.25rem;
+}
+
+.card-title {
+    margin-top: 0;
+    margin-bottom: .75rem;
+    font-size: 1.25em;
+    font-weight: 700;
+    line-height: 1.2;
+    display: block;
+}
+
+.card-text{
+    margin-top: 0;
+    margin-bottom: 1rem;
+    display: block;
+}
+
+.card-link{
+    color: #007bff;
+    text-decoration: none;
+    background-color: transparent;
+}
+
+.card-text.price{
+    font-weight: 700;
 }

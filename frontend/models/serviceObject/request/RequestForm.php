@@ -9,7 +9,7 @@ use common\models\enum\DocumentStatus;
 use common\models\tablepart\ContractProduct;
 use common\models\tablepart\RequestDate;
 use Exception;
-use frontend\models\FrontendForm;
+use common\models\form\Form;
 use Yii;
 use yii\base\InvalidConfigException;
 use yii\helpers\Html;
@@ -17,7 +17,7 @@ use yii\helpers\Html;
 /**
  * Форма для создания заявок на поставку товаров
  */
-class RequestForm extends FrontendForm
+class RequestForm extends Form
 {
     /**
      * Сценарий для предварительной заявки

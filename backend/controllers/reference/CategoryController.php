@@ -4,8 +4,11 @@ namespace backend\controllers\reference;
 
 use backend\controllers\BackendModelController;
 use common\helpers\ArrayHelper;
+use common\models\ActiveRecord;
 use common\models\reference\MealCategory;
+use common\models\reference\ProductCategory;
 use Yii;
+use yii\base\InvalidConfigException;
 use yii\base\UserException;
 use yii\filters\AccessControl;
 use yii\web\BadRequestHttpException;
@@ -37,20 +40,25 @@ abstract class CategoryController extends BackendModelController
      * @inheritdoc
      * @return array
      * @throws BadRequestHttpException
-     * @throws UserException
      * @throws NotFoundHttpException
+     * @throws UserException
+     * @throws InvalidConfigException
      */
     public function actionMove()
     {
+        /** @var ActiveRecord $modelClass */
+        $modelClass = $this->modelClass;
         $categoryId = Yii::$app->request->getBodyParam('id');
         $newParentId = Yii::$app->request->getBodyParam('newParentId');
         if (!$categoryId || !$newParentId) {
             throw new BadRequestHttpException();
         }
-        /** @var MealCategory $category */
+        /** @var MealCategory|ProductCategory $category */
         $category = $categoryId ? $this->findModel($categoryId, $this->modelClass) : null;
         if ($newParentId == '#') {
             $newParentId = null;
+        } elseif (!$modelClass::find()->andWhere(['id' => $newParentId, 'parent_id' => null])->exists()) {
+            return ['result' => false];
         }
         $category->parent_id = $newParentId;
         $category->save();

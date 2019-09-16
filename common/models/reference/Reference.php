@@ -42,6 +42,7 @@ abstract class Reference extends ActiveRecord
         return array_merge(parent::rules(), [
             [['name'], 'filter', 'filter' => 'trim'],
             [['name'], 'string', 'max' => 256],
+            [['name'], 'required'],
             [['is_active'], 'boolean'],
             [['is_active'], 'default', 'value' => true],
         ]);

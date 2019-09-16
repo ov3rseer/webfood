@@ -2,9 +2,9 @@
 
 namespace backend\widgets;
 
-use backend\models\form\Form;
-use backend\models\report\Report;
+use common\models\form\Form;
 use common\models\ActiveRecord;
+use common\models\form\Report;
 use yii\widgets\ActiveForm as BaseActiveForm;
 
 class ActiveForm extends BaseActiveForm

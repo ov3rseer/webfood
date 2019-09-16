@@ -1,17 +1,17 @@
 <?php
 
-namespace frontend\actions\base;
+namespace terminal\actions\base;
 
-use frontend\actions\FrontendModelAction;
 use common\models\form\SystemForm;
 use backend\widgets\ActiveForm;
+use terminal\actions\TerminalModelAction;
 use Yii;
 use yii\web\Response;
 
 /**
  * Действие для вывода формы
  */
-class IndexAction extends FrontendModelAction
+class IndexAction extends TerminalModelAction
 {
     /**
      * @inheritdoc

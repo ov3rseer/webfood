@@ -3,7 +3,7 @@
 namespace backend\actions\system\base;
 
 use backend\actions\BackendModelAction;
-use backend\models\form\SystemForm;
+use common\models\form\SystemForm;
 use backend\widgets\ActiveForm;
 use Yii;
 use yii\web\Response;

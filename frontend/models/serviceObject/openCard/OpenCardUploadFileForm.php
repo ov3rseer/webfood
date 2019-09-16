@@ -12,7 +12,7 @@ use common\models\reference\File;
 use common\models\reference\SchoolClass;
 use common\models\reference\ServiceObject;
 use common\models\tablepart\OpenCardChild;
-use frontend\models\SystemForm;
+use common\models\form\SystemForm;
 use PhpOffice\PhpSpreadsheet\IOFactory;
 use Yii;
 use yii\base\UserException;

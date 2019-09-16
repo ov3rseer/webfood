@@ -27,7 +27,7 @@ use yii\db\ActiveQuery;
  * @property ServiceObject  $serviceObject
  * @property Contract       $contract
  */
-class  Request extends Document
+class Request extends Document
 {
     /**
      * @inheritdoc
@@ -80,14 +80,6 @@ class  Request extends Document
     {
         return $this->hasMany(RequestDate::class, ['parent_id' => 'id'])
             ->orderBy('id ASC');
-    }
-
-    /**
-     * @return ActiveQuery
-     */
-    public function getContract()
-    {
-        return $this->hasOne(Contract::class, ['id' => 'contract_id']);
     }
 
     /**

@@ -2,6 +2,7 @@
 
 namespace common\models\reference;
 
+use common\models\enum\MealType;
 use common\models\tablepart\MealProduct;
 use yii\db\ActiveQuery;
 
@@ -10,10 +11,12 @@ use yii\db\ActiveQuery;
  *
  * Свойства
  * @property integer $meal_category_id
+ * @property float   $price
+ * @property string  $description
  *
  * Отношения:
  * @property MealProduct[] $mealProduct
- * @property MealCategory  $mealCategory
+ * @property MealCategory $mealCategory
  */
 class Meal extends Reference
 {
@@ -39,8 +42,10 @@ class Meal extends Reference
     public function rules()
     {
         return array_merge(parent::rules(), [
-            [['meal_category_id'], 'integer'],
-            [['meal_category_id'], 'required'],
+            [['meal_category_id', 'meal_type_id'], 'integer'],
+            [['meal_category_id', 'meal_type_id', 'price'], 'required'],
+            [['description'], 'string'],
+            [['price'], 'number', 'min' => 0],
         ]);
     }
 
@@ -52,6 +57,9 @@ class Meal extends Reference
         return array_merge(parent::attributeLabels(), [
             'mealProducts'      => 'Продукты (состав блюда)',
             'meal_category_id'  => 'Категория блюда',
+            'meal_type_id'      => 'Тип блюда',
+            'price'             => 'Цена',
+            'description'       => 'Описание',
         ]);
     }
 
@@ -61,6 +69,14 @@ class Meal extends Reference
     public function getMealCategory()
     {
         return $this->hasOne(MealCategory::className(), ['id' => 'meal_category_id']);
+    }
+
+    /**
+     * @return ActiveQuery
+     */
+    public function getMealType()
+    {
+        return $this->hasOne(MealType::className(), ['id' => 'meal_type_id']);
     }
 
     /**
