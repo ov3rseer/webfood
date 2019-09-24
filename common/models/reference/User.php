@@ -50,7 +50,12 @@ class User extends Reference implements IdentityInterface
     {
         return 'Пользователи';
     }
-    
+
+    public function __toString()
+    {
+        return $this->name_full;
+    }
+
     /**
      * @inheritdoc
      */
@@ -397,7 +402,7 @@ class User extends Reference implements IdentityInterface
             if ($this->scenario != self::SCENARIO_SEARCH) {
                 $this->_fieldsOptions['name_full']['displayType'] = ActiveField::READONLY;
             }
-            $this->_fieldsOptions['password']['displayType'] = ActiveField::READONLY;
+            $this->_fieldsOptions['password']['displayType'] = ActiveField::PASSWORD_READONLY;
             $this->_fieldsOptions['is_password_block']['displayType'] = ActiveField::BOOL;
             $this->_fieldsOptions['password_hash']['displayType'] = ActiveField::IGNORE;
             $this->_fieldsOptions['auth_key']['displayType'] = ActiveField::IGNORE;

@@ -41,6 +41,7 @@ class ActiveField extends \yii\widgets\ActiveField
     const MULTI_REFERENCE = 'multiReference';
     const ENUM = 'enum';
     const PASSWORD = 'password';
+    const PASSWORD_READONLY = 'passread';
     const HTML = 'html';
     const COLOR = 'color';
     const EMAIL = 'email';
@@ -67,7 +68,7 @@ class ActiveField extends \yii\widgets\ActiveField
         $options = array_merge($options, $this->inputOptions);
         Html::removeCssClass($options, 'form-control');
         parent::checkbox($options, $enclosedByLabel);
-        $this->parts['{input}'] = '<div class="checkbox">' . $this->parts['{input}'] .'</div>';
+        $this->parts['{input}'] = '<div class="checkbox">' . $this->parts['{input}'] . '</div>';
         return $this;
     }
 
@@ -79,25 +80,25 @@ class ActiveField extends \yii\widgets\ActiveField
         $result = parent::textarea($options);
         if ($toggleButton) {
             $value = Html::getAttributeValue($this->model, $this->attribute);
-            Html::addCssClass($options,'form-control');
+            Html::addCssClass($options, 'form-control');
 
             $this->parts['{input}'] =
-                '<div class="textarea-form">'.
+                '<div class="textarea-form">' .
                 '<div class="hidden-text">' .
                 '<span class="old-value">' .
                 Html::encode($value) .
-                '</span>'.
-                Html::a('<span class="glyphicon glyphicon-pencil" style="float:right"></span>','#',
+                '</span>' .
+                Html::a('<span class="glyphicon glyphicon-pencil" style="float:right"></span>', '#',
                     ['class' => 'edit-value', 'title' => 'Редактировать']) .
                 '</div>' .
 
                 '<div class="hidden-form" style="display:none">' .
                 '<span class="new-value">' .
                 $this->parts['{input}'] .
-                '</span>'.
+                '</span>' .
                 Html::a('<span class="glyphicon glyphicon-ok" style="float:right"></span>', '#',
                     ['class' => 'edit-value save-value', 'title' => 'Применить']) .
-                '</div>'.
+                '</div>' .
                 '</div>';
             $view = $this->form->getView();
             $view->registerJs(
@@ -169,7 +170,7 @@ class ActiveField extends \yii\widgets\ActiveField
             ],
             'clientEvents' => [
                 'apply.daterangepicker' => new JsExpression('function(ev, picker) {
-                    $(this).val(picker.startDate.format("YYYY-MM-DD HH:mm:ss") ' . ($singleDate ? '' : ' + " - " + picker.endDate.format("YYYY-MM-DD HH:mm:ss")'). ');
+                    $(this).val(picker.startDate.format("YYYY-MM-DD HH:mm:ss") ' . ($singleDate ? '' : ' + " - " + picker.endDate.format("YYYY-MM-DD HH:mm:ss")') . ');
                     $(this).trigger("change");
                 }'),
                 'cancel.daterangepicker' => new JsExpression('function(ev, picker) {
@@ -232,7 +233,7 @@ class ActiveField extends \yii\widgets\ActiveField
             ],
             'clientEvents' => [
                 'apply.daterangepicker' => new JsExpression('function(ev, picker) {
-                    $(this).val(picker.startDate.format("YYYY-MM-DD") ' . ($singleDate ? '' : ' + " - " + picker.endDate.format("YYYY-MM-DD")'). ');
+                    $(this).val(picker.startDate.format("YYYY-MM-DD") ' . ($singleDate ? '' : ' + " - " + picker.endDate.format("YYYY-MM-DD")') . ');
                     $(this).trigger("change");
                 }'),
                 'cancel.daterangepicker' => new JsExpression('function(ev, picker) {
@@ -316,7 +317,7 @@ class ActiveField extends \yii\widgets\ActiveField
                         }
                     }
                     $widgetConfig = ArrayHelper::merge($widgetConfig, [
-                        'model'     => $this->model,
+                        'model' => $this->model,
                         'attribute' => $this->attribute,
                     ]);
                 }
@@ -333,7 +334,7 @@ class ActiveField extends \yii\widgets\ActiveField
                         'quietMillis' => 250,
                         'data' => new JsExpression('function(term, page) {return term;}'),
                         'processResults' => new JsExpression('function(data, page) { return { results: data }; }'),
-                    ], !empty( $this->additionalOptions['ajax-options']) ? $this->additionalOptions['ajax-options'] : []);
+                    ], !empty($this->additionalOptions['ajax-options']) ? $this->additionalOptions['ajax-options'] : []);
                 }
                 $this->parts['{input}'] = Html::beginTag('div', ['class' => 'input-group select2-bootstrap-append']);
                 $this->parts['{input}'] .= Select2::widget($widgetConfig);
@@ -386,6 +387,26 @@ class ActiveField extends \yii\widgets\ActiveField
         } else {
             $this->textInput(array_merge($options, ['readonly' => 'readonly', 'value' => $value]));
         }
+        $this->parts['{input}'] .= $inputAddon;
+        return $this;
+    }
+
+    /**
+     * Генерация поля для вывода значения пароля без возможности ручного изменения
+     * @param array $options
+     * @return $this
+     * @throws \ReflectionException
+     */
+    public function passwordReadonly($options = [])
+    {
+        $relation = $this->model->getAttributeRelation($this->attribute);
+        $inputAddon = '';
+        if ($relation) {
+            $inputAddon = Html::hiddenInput(Html::getInputName($this->model, $this->attribute), $this->model->{$this->attribute});
+            $this->attribute = $relation['name'];
+        }
+        $value = $this->model->{$this->attribute};
+        $this->passwordInput(array_merge($options, ['readonly' => 'readonly', 'value' => $value]));
         $this->parts['{input}'] .= $inputAddon;
         return $this;
     }

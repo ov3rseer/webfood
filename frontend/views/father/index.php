@@ -23,7 +23,7 @@ if ($father) {
     $addChildInputId = 'add-child-input';
 
     echo Html::beginTag('div', ['class' => 'container']);
-    echo Html::beginTag('div', ['class' => 'col-xs-4']);
+    echo Html::beginTag('div', ['class' => 'col-xs-12 col-sm-6 col-md-4 col-lg-4']);
     echo Html::beginTag('div', ['class' => 'panel panel-default']);
     echo Html::beginTag('div', ['class' => 'panel-heading']);
     echo Html::beginTag('span', ['style' => 'display: flex; justify-content: space-between;']);
@@ -38,20 +38,30 @@ if ($father) {
         echo Html::beginTag('div', ['class' => 'list-group accordion', 'id' => 'accordionExample']);
         foreach ($father->fatherChildren as $fatherChild) {
             echo Html::beginTag('div', ['class' => 'list-group-item list-group-item-action']);
-            echo Html::beginTag('div', [
+            echo Html::beginTag('div');
+            echo Html::beginTag('span', ['style' => 'display: flex; justify-content: space-between;']);
+            echo Html::a($fatherChild->child->name_full, '#', [
+                'style' => 'text-decoration:none; border-bottom: 1px dashed #000080;',
                 'data-toggle' => 'collapse',
                 'data-target' => '#collapse' . $fatherChild->child_id,
                 'aria-expanded' => true,
                 'aria-controls' => 'collapse' . $fatherChild->child_id
             ]);
-            echo Html::beginTag('span', ['style' => 'display: flex; justify-content: space-between;']);
-            echo Html::encode($fatherChild->child);
             echo Html::a('<span class="glyphicon glyphicon-minus"></span><span class="glyphicon glyphicon-user"></span>',
-                '#', ['class' => $deleteChildButtonId.' text-danger', 'data' => ['child-id' => $fatherChild->child_id]]);
+                '#', ['class' => $deleteChildButtonId . ' text-danger', 'data' => ['child-id' => $fatherChild->child_id]]);
             echo Html::endTag('span');
             echo Html::endTag('div');
             echo Html::beginTag('div', ['id' => 'collapse' . $fatherChild->child_id, 'class' => 'collapse', 'data-parent' => '#accordionExample']);
-            echo 'Пока здесь ничего нет, но в скором времени появится!';
+            if ($card = $fatherChild->child->card) {
+
+                echo Html::beginTag('p', ['style' => 'margin-top:10px; ']);
+                echo Html::tag('span', '<em class="text-muted">Номер карты:</em> ' . Html::encode($card->card_number));
+                echo Html::endTag('p');
+                echo Html::beginTag('p', ['style' => 'display:flex; justify-content: space-between;']);
+                echo Html::tag('span', '<em class="text-muted">Баланс:</em> ' . Html::encode($card->balance));
+                echo Html::a('Пополнить', '#', ['class' => 'btn btn-success']);
+                echo Html::endTag('p');
+            }
             echo Html::endTag('div');
             echo Html::endTag('div');
         }

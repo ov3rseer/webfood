@@ -56,8 +56,13 @@ AppAsset::register($this);
                             'visible' => Yii::$app->user->can('super-admin'),
                         ],
                         [
-                            'label' => 'Открытие счетов',
-                            'url' => ['/document/open-bank-account/index'],
+                            'label' => 'Покупки',
+                            'url' => ['/document/purchase/index'],
+                            'visible' => Yii::$app->user->can('super-admin'),
+                        ],
+                        [
+                            'label' => 'Пополнения счетов',
+                            'url' => ['/document/refill-balance/index'],
                             'visible' => Yii::$app->user->can('super-admin'),
                         ],
                     ],

@@ -1,24 +1,25 @@
 <?php
 
-namespace frontend\models\serviceObject\openCard;
+namespace frontend\models\serviceObject\childrenIntroduction;
 
 use backend\widgets\ActiveField;
-use common\components\DateTime;
-use common\models\document\OpenCard;
-use common\models\enum\DocumentStatus;
 use common\models\enum\UserType;
+use common\models\reference\CardChild;
 use common\models\reference\Child;
 use common\models\reference\File;
 use common\models\reference\SchoolClass;
 use common\models\reference\ServiceObject;
-use common\models\tablepart\OpenCardChild;
 use common\models\form\SystemForm;
+use common\models\tablepart\SchoolClassChild;
+use common\models\tablepart\ServiceObjectSchoolClass;
+use PhpOffice\PhpSpreadsheet\Exception as SpreadsheetException;
 use PhpOffice\PhpSpreadsheet\IOFactory;
+use PhpOffice\PhpSpreadsheet\Reader\Exception;
 use Yii;
 use yii\base\UserException;
 use yii\web\UploadedFile;
 
-class OpenCardUploadFileForm extends SystemForm
+class ChildrenIntroductionUploadFile extends SystemForm
 {
     /**
      * @var UploadedFile файл для загрузки
@@ -68,12 +69,12 @@ class OpenCardUploadFileForm extends SystemForm
     /**
      * @inheritdoc
      * @throws UserException
-     * @throws \PhpOffice\PhpSpreadsheet\Exception
-     * @throws \PhpOffice\PhpSpreadsheet\Reader\Exception
+     * @throws SpreadsheetException
+     * @throws Exception
      */
     public function proceed()
     {
-        if (Yii::$app->user && Yii::$app->user->identity->user_type_id == UserType::SERVICE_OBJECT && $this->uploadedFile && !$this->uploadedFile->error) {
+        if (Yii::$app->user && Yii::$app->user->identity->user_type_id == UserType::SERVICE_OBJECT) {
             $file = new File();
             $file->setUploadFile($this->uploadedFile);
             $file->path = 'upload-lists';
@@ -91,12 +92,11 @@ class OpenCardUploadFileForm extends SystemForm
             $data = $spreadsheet->getActiveSheet()->getCellCollection();
             $cells = [];
             for ($row = 2; $row <= $data->getHighestRow(); $row++) {
-                for ($column = 'A'; $column <= 'G'; $column++) {
+                for ($column = 'A'; $column <= 'E'; $column++) {
                     $cells[$row][] = $data->get($column . $row)->getValue();
                 }
             }
 
-            $children = [];
             $serviceObject = ServiceObject::findOne(['user_id' => Yii::$app->user->id]);
             if ($serviceObject) {
                 foreach ($cells as $row => $column) {
@@ -105,8 +105,6 @@ class OpenCardUploadFileForm extends SystemForm
                     $patronymic = trim($column[2]) ?? null;
                     $classNumber = trim($column[3]) ?? null;
                     $classLitter = trim($column[4]) ?? null;
-                    $codeword = trim($column[5]) ?? null;
-                    $snils = trim($column[6]) ?? null;
 
                     $schoolClass = SchoolClass::findOne(['number' => $classNumber, 'litter' => $classLitter, 'service_object_id' => $serviceObject->id]);
                     if (!$schoolClass) {
@@ -117,6 +115,14 @@ class OpenCardUploadFileForm extends SystemForm
                         $schoolClass->save();
                     }
 
+                    $serviceObjectSchoolClass = ServiceObjectSchoolClass::findOne(['parent_id' => $serviceObject->id, 'school_class_id' => $schoolClass->id]);
+                    if (!$serviceObjectSchoolClass) {
+                        $serviceObjectSchoolClass = new ServiceObjectSchoolClass();
+                        $serviceObjectSchoolClass->parent_id = $serviceObject->id;
+                        $serviceObjectSchoolClass->school_class_id = $schoolClass->id;
+                        $serviceObjectSchoolClass->save();
+                    }
+
                     $child = Child::findOne([
                         'surname' => $surname,
                         'forename' => $forename,
@@ -125,36 +131,38 @@ class OpenCardUploadFileForm extends SystemForm
                         'school_class_id' => $schoolClass->id
                     ]);
 
+
                     if (!$child) {
+                        $cardNumber = '';
+                        $length = 10;
+                        for ($i = 0; $i < $length; $i++) {
+                            $cardNumber .= mt_rand(0, 9);
+                        }
+                        $card = new CardChild();
+                        $card->card_number = $cardNumber;
+                        $card->balance = 0;
+                        $card->limit_per_day = 0;
+                        $card->save();
+
                         $child = new Child();
                         $child->surname = $surname;
                         $child->forename = $forename;
                         $child->patronymic = $patronymic;
                         $child->service_object_id = $serviceObject->id;
                         $child->school_class_id = $schoolClass->id;
+                        $child->card_id = $card->id;
                         $child->save();
-                        $children[$child->id]['snils'] = $snils;
-                        $children[$child->id]['codeword'] = $codeword;
+                    }
+
+                    $schoolClassChild = SchoolClassChild::findOne(['parent_id' => $schoolClass->id, 'child_id' => $child->id]);
+                    if (!$schoolClassChild) {
+                        $schoolClassChild = new SchoolClassChild();
+                        $schoolClassChild->parent_id = $schoolClass->id;
+                        $schoolClassChild->child_id = $child->id;
+                        $schoolClassChild->save();
                     }
                 }
-                if (!empty($children)) {
-                    $openBankAccount = new OpenCard();
-                    $openBankAccount->date = new DateTime('now');
-                    $openBankAccount->status_id = DocumentStatus::DRAFT;
-                    $openBankAccount->service_object_id = $serviceObject->id;
-                    $openBankAccount->save();
-                    foreach ($children as $childId => $child) {
-                        $openBankAccountChild = new OpenCardChild();
-                        $openBankAccountChild->child_id = $childId;
-                        $openBankAccountChild->parent_id = $openBankAccount->id;
-                        $openBankAccountChild->codeword = $child['codeword'];
-                        $openBankAccountChild->snils = $child['snils'];
-                        $openBankAccountChild->save();
-                    }
-                    Yii::$app->session->setFlash('success', 'Заявка успешно оформлена.');
-                } else {
-                    Yii::$app->session->setFlash('error', 'На всех детей уже оформлены заявки.');
-                }
+                Yii::$app->session->setFlash('success', 'Операция прошла успешно.');
             } else {
                 Yii::$app->session->setFlash('error', 'Вы не являетесь объектом обслуживания.');
             }

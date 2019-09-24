@@ -15,11 +15,13 @@ use yii\db\ActiveQuery;
  * @property integer $service_object_id
  * @property integer $school_class_id
  * @property integer $father_id
+ * @property integer $card_id
  *
  * Отношения:
  * @property ServiceObject  $serviceObject
  * @property SchoolClass    $schoolClass
  * @property Father         $father
+ * @property CardChild      $card
  */
 class Child extends Reference
 {
@@ -49,7 +51,7 @@ class Child extends Reference
             [['name_full'], 'filter', 'filter' => 'trim'],
             [['forename', 'surname', 'patronymic'], 'string'],
             [['forename', 'surname', 'patronymic'], 'filter', 'filter' => 'ucfirst'],
-            [['service_object_id', 'school_class_id', 'father_id'], 'integer'],
+            [['service_object_id', 'school_class_id', 'father_id', 'card_id'], 'integer'],
             [['forename', 'surname', 'patronymic', 'service_object_id', 'school_class_id'], 'required'],
         ]);
     }
@@ -68,6 +70,7 @@ class Child extends Reference
             'service_object_id' => 'Объект обслуживания',
             'school_class_id'   => 'Класс',
             'father_id'         => 'Родитель',
+            'card_id'           => 'Карта',
         ]);
     }
 
@@ -93,6 +96,14 @@ class Child extends Reference
     public function getFather()
     {
         return $this->hasOne(Father::class, ['id' => 'father_id']);
+    }
+
+    /**
+     * @return ActiveQuery
+     */
+    public function getCard()
+    {
+        return $this->hasOne(CardChild::class, ['id' => 'card_id']);
     }
 
     /**

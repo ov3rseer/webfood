@@ -1,6 +1,6 @@
 <?php
 
-namespace common\exceptions;
+namespace common\models\exceptions;
 
 use common\models\document\Document;
 use Exception;
@@ -27,7 +27,7 @@ class RegisterException extends UserException
      */
     public function __construct($document = null, $errors = array(), $code = 0, Exception $previous = null)
     {
-        $message = 'Документ не сохранен из-за неверных остатков. <a href="javascript:void(showRegistersErrors())">Подробнее</a>';
+        $message = 'Документ не сохранен. <a href="javascript:void(showRegistersErrors())">Подробнее</a>';
         parent::__construct($message, $code, $previous);
         $this->document = $document;
         $this->errors = $errors;

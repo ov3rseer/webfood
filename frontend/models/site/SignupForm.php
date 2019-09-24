@@ -123,7 +123,6 @@ class SignupForm extends Model
         $user->generateAuthKey();
         $user->generateEmailVerificationToken();
         $user->save();
-        $this->sendEmail($user);
 
         $father = new Father();
         $father->user_id = $user->id;
@@ -131,7 +130,8 @@ class SignupForm extends Model
         $father->forename = $this->forename;
         $father->patronymic = $this->patronymic;
         $father->save();
-        return true;
+
+        return $this->sendEmail($user);
     }
 
     /**

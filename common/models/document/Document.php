@@ -4,18 +4,18 @@ namespace common\models\document;
 
 use backend\widgets\ActiveField;
 use common\components\DateTime;
-use common\exceptions\RegisterException;
+use common\models\exceptions\RegisterException;
 use common\models\ActiveRecord;
 use common\models\enum\DocumentStatus;
 use common\models\reference\User;
 use common\models\register\registerAccumulate\RegisterAccumulate;
 use common\models\system\Entity;
 use common\queries\DocumentQuery;
-use Throwable;
 use yii;
 use yii\base\Exception;
 use yii\behaviors\BlameableBehavior;
 use yii\behaviors\TimestampBehavior;
+use yii\db\ActiveQuery;
 use yii\helpers\Inflector;
 use yii\helpers\Url;
 
@@ -58,7 +58,7 @@ abstract class Document extends ActiveRecord
 
     /**
      * @inheritdoc
-     * @throws Throwable
+     * @throws \Throwable
      */
     public function behaviors()
     {
@@ -153,7 +153,7 @@ abstract class Document extends ActiveRecord
     }
 
     /**
-     * @return \yii\db\ActiveQuery
+     * @return ActiveQuery
      */
     public function getStatus()
     {
@@ -161,7 +161,7 @@ abstract class Document extends ActiveRecord
     }
 
     /**
-     * @return \yii\db\ActiveQuery
+     * @return ActiveQuery
      */
     public function getCreateUser()
     {
@@ -169,7 +169,7 @@ abstract class Document extends ActiveRecord
     }
 
     /**
-     * @return \yii\db\ActiveQuery
+     * @return ActiveQuery
      */
     public function getUpdateUser()
     {
@@ -177,7 +177,7 @@ abstract class Document extends ActiveRecord
     }
 
     /**
-     * @return \yii\db\ActiveQuery
+     * @return ActiveQuery
      */
     public function getDocumentBasis()
     {
@@ -249,8 +249,9 @@ abstract class Document extends ActiveRecord
      * Контроль остатков по регистрам
      * @param integer $oldStatusId
      * @param integer $newStatusId
-     * @throws RegisterException
      * @throws Exception
+     * @throws \Throwable
+     * @throws yii\db\StaleObjectException
      */
     protected function checkRegisters($oldStatusId, $newStatusId)
     {
@@ -317,8 +318,10 @@ abstract class Document extends ActiveRecord
     /**
      * Очистка записей в зависимом регистре
      * @param RegisterAccumulate|string $registerClassName - имя класса регистра
-     * @throws Exception
      * @return array массив данных, удаленных из регистра
+     * @throws Exception
+     * @throws \Throwable
+     * @throws yii\db\StaleObjectException
      */
     protected function clearDependentRegister($registerClassName)
     {
@@ -399,7 +402,6 @@ abstract class Document extends ActiveRecord
                 }
             }
         }
-
         return $result;
     }
 

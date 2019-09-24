@@ -4,8 +4,8 @@ namespace frontend\controllers\serviceObject;
 
 use common\helpers\ArrayHelper;
 use frontend\controllers\FrontendModelController;
-use frontend\models\serviceObject\openCard\OpenCardForm;
-use frontend\models\serviceObject\openCard\OpenCardUploadFileForm;
+use frontend\models\serviceObject\childrenIntroduction\ChildrenIntroductionForm;
+use frontend\models\serviceObject\childrenIntroduction\ChildrenIntroductionUploadFile;
 use PhpOffice\PhpSpreadsheet\Exception as SpreedsheetException;
 use PhpOffice\PhpSpreadsheet\Reader\Exception;
 use Yii;
@@ -16,12 +16,12 @@ use yii\web\UploadedFile;
 /**
  * Контроллер для формы "Загрузка списков"
  */
-class OpenCardController extends FrontendModelController
+class ChildrenIntroductionController extends FrontendModelController
 {
     /**
      * @var string имя класса модели
      */
-    public $modelClass = 'frontend\models\serviceObject\openCard\OpenCardForm';
+    public $modelClass = 'frontend\models\serviceObject\childrenIntroduction\ChildrenIntroductionForm';
 
     /**
      * @inheritdoc
@@ -65,27 +65,29 @@ class OpenCardController extends FrontendModelController
      */
     public function actionIndex()
     {
-        /** @var OpenCardForm $model */
+        /** @var ChildrenIntroductionForm $model */
         $model = new $this->modelClass();
         $requestData = array_merge(Yii::$app->request->post(), Yii::$app->request->get());
         $action = Yii::$app->request->post('action');
         $model->load($requestData);
-        if ($action == OpenCardForm::SCENARIO_HAND_INPUT) {
+        if ($action == ChildrenIntroductionForm::SCENARIO_HAND_INPUT) {
             $model->scenario = $action;
             if ($model->validate()) {
                 $model->proceed();
             }
         }
-        $openCardUploadFile = new OpenCardUploadFileForm();
-        if (Yii::$app->request->post('OpenCardUploadFile') && $action == OpenCardForm::SCENARIO_UPLOAD_FILE) {
+        $openCardUploadFile = new ChildrenIntroductionUploadFile();
+        if ($action == ChildrenIntroductionForm::SCENARIO_UPLOAD_FILE) {
             $openCardUploadFile->uploadedFile = UploadedFile::getInstance($openCardUploadFile, 'uploadedFile');
-            $model->scenario = $action;
-            if ($openCardUploadFile->validate()) {
-                $openCardUploadFile->proceed();
+            if ($openCardUploadFile->uploadedFile && !$openCardUploadFile->uploadedFile->error) {
+                $model->scenario = $action;
+                if ($openCardUploadFile->validate()) {
+                    $openCardUploadFile->proceed();
+                }
             }
         }
-        $model->scenario = OpenCardForm::SCENARIO_HAND_INPUT;
-        return $this->renderUniversal('@frontend/views/service-object/request/open-card-request/index', ['model' => $model, 'uploadFileForm' => $openCardUploadFile]);
+        $model->scenario = ChildrenIntroductionForm::SCENARIO_HAND_INPUT;
+        return $this->renderUniversal('@frontend/views/service-object/children-introduction/index', ['model' => $model, 'uploadFileForm' => $openCardUploadFile]);
     }
 
     /**
@@ -94,8 +96,8 @@ class OpenCardController extends FrontendModelController
     public function actionDownloadExampleFile()
     {
         return Yii::$app->response->sendFile(
-            Yii::getAlias('@frontend/web/samples/open-card-request/open-card.xlsx'),
-            'Файл-образец для загрузки в систему учащихся и открытия счетов.xlsx'
+            Yii::getAlias('@frontend/web/samples/children-introduction/children.xlsx'),
+            'Файл-образец для загрузки в систему учащихся.xlsx'
         );
     }
 }

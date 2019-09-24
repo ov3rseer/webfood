@@ -10,18 +10,17 @@ class m190822_094907_add_ref_card_child extends Migration
     public function safeUp()
     {
         $this->createReferenceTable('{{%ref_card_child}}', [
-            'card_number_hash' => $this->string()->notNull()->unique(),
-       //     'card_keyword_hash' => $this->string()->defaultValue(null),
-            'balance' => $this->float()->defaultValue(0),
-            'limit_per_day' => $this->float()->defaultValue(0),
-            'child_id' => $this->integer()->indexed()->foreignKey('{{%ref_child}}', 'id'),
-            'auth_key' => $this->string(32),
+            'card_number' => $this->string()->indexed()->notNull()->unique(),
+            'balance' => $this->decimal(10, 2)->defaultValue(0)->notNull(),
+            'limit_per_day' => $this->decimal(10, 2)->defaultValue(0)->notNull(),
         ]);
         $this->insert('{{%sys_entity}}', ['class_name' => 'common\models\reference\CardChild']);
+        $this->addColumn('{{%ref_child}}', 'card_id', $this->integer()->indexed()->foreignKey('{{%ref_card_child}}', 'id'));
     }
 
     public function safeDown()
     {
+        $this->dropColumn('{{%ref_child}}', 'card_id');
         $this->delete('{{%sys_entity}}', ['class_name' => 'common\models\reference\CardChild']);
         $this->dropTable('{{%ref_card_child}}');
     }

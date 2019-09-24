@@ -65,7 +65,7 @@ if (!$model->isNewRecord) {
                 || $model instanceof Document && $model->status_id != DocumentStatus::DELETED
             )
         )
-    ){
+    ) {
         $buttons[] = Html::a('Удалить', ['delete', 'id' => $model->id], [
             'class' => 'btn btn-danger',
             'data' => [
@@ -82,7 +82,7 @@ if (!$model->isNewRecord) {
                 || $model instanceof Document && $model->status_id == DocumentStatus::DELETED
             )
         )
-    ){
+    ) {
         $buttons[] = Html::a('Восстановить', ['restore', 'id' => $model->id], [
             'class' => 'btn btn-success',
             'data' => [
@@ -108,8 +108,9 @@ if (!$model->isNewRecord) {
 echo $form->errorSummary($model);
 
 foreach ($model->getFieldsOptions() as $field => $fieldOptions) {
-    if (!in_array($field, ['create_user_id', 'update_user_id']))
+    if (!in_array($field, ['create_user_id', 'update_user_id'])) {
         echo $form->autoField($model, $field, $fieldOptions);
+    }
     if ($fieldOptions['type'] == ActiveField::FILE && isset($fieldOptions['options']['related_field'])) {
         $fileId = $model->{$fieldOptions['options']['related_field']};
         if ($fileId) {
@@ -120,7 +121,7 @@ foreach ($model->getFieldsOptions() as $field => $fieldOptions) {
 }
 
 $this->registerJs("
-    $('#".Html::getInputid($model, 'is_password_block')."').click(function(e){
+    $('#" . Html::getInputid($model, 'is_password_block') . "').click(function(e){
         $('#" . Html::getInputId($model, 'password') . "').attr('readonly', $(this).is(':checked'));       
     });
 ");

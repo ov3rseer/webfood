@@ -37,7 +37,7 @@ if ($serviceObject) {
     ]);
     echo Html::endTag('p');
     echo Html::beginTag('p');
-    echo Html::a('Заявки на открытие карт', 'serviceObject/open-card-request/index', [
+    echo Html::a('Загрузка учащихся', 'serviceObject/children-introduction/index', [
         'class' => 'btn btn-lg btn-success',
         'style' => 'width:600px;',
     ]);

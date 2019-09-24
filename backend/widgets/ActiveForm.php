@@ -92,6 +92,9 @@ class ActiveForm extends BaseActiveForm
             case ActiveField::PASSWORD:
                 $result->passwordInput();
                 break;
+            case ActiveField::PASSWORD_READONLY:
+                $result->passwordReadonly();
+                break;
             case ActiveField::IGNORE:
                 $result = '';
                 break;

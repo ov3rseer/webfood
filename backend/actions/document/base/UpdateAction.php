@@ -4,8 +4,8 @@ namespace backend\actions\document\base;
 
 use backend\controllers\document\DocumentController;
 use backend\widgets\ActiveForm;
-use common\exceptions\RegisterException;
 use common\models\document\Document;
+use common\models\exceptions\RegisterException;
 use Yii;
 use yii\web\Response;
 
