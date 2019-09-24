@@ -57,8 +57,8 @@ class Purchase extends Document
      */
     public function validateStatus()
     {
-        if ($this->oldAttributes['status_id'] == DocumentStatus::POSTED) {
-            $this->addError('summary', 'Платёж уже проведён, невозможно изменить данные');
+        if (!$this->isNewRecord && $this->oldAttributes['status_id'] == DocumentStatus::POSTED) {
+            $this->addError('summary', 'Пополнение счёта уже проведёно, невозможно изменить данные');
         }
     }
 
@@ -144,5 +144,20 @@ class Purchase extends Document
                 },
             ],
         ];
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function afterSave($insert, $changedAttributes)
+    {
+        parent::afterSave($insert, $changedAttributes);
+        if ($this->status_id == DocumentStatus::POSTED) {
+            $cardBalance = CardHistory::findBalance(null, ['sum'], ['card_id'], 't')->andWhere(['card_id' => $this->card_id])->one();
+            if (!empty($cardBalance['sum'] && $this->card)) {
+                $this->card->balance = $cardBalance['sum'];
+                $this->card->save();
+            }
+        }
     }
 }

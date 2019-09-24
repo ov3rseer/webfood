@@ -57,7 +57,7 @@ class RefillBalance extends Document
      */
     public function validateStatus()
     {
-        if ($this->oldAttributes['status_id'] == DocumentStatus::POSTED) {
+        if (!$this->isNewRecord && $this->oldAttributes['status_id'] == DocumentStatus::POSTED) {
             $this->addError('summary', 'Пополнение счёта уже проведёно, невозможно изменить данные');
         }
     }
@@ -90,9 +90,6 @@ class RefillBalance extends Document
             // Заказы покупателей
             CardHistory::className() => [
                 'balance_error' => function () {
-                    if ($this->status_id == DocumentStatus::POSTED) {
-                        return 'Пополнение баланса уже произведено.';
-                    }
                     return '';
                 },
                 'function' => function (RefillBalance $documentModel) {
@@ -100,7 +97,7 @@ class RefillBalance extends Document
                     if ($documentModel) {
                         $result[] = [
                             'card_id' => $documentModel->card_id,
-                            'sum' =>  $documentModel->sum,
+                            'sum' => $documentModel->sum,
                         ];
 
                     }
@@ -108,5 +105,20 @@ class RefillBalance extends Document
                 },
             ],
         ];
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function afterSave($insert, $changedAttributes)
+    {
+        parent::afterSave($insert, $changedAttributes);
+        if ($this->status_id == DocumentStatus::POSTED) {
+            $cardBalance = CardHistory::findBalance(null, ['sum'], ['card_id'], 't')->andWhere(['card_id' => $this->card_id])->one();
+            if (!empty($cardBalance['sum'] && $this->card)) {
+                $this->card->balance = $cardBalance['sum'];
+                $this->card->save();
+            }
+        }
     }
 }
