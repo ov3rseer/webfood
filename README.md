@@ -125,6 +125,18 @@
 
 `GRANT ALL PRIVILEGES ON DATABASE  webfood_extend TO postgres;`
 
+Чтобы очистить и создать заного базу данных:
+
+`php yii database`
+
+Чтобы заполнить базу данных таблицами:
+
+`php yii migrate`
+
+Чтобы заполнить базу данных тестовыми данными:
+
+`php yii fixture '*'`
+
 #### Настройка локалей, если возникает ошибка при создании базы:
 
 `sudo systemctl stop postgresql@9.5-main`
@@ -141,7 +153,7 @@
 
 порт:   `5432`
 
-база:   `webfood`
+база:   `webfood_extend`
 
 юзер:   `postgres`
 
@@ -152,10 +164,6 @@
 В папке где будет находиться проект нужно выполнить команду:
 
 `git clone http://adlibtech.ru/git/SergeyDashko/WebFood_extend.git`
-
-Чтобы заполнить базу данных таблицами:
-
-`php yii migrate`
 
 
 ### **Правила:**
