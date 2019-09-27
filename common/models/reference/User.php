@@ -14,14 +14,14 @@ use yii\web\IdentityInterface;
 /**
  * Модель спарвочника "Пользователи"
  *
- * @property string     $email
- * @property string     $password_hash
- * @property string     $auth_key
- * @property string     $name
- * @property string     $name_full
- * @property integer    $user_type_id
- * @property string     $password_reset_token
- * @property string     $verification_token
+ * @property string $email
+ * @property string $password_hash
+ * @property string $auth_key
+ * @property string $name
+ * @property string $name_full
+ * @property integer $user_type_id
+ * @property string $password_reset_token
+ * @property string $verification_token
  */
 class User extends Reference implements IdentityInterface
 {
@@ -53,7 +53,7 @@ class User extends Reference implements IdentityInterface
 
     public function __toString()
     {
-        return $this->name_full;
+        return isset($this->name_full) ? $this->name_full : $this->name;
     }
 
     /**
@@ -71,6 +71,7 @@ class User extends Reference implements IdentityInterface
             [['email'], 'unique', 'message' => 'Этот адрес электронной почты уже занят.'],
             [['user_type_id'], 'integer'],
             [['is_password_block'], 'boolean'],
+            [['name', 'user_type_id'], 'required']
         ]);
     }
 
@@ -80,11 +81,11 @@ class User extends Reference implements IdentityInterface
     public function attributeLabels()
     {
         return array_merge(parent::attributeLabels(), [
-            'name'              => 'Логин',
-            'name_full'         => 'Полное имя',
-            'password'          => 'Пароль',
-            'email'             => 'Email',
-            'user_type_id'      => 'Тип пользователя',
+            'name' => 'Логин',
+            'name_full' => 'Полное имя',
+            'password' => 'Пароль',
+            'email' => 'Email',
+            'user_type_id' => 'Тип пользователя',
             'is_password_block' => 'Блокировка смены пароля',
         ]);
     }

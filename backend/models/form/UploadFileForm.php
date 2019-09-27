@@ -5,6 +5,9 @@ namespace backend\models\form;
 use backend\widgets\ActiveField;
 use common\models\form\Form;
 use common\models\reference\File;
+use yii\base\InvalidConfigException;
+use yii\base\UserException;
+use yii\db\ActiveQuery;
 use yii\web\UploadedFile;
 
 /**
@@ -66,8 +69,8 @@ class UploadFileForm extends Form
     }
 
     /**
-     * @return \yii\db\ActiveQuery
-     * @throws \yii\base\InvalidConfigException
+     * @return ActiveQuery
+     * @throws InvalidConfigException
      */
     public function getFile()
     {
@@ -94,20 +97,18 @@ class UploadFileForm extends Form
     public function populate($file)
     {
         $this->file_id = $file->id;
-        $this->name_full = $file->name_full;
         $this->comment = $file->comment;
     }
 
     /**
      * Подтверждение формы
-     * @throws \yii\base\UserException
+     * @throws UserException
      */
     public function submit()
     {
         $file = $this->file_id ? $this->file : new File();
         $file->setUploadFile($this->uploadedFile);
         $file->path = 'upload';
-        $file->name_full = $this->name_full;
         $file->comment = $this->comment ? $this->comment : '';
         $file->save();
     }

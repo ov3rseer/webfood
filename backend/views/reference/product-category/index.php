@@ -103,14 +103,14 @@ $pjaxTreeWidgetId = 'pjax-' . $treeWidgetId;
                                 return true;
                             }
                         "),
-                        'multiple' => true,
+                        'multiple' => false,
                     ],
                     'checkbox' => [
-                        'visible' => true,
+                        'visible' => false,
                         'three_state' => false,
                     ],
                     'dnd' => [
-                        'is_draggable' => true,
+                        'is_draggable' => false,
                         'copy' => false,
                     ],
                     'search' => [

@@ -10,6 +10,9 @@ class m190807_082518_add_ref_meal extends Migration
     public function safeUp()
     {
         $this->createReferenceTable('{{%ref_meal}}', [
+            'meal_category_id' => $this->integer()->indexed()->notNull()->foreignKey('{{%ref_meal_category}}', 'id'),
+            'meal_type_id' => $this->integer()->indexed()->notNull()->foreignKey('{{%enum_meal_type}}', 'id'),
+            'meal_output' => $this->string(30),
             'price' => $this->decimal(10, 2)->notNull(),
             'description' => $this->text(),
         ]);

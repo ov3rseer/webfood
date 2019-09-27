@@ -13,7 +13,6 @@ use yii\db\ActiveQuery;
  * @property integer $parent_id
  * @property integer $complex_id
  * @property float $quantity
- * @property float $price
  *
  * Отношения:
  * @property Purchase $parent
@@ -28,8 +27,8 @@ class PurchaseComplex extends TablePart
     {
         return array_merge(parent::rules(), [
             [['complex_id'], 'integer'],
-            [['quantity', 'price'], 'number', 'min' => 0],
-            [['complex_id', 'quantity', 'price'], 'required'],
+            [['quantity'], 'number', 'min' => 0],
+            [['complex_id', 'quantity'], 'required'],
         ]);
     }
 
@@ -41,7 +40,6 @@ class PurchaseComplex extends TablePart
         return array_merge(parent::attributeLabels(), [
             'complex_id' => 'Комплекс',
             'quantity' => 'Количество',
-            'price' => 'Цена',
         ]);
     }
 

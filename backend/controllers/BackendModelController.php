@@ -258,9 +258,9 @@ abstract class BackendModelController extends Controller
 
     /**
      * Получение списка колонок для отображения табличной части в форме редактирования объекта
-     * @param \common\models\ActiveRecord $model
+     * @param ActiveRecord $model
      * @param string $tablePartRelation
-     * @param \backend\widgets\ActiveForm $form
+     * @param ActiveForm $form
      * @param bool $readonly
      * @return array список колонок
      * @throws InvalidConfigException
@@ -326,11 +326,11 @@ abstract class BackendModelController extends Controller
 
     /**
      * Получение списка колонок для отображения списка связанных записей в форме редактирования объекта
-     * @param \common\models\ActiveRecord $model
+     * @param ActiveRecord $model
      * @param string $crossTableRelation
      * @param string $crossTableRelationClass
      * @param string $parentAttribute
-     * @param \backend\widgets\ActiveForm $form
+     * @param ActiveForm $form
      * @param boolean $isExternalEdit
      * @return array список колонок
      * @throws InvalidConfigException

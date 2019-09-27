@@ -3,6 +3,7 @@
 namespace backend\controllers\reference;
 
 use backend\controllers\BackendModelController;
+use backend\widgets\ActiveForm;
 
 /**
  * Базовый класс контроллера для моделей справочников
@@ -26,5 +27,14 @@ abstract class ReferenceController extends BackendModelController
                 'searchFields' => ['name'],
             ],
         ]);
+    }
+
+    /**
+     * @inheritdoc
+     * @param ActiveForm $form
+     */
+    static public function getTablePartColumns($model, $tablePartRelation, $form, $readonly = false)
+    {
+        return parent::getTablePartColumns($model, $tablePartRelation, $form, $readonly);
     }
 }

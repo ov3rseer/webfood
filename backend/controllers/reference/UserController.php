@@ -19,12 +19,11 @@ class UserController extends ReferenceController
      */
     public function actions()
     {
-        return array_merge(parent::actions(), [
-            'create' => [
-                'class' => 'backend\actions\base\CreateAction',
-                'modelClass' => $this->modelClass,
-                'viewPath' => '@backend/views/reference/user/update',
-            ],
+        $result = parent::actions();
+        if (isset($result['create'])) {
+            unset($result['create']);
+        }
+        return array_merge($result, [
             'update' => [
                 'class' => 'backend\actions\base\UpdateAction',
                 'modelClass' => $this->modelClass,

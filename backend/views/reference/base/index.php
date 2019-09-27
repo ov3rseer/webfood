@@ -23,7 +23,7 @@ $gridWidgetId = 'grid-' . $shortClassName;
 $gridOptions = [
     'dataProvider' => $dataProvider,
     'filterModel' => $filterModel,
-    'columns' => function() use ($controller, $model, $filterModel) {
+    'columns' => function () use ($controller, $model, $filterModel) {
         return $controller->generateAutoColumns($model, $filterModel);
     },
     'rowOptions' => function (Reference $model) {
@@ -32,7 +32,7 @@ $gridOptions = [
 ];
 
 $toolbarLayout = [['refresh']];
-if (Yii::$app->user->can($controller::className() . '.Create')) {
+if (!$model instanceof \common\models\reference\User) {
     $toolbarLayout[0][] = 'create';
 }
 if (Yii::$app->user->can($controller::className() . '.Delete')) {

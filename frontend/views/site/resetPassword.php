@@ -4,7 +4,7 @@
 /* @var $form yii\bootstrap\ActiveForm */
 /* @var $model ResetPasswordForm */
 
-use frontend\models\ResetPasswordForm;
+use frontend\models\site\ResetPasswordForm;
 use yii\helpers\Html;
 use yii\bootstrap\ActiveForm;
 

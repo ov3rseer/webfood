@@ -13,13 +13,38 @@ return [
     'controllerNamespace' => 'console\controllers',
     'aliases' => [
         '@bower' => '@vendor/bower-asset',
-        '@npm'   => '@vendor/npm-asset',
+        '@npm' => '@vendor/npm-asset',
+    ],
+    'components' => [
+        'db' => [
+            'class' => 'common\components\pgsql\Connection',
+            'dsn' => 'pgsql:host=localhost;dbname=webfood_extend',
+            'username' => 'postgres',
+            'password' => '1234',
+            'enableSchemaCache' => true,
+            'schemaCache' => 'schemaCache',
+        ],
+        'dbAdmin' => [
+            'class' => 'common\components\pgsql\Connection',
+            'dsn' => 'pgsql:host=localhost;dbname=postgres',
+            'username' => 'postgres',
+            'password' => '1234',
+        ],
+        'log' => [
+            'targets' => [
+                [
+                    'class' => 'yii\log\FileTarget',
+                    'levels' => ['error', 'warning'],
+                ],
+            ],
+        ],
     ],
     'controllerMap' => [
         'fixture' => [
             'class' => 'yii\console\controllers\FixtureController',
-            'namespace' => 'common\fixtures',
-          ],
+            'namespace' => 'console\fixtures',
+            'globalFixtures' => [],
+        ],
         'migrate' => [
             'class' => 'yii\console\controllers\MigrateController',
             'templateFile' => '@console/migrations/template.php.txt',
@@ -28,15 +53,11 @@ return [
         'task' => [
             'class' => 'console\controllers\TaskController',
         ],
-    ],
-    'components' => [
-        'log' => [
-            'targets' => [
-                [
-                    'class' => 'yii\log\FileTarget',
-                    'levels' => ['error', 'warning'],
-                ],
-            ],
+        'database' => [
+            'class' => 'console\controllers\DatabaseController',
+            'connection' => 'dbAdmin',
+            'name' => 'webfood_extend',
+            'owner' => 'postgres',
         ],
     ],
     'params' => $params,

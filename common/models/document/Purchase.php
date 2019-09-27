@@ -2,12 +2,16 @@
 
 namespace common\models\document;
 
+use backend\controllers\document\DocumentController;
+use backend\widgets\ActiveForm;
 use common\models\enum\DocumentStatus;
 use common\models\reference\CardChild;
 use common\models\register\registerAccumulate\CardHistory;
 use common\models\tablepart\PurchaseComplex;
 use common\models\tablepart\PurchaseMeal;
+use yii\base\InvalidConfigException;
 use yii\db\ActiveQuery;
+use yii\helpers\Html;
 
 /**
  * Модель документа "Покупка"
@@ -114,6 +118,47 @@ class Purchase extends Document
 
     /**
      * @inheritdoc
+     * @param $tablePartRelation
+     * @param $form
+     * @param bool $readonly
+     * @return array
+     * @throws InvalidConfigException
+     * @throws \ReflectionException
+     */
+    public function getTablePartColumns($tablePartRelation, $form, $readonly = false)
+    {
+        /** @var ActiveForm $form */
+        $model = $this;
+        $parentResult = DocumentController::getTablePartColumns($model, $tablePartRelation, $form, $readonly);
+        if (in_array($tablePartRelation, ['purchaseMeal', 'purchaseComplex'])) {
+            // Колонка продукты
+            $parentResult['price'] = [
+                'format' => 'raw',
+                'label' => 'Цена',
+                'headerOptions' => ['style' => 'text-align:center;'],
+                'value' => function ($rowModel) use ($form, $model, $tablePartRelation) {
+                    /** @var PurchaseMeal $rowModel */
+                    $result = '';
+                    $parameter = $tablePartRelation == 'purchaseMeal' ? 'meal' : 'complex';
+                    if (!$rowModel->isNewRecord && isset($rowModel->{$parameter}->price)) {
+                        $result = Html::textInput(
+                            Html::getInputName($model, '[' . $tablePartRelation . '][' . $rowModel->id . ']price'),
+                            Html::encode($rowModel->{$parameter}->price),
+                            [
+                                'id' => Html::getInputId($model, '[' . $tablePartRelation . '][' . $rowModel->id . ']price'),
+                                'class' => 'form-control',
+                                'readonly' => true
+                            ]);
+                    }
+                    return $result;
+                }
+            ];
+        }
+        return $parentResult;
+    }
+
+    /**
+     * @inheritdoc
      */
     public function getSettingsForDependentRegisters()
     {
@@ -124,11 +169,12 @@ class Purchase extends Document
                     $balanceRow = CardHistory::findBalance(null, ['sum'], [], 't')
                         ->andWhere(['t.card_id' => $this->card_id])
                         ->one();
-                    if (!empty($balanceRow['sum'])) {
-                        $result = $balanceRow['sum'] - $this->sum;
-                        if ($result < 0) {
-                            return 'Отрицательный баланс.';
-                        }
+                    if (empty($balanceRow['sum'])) {
+                        $balanceRow['sum'] = 0;
+                    }
+                    $result = $balanceRow['sum'] - $this->sum;
+                    if ($result < 0) {
+                        return 'Отрицательный баланс.';
                     }
                     return '';
                 },

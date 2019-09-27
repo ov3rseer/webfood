@@ -15,13 +15,11 @@ class m190920_115053_add_doc_purchase extends Migration
         $this->createTablePartTable('{{%tab_purchase_meal}}', '{{doc_purchase}}', [
             'meal_id' => $this->integer()->notNull()->indexed()->foreignKey('{{ref_meal}}', 'id'),
             'quantity' => $this->decimal(10, 2)->notNull(),
-            'price' => $this->decimal(10, 2)->notNull(),
         ]);
 
         $this->createTablePartTable('{{%tab_purchase_complex}}', '{{doc_purchase}}', [
             'complex_id' => $this->integer()->notNull()->indexed()->foreignKey('{{ref_complex}}', 'id'),
             'quantity' => $this->decimal(10, 2)->notNull(),
-            'price' => $this->decimal(10, 2)->notNull(),
         ]);
     }
 
