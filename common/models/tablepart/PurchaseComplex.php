@@ -12,7 +12,7 @@ use yii\db\ActiveQuery;
  * Свойства:
  * @property integer $parent_id
  * @property integer $complex_id
- * @property float $quantity
+ * @property float   $quantity
  *
  * Отношения:
  * @property Purchase $parent

@@ -6,6 +6,7 @@ use common\models\reference\Meal;
 use common\models\reference\Product;
 use common\models\reference\Unit;
 use yii\db\ActiveQuery;
+use yii\helpers\Html;
 
 /**
  * Модель строки табличной части "Продукты(состав блюда)" справочника "Блюдо"
@@ -32,7 +33,18 @@ class MealProduct extends TablePart
             [['product_id', 'unit_id'], 'integer'],
             [['product_id', 'unit_id', 'product_quantity'], 'required'],
             [['product_quantity'], 'number', 'min' => 0],
+            [['unit_id'], 'validateUnit'],
         ]);
+    }
+
+    /**
+     * Проверка на правильность единицы измерения
+     */
+    public function validateUnit()
+    {
+        if ($this->unit_id != $this->product->unit_id) {
+            $this->addError('unit_id', 'Выбрана неверная единица измерения. Выберите "' . Html::encode($this->product->unit) . '"');
+        }
     }
 
     /**

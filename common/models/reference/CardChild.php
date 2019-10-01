@@ -58,7 +58,7 @@ class CardChild extends Reference
     {
         $parentResult = parent::beforeSave($insert);
         if ($parentResult) {
-            $this->name = $this->card_number;
+            $this->name = 'Карта №' . $this->card_number;
         }
         return $parentResult;
     }

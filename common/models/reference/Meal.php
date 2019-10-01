@@ -2,9 +2,14 @@
 
 namespace common\models\reference;
 
+use backend\controllers\reference\ReferenceController;
+use backend\widgets\ActiveForm;
 use common\models\enum\MealType;
 use common\models\tablepart\MealProduct;
+use ReflectionException;
+use yii\base\InvalidConfigException;
 use yii\db\ActiveQuery;
+use yii\helpers\Html;
 
 /**
  * Модель справочника "Блюдо"
@@ -15,7 +20,7 @@ use yii\db\ActiveQuery;
  * @property string  $description
  *
  * Отношения:
- * @property MealProduct[] $mealProduct
+ * @property MealProduct[] $mealProducts
  * @property MealCategory $mealCategory
  */
 class Meal extends Reference
@@ -43,7 +48,7 @@ class Meal extends Reference
     {
         return array_merge(parent::rules(), [
             [['meal_category_id', 'meal_type_id'], 'integer'],
-            [['meal_category_id', 'meal_type_id', 'price'], 'required'],
+            [['name', 'meal_category_id', 'meal_type_id'], 'required'],
             [['description'], 'string'],
             [['price'], 'number', 'min' => 0],
         ]);
@@ -96,5 +101,71 @@ class Meal extends Reference
         return array_merge([
             'mealProducts' => MealProduct::className(),
         ], parent::getTableParts());
+    }
+
+    /**
+     * @inheritdoc
+     * @param $tablePartRelation
+     * @param $form
+     * @param bool $readonly
+     * @return array
+     * @throws InvalidConfigException
+     * @throws ReflectionException
+     */
+    public function getTablePartColumns($tablePartRelation, $form, $readonly = false)
+    {
+        /** @var ActiveForm $form */
+        $model = $this;
+        $parentResult = ReferenceController::getTablePartColumns($model, $tablePartRelation, $form, $readonly);
+        if ($tablePartRelation == 'mealProducts') {
+            $parentResult['price-per-unit'] = [
+                'format' => 'raw',
+                'label' => 'Цена за ед. измерения',
+                'headerOptions' => ['style' => 'text-align:center;'],
+                'value' => function ($rowModel) use ($form, $model, $tablePartRelation) {
+                    /** @var MealProduct $rowModel */
+                    $result = '';
+                    if (!$rowModel->isNewRecord && $rowModel->product) {
+                        $result = Html::encode($rowModel->product->price) . ' руб. за ' . Html::encode($rowModel->product->unit);
+                    }
+                    return $result;
+                }
+            ];
+            $parentResult['sum'] = [
+                'format' => 'raw',
+                'label' => 'Сумма',
+                'headerOptions' => ['style' => 'text-align:center;'],
+                'value' => function ($rowModel) use ($form, $model, $tablePartRelation) {
+                    /** @var MealProduct $rowModel */
+                    $result = 0;
+                    if (!$rowModel->isNewRecord && isset($rowModel->product->price)) {
+                        $result = $rowModel->product->price * $rowModel->product_quantity;
+                    }
+                    return number_format($result, 2);
+                }
+            ];
+            $parentResult['product_quantity']['label'] = 'Вес (количество)';
+        }
+        return $parentResult;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function beforeSave($insert)
+    {
+        $parentResult = parent::beforeSave($insert);
+        if ($parentResult) {
+            $sum = 0;
+            foreach ($this->mealProducts as $mealProduct) {
+                if (isset($mealProduct->product)) {
+                    if ($mealProduct->product->unit_id == $mealProduct->unit_id) {
+                        $sum += $mealProduct->product_quantity * $mealProduct->product->price;
+                    }
+                }
+            }
+            $this->price = $sum;
+        }
+        return $parentResult;
     }
 }

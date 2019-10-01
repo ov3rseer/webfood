@@ -2,7 +2,7 @@
 
 namespace backend\controllers\reference;
 
-use common\models\document\Request;
+use common\models\reference\Complex;
 
 /**
  * Контроллер для справочника "Комплексы"
@@ -16,7 +16,7 @@ class ComplexController extends ReferenceController
 
     /**
      * @inheritdoc
-     * @param Request $model
+     * @param Complex $model
      */
     static public function getTablePartColumns($model, $tablePartRelation, $form, $readonly = false)
     {

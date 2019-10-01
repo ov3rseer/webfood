@@ -21,8 +21,8 @@ use yii\helpers\Html;
  * @property float $sum
  *
  * Отношения:
- * @property PurchaseComplex[] $purchaseComplex
- * @property PurchaseMeal[] $purchaseMeal
+ * @property PurchaseComplex[] $purchaseComplexes
+ * @property PurchaseMeal[] $purchaseMeals
  * @property CardChild $card
  */
 class Purchase extends Document
@@ -51,7 +51,7 @@ class Purchase extends Document
         return array_merge(parent::rules(), [
             [['card_id'], 'integer'],
             [['sum'], 'number', 'min' => 0],
-            [['card_id', 'sum'], 'required'],
+            [['card_id'], 'required'],
             [['status_id'], 'validateStatus'],
         ]);
     }
@@ -74,8 +74,8 @@ class Purchase extends Document
         return array_merge(parent::attributeLabels(), [
             'card_id' => 'Карта',
             'sum' => 'Сумма',
-            'purchaseMeal' => 'Купленные блюда',
-            'purchaseComplex' => 'Купленные комплексы',
+            'purchaseMeals' => 'Купленные блюда',
+            'purchaseComplexes' => 'Купленные комплексы',
         ]);
     }
 
@@ -90,7 +90,7 @@ class Purchase extends Document
     /**
      * @return ActiveQuery
      */
-    public function getPurchaseComplex()
+    public function getPurchaseComplexes()
     {
         return $this->hasMany(PurchaseComplex::class, ['parent_id' => 'id'])
             ->orderBy('id ASC');
@@ -99,7 +99,7 @@ class Purchase extends Document
     /**
      * @return ActiveQuery
      */
-    public function getPurchaseMeal()
+    public function getPurchaseMeals()
     {
         return $this->hasMany(PurchaseMeal::class, ['parent_id' => 'id'])
             ->orderBy('id ASC');
@@ -111,8 +111,8 @@ class Purchase extends Document
     public function getTableParts()
     {
         return array_merge([
-            'purchaseMeal' => PurchaseMeal::className(),
-            'purchaseComplex' => PurchaseComplex::className(),
+            'purchaseMeals' => PurchaseMeal::class,
+            'purchaseComplexes' => PurchaseComplex::class,
         ], parent::getTableParts());
     }
 
@@ -130,8 +130,7 @@ class Purchase extends Document
         /** @var ActiveForm $form */
         $model = $this;
         $parentResult = DocumentController::getTablePartColumns($model, $tablePartRelation, $form, $readonly);
-        if (in_array($tablePartRelation, ['purchaseMeal', 'purchaseComplex'])) {
-            // Колонка продукты
+        if (in_array($tablePartRelation, ['purchaseMeals', 'purchaseComplexes'])) {
             $parentResult['price'] = [
                 'format' => 'raw',
                 'label' => 'Цена',
@@ -139,7 +138,7 @@ class Purchase extends Document
                 'value' => function ($rowModel) use ($form, $model, $tablePartRelation) {
                     /** @var PurchaseMeal $rowModel */
                     $result = '';
-                    $parameter = $tablePartRelation == 'purchaseMeal' ? 'meal' : 'complex';
+                    $parameter = $tablePartRelation == 'purchaseMeals' ? 'meal' : 'complex';
                     if (!$rowModel->isNewRecord && isset($rowModel->{$parameter}->price)) {
                         $result = Html::textInput(
                             Html::getInputName($model, '[' . $tablePartRelation . '][' . $rowModel->id . ']price'),
@@ -151,6 +150,20 @@ class Purchase extends Document
                             ]);
                     }
                     return $result;
+                }
+            ];
+            $parentResult['sum'] = [
+                'format' => 'raw',
+                'label' => 'Сумма',
+                'headerOptions' => ['style' => 'text-align:center;'],
+                'value' => function ($rowModel) use ($form, $model, $tablePartRelation) {
+                    /** @var PurchaseMeal $rowModel */
+                    $result = 0;
+                    $parameter = $tablePartRelation == 'purchaseMeals' ? 'meal' : 'complex';
+                    if (!$rowModel->isNewRecord && isset($rowModel->{$parameter}->price)) {
+                        $result = $rowModel->{$parameter}->price * $rowModel->quantity;
+                    }
+                    return number_format($result, 2);
                 }
             ];
         }
@@ -190,6 +203,29 @@ class Purchase extends Document
                 },
             ],
         ];
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function beforeSave($insert)
+    {
+        $parentResult = parent::beforeSave($insert);
+        if ($parentResult) {
+            $sum = 0;
+            foreach ($this->purchaseMeals as $purchaseMeal) {
+                if (isset($purchaseMeal->meal)) {
+                    $sum += $purchaseMeal->quantity * $purchaseMeal->meal->price;
+                }
+            }
+            foreach ($this->purchaseComplexes as $purchaseComplex) {
+                if (isset($purchaseComplex->complex)) {
+                    $sum += $purchaseComplex->quantity * $purchaseComplex->complex->price;
+                }
+            }
+            $this->sum = $sum;
+        }
+        return $parentResult;
     }
 
     /**

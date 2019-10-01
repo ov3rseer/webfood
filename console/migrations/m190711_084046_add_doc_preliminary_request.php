@@ -43,6 +43,7 @@ class m190711_084046_add_doc_preliminary_request extends Migration
 
         $this->createReferenceTable('{{%ref_product}}', [
             'product_code' => $this->string(9)->notNull()->unique(),
+            'price' => $this->decimal(10, 2)->notNull(),
             'unit_id' => $this->integer()->notNull()->indexed()->foreignKey('{{%ref_unit}}', 'id'),
         ]);
         $this->insert('{{%sys_entity}}', ['class_name' => 'common\models\reference\Product']);

@@ -70,7 +70,7 @@ class Child extends Reference
             'service_object_id' => 'Объект обслуживания',
             'school_class_id'   => 'Класс',
             'father_id'         => 'Родитель',
-            'card_id'           => 'Карта',
+            'card_id'           => 'Номер карты',
         ]);
     }
 

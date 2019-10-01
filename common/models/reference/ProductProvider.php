@@ -89,10 +89,12 @@ class ProductProvider extends Reference
     {
         if ($this->_fieldsOptions === []) {
             parent::getFieldsOptions();
-            if ($this->user_id) {
-                $this->_fieldsOptions['user_id']['displayType'] = ActiveField::READONLY;
-            } else {
-                $this->_fieldsOptions['user_id']['displayType'] = ActiveField::REFERENCE;
+            if ($this->scenario != self::SCENARIO_SEARCH) {
+                if ($this->user_id) {
+                    $this->_fieldsOptions['user_id']['displayType'] = ActiveField::READONLY;
+                } else {
+                    $this->_fieldsOptions['user_id']['displayType'] = ActiveField::REFERENCE;
+                }
             }
         }
         return $this->_fieldsOptions;

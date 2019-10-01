@@ -37,6 +37,15 @@ abstract class Reference extends ActiveRecord
     /**
      * @inheritdoc
      */
+    public function init()
+    {
+        parent::init();
+        $this->is_active = true;
+    }
+
+    /**
+     * @inheritdoc
+     */
     public function rules()
     {
         return array_merge(parent::rules(), [
@@ -105,10 +114,10 @@ abstract class Reference extends ActiveRecord
     public function attributeLabels()
     {
         return array_merge(parent::attributeLabels(), [
-            'name'           => 'Наименование',
-            'is_active'      => 'Активен',
-            'create_date'    => 'Дата создания',
-            'update_date'    => 'Дата изменения',
+            'name' => 'Наименование',
+            'is_active' => 'Активен',
+            'create_date' => 'Дата создания',
+            'update_date' => 'Дата изменения',
             'create_user_id' => 'Автор',
             'update_user_id' => 'Автор последнего изменения',
         ]);

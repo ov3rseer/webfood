@@ -15,10 +15,11 @@ use yii\helpers\Html;
  *
  * Свойства:
  * @property integer $complex_type_id
+ * @property float $price
  *
  * Отношения:
  * @property ComplexType $complexType
- * @property ComplexMeal[] $complexMeal
+ * @property ComplexMeal[] $complexMeals
  */
 class Complex extends Reference
 {
@@ -45,6 +46,7 @@ class Complex extends Reference
     {
         return array_merge(parent::rules(), [
             [['complex_type_id'], 'integer'],
+            [['price'], 'number', 'min' => 0],
             [['complex_type_id'], 'required'],
 
         ]);
@@ -57,6 +59,7 @@ class Complex extends Reference
     {
         return array_merge(parent::attributeLabels(), [
             'complex_type_id' => 'Тип комплекса',
+            'price' => 'Цена',
             'complexMeals' => 'Блюда (состав комплекса)',
         ]);
     }
@@ -112,18 +115,42 @@ class Complex extends Reference
                     /** @var ComplexMeal $rowModel */
                     $result = '';
                     if (!$rowModel->isNewRecord && isset($rowModel->meal->price)) {
-                        $result = Html::textInput(
-                            Html::getInputName($model, '[' . $tablePartRelation . '][' . $rowModel->id . ']price'),
-                            Html::encode($rowModel->meal->price),
-                            [
-                                'id' => Html::getInputId($model, '[' . $tablePartRelation . '][' . $rowModel->id . ']price'),
-                                'class' => 'form-control',
-                                'readonly' => true
-                            ]);
+                        $result = Html::encode($rowModel->meal->price);
                     }
                     return $result;
                 }
             ];
+            $parentResult['sum'] = [
+                'format' => 'raw',
+                'label' => 'Сумма',
+                'headerOptions' => ['style' => 'text-align:center;'],
+                'value' => function ($rowModel) use ($form, $model, $tablePartRelation) {
+                    /** @var ComplexMeal $rowModel */
+                    $result = 0;
+                    if (!$rowModel->isNewRecord && isset($rowModel->meal->price)) {
+                        $result = $rowModel->meal->price * $rowModel->meal_quantity;
+                    }
+                    return number_format($result, 2);
+                }
+            ];
+        }
+        return $parentResult;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function beforeSave($insert)
+    {
+        $parentResult = parent::beforeSave($insert);
+        if ($parentResult) {
+            $sum = 0;
+            foreach ($this->complexMeals as $complexMeal) {
+                if (isset($complexMeal->meal)) {
+                    $sum += $complexMeal->meal_quantity * $complexMeal->meal->price;
+                }
+            }
+            $this->price = $sum;
         }
         return $parentResult;
     }

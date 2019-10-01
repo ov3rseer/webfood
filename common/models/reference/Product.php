@@ -10,6 +10,7 @@ use yii\db\ActiveQuery;
  * @property integer    $product_code
  * @property integer    $unit_id
  * @property integer    $product_category_id
+ * @property float      $price
  *
  * Отношения:
  * @property Unit               $unit
@@ -40,8 +41,8 @@ class Product extends Reference
     {
         return array_merge(parent::rules(), [
             [['product_code', 'unit_id', 'product_category_id'], 'integer'],
-            [['product_code'], 'required'],
-
+            [['price'], 'number', 'min' => 0],
+            [['name', 'product_code', 'price', 'unit_id', 'product_category_id'], 'required'],
         ]);
     }
 
@@ -52,6 +53,7 @@ class Product extends Reference
     {
         return array_merge(parent::attributeLabels(), [
             'product_code'          => 'Код продукта',
+            'price'                 => 'Цена за единицу измерения',
             'unit_id'               => 'Единица измерения',
             'product_category_id'   => 'Категория продукта',
         ]);
