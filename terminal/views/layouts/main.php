@@ -8,10 +8,7 @@ use common\models\enum\MealType;
 use common\models\reference\Meal;
 use common\models\reference\MealCategory;
 use yii\helpers\Html;
-use yii\bootstrap\Nav;
-use yii\bootstrap\NavBar;
 use terminal\assets\AppAsset;
-use common\widgets\Alert;
 use yii\web\View;
 
 AppAsset::register($this);
@@ -28,26 +25,40 @@ AppAsset::register($this);
     <?php $this->head() ?>
 </head>
 <body>
+
 <?php
 
 $this->beginBody();
-$session = Yii::$app->session;
-if (!empty($session['meals'])) {
-    $menuItems[] = Html::a('ОТМЕНИТЬ ПОКУПКУ <span class="glyphicon glyphicon-remove"></span>', ['cart-form/delete-all-meals'], ['class' => 'btn btn-danger']);
-}
-$menuItems[] = Html::a('КОРЗИНА <span class="glyphicon glyphicon-shopping-cart"></span>  
-<span class="badge">' . (!empty($session['meals']) ? count($session['meals']) : 0) . '</span>', ['cart-form/index'], ['class' => 'btn btn-success']);
 
-NavBar::begin([
-    'brandLabel' => Yii::$app->name,
-    'brandUrl' => Yii::$app->homeUrl,
-    'options' => [
-        'class' => 'navbar-inverse navbar-sticky-top',
-    ],
-]);
-echo Nav::widget(['options' => ['class' => 'navbar-nav navbar-right'], 'items' => $menuItems]);
-NavBar::end();
 
+
+//        README
+//        К .js_e_cart_preview Нужно добавить класс active, если в корзине есть товары и убирать его, если она пуста
+//
+//        В .badge нужно писать количество товара, если оно есть. Если корзина пуста - то и этот элемент должен быть пуст - тогда он скроется автоматически (css)
+//        <span class="badge">6</span> - будет виден
+//        <span class="badge"></span> - исчезнет
+$active = empty($session['meals']) ? '' : 'active';
+echo Html::beginTag('div', ['class' => 'topbar container-fluid pt-3']);
+echo Html::tag('div', Html::tag('span', 'ВебЕда (название категории)', ['class' => 'mb-0 pl-3 ellipsis']), ['class' => 'category-title']);
+echo Html::beginTag('div', ['class' => 'js_e_cart_preview  ' . $active . ' e_cart_preview  text-right h-100']);
+
+// Кнопка "Отменить"
+echo Html::a(Html::tag('i', '', ['class' => 'fas fa-times-circle mr-2']) . 'Отменить',
+    '#', ['class' => 'js_e_reset wf-cart-btn-reset btn btn-lg ml-3']);
+
+// Кнопка "Корзина"
+echo Html::a(Html::tag('i', '', ['class' => 'fas fa-shopping-cart mr-2']) . 'Корзина ' . Html::tag('span', 'пуста ', ['class' => 'empty-only'])
+    . Html::tag('span', (!empty($session['meals']) ? count($session['meals']) : ''), ['class' => 'badge']),
+    '#', ['class' => 'wf-cart-btn-cart btn btn-lg ml-3 h-100']);
+
+// Кнопка "Оплатить"
+echo Html::a(Html::tag('i', '', ['class' => 'fas fa-money-bill-wave mr-2']) . 'Оплатить '
+    . Html::tag('span', Html::tag('span', '153<small>,50</small>', ['class' => 'js_e_sum']) . ' &#8381', ['class' => 'price']),
+    '#', ['class' => 'wf-cart-btn-checkout btn btn-lg ml-2 h-100']);
+
+echo Html::endTag('div');
+echo Html::endTag('div');
 
 /** @var MealCategory $category */
 $categories = MealCategory::find()
@@ -60,22 +71,44 @@ $categories = MealCategory::find()
     ])
     ->all();
 
-echo Html::beginTag('div', ['style' => 'position: relative;']);
 echo Html::beginTag('div', ['class' => 'left-sidebar']);
-echo Html::tag('h3', 'Категории блюд');
+echo Html::tag('div', '', ['class' => 'wf-js-fade-bg wf-js-sidebar-close']);
+echo Html::beginTag('ul', ['class' => 'list-unstyled']);
+
+echo Html::beginTag('li', ['class' => 'logo sidebar-item']);
+$logo = Html::tag('div', '', ['class' => 'icon logo-icon bg-contain', 'style' => 'background-image: url(../img/logo_color.svg);']);
+$logo .= Html::tag('span', 'ВебЕда', ['class' => 'menu-title py-0']);
+echo Html::a($logo, 'index');
+echo Html::endTag('li');
+
+echo Html::beginTag('li', ['class' => 'sidebar-item wf-js-sidebar-expand-btn e-border-bottom']);
+echo Html::tag('div', '', ['class' => 'icon fas fa-fw fa-bars']);
+echo Html::tag('span', '<small>Закрыть меню</small>', ['class' => 'menu-title']);
+echo Html::endTag('li');
+
+echo '<br>';
+
+echo Html::beginTag('li', ['class' => 'sidebar-item']);
+$logo = Html::tag('div', '', ['class' => 'icon fas fa-fw fa-th-list']);
+$logo .= Html::tag('span', 'Комплексы', ['class' => 'menu-title']);
+echo Html::a($logo, 'index');
+echo Html::endTag('li');
+
+
 foreach ($categories as $category) {
-    echo Html::a(Html::encode($category), ['site/index', 'categoryId' => $category->id], ['title' => Html::encode($category), 'class' => 'btn btn-success']);
+    echo Html::beginTag('li', ['class' => 'sidebar-item active']);
+    $logo = Html::tag('div', '', ['class' => 'icon fas fa-fw fa-coffee']);
+    $logo .= Html::tag('span', Html::encode($category), ['class' => 'menu-title']);
+    echo Html::a($logo, 'index');
+    echo Html::endTag('li');
 }
+
+echo Html::endTag('ul');
 echo Html::endTag('div');
 
-echo Html::beginTag('div', ['class' => 'right-placeholder']);
-echo Html::beginTag('div', ['class' => 'container-fluid']);
-echo Alert::widget();
+echo '<div class="container-fluid py-4 px-4">';
 echo $content;
-echo Html::endTag('div');
-echo Html::endTag('div');
-echo Html::endTag('div');
-echo Html::endTag('div');
+echo '</div>';
 
 $this->endBody();
 
