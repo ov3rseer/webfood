@@ -4,7 +4,7 @@ namespace common\models\reference;
 
 use backend\controllers\reference\ReferenceController;
 use backend\widgets\ActiveForm;
-use common\models\enum\MealType;
+use common\models\enum\FoodType;
 use common\models\tablepart\MealProduct;
 use ReflectionException;
 use yii\base\InvalidConfigException;
@@ -16,12 +16,14 @@ use yii\helpers\Html;
  *
  * Свойства
  * @property integer $meal_category_id
- * @property float   $price
- * @property string  $description
+ * @property integer $food_type_id
+ * @property float $price
+ * @property string $description
  *
  * Отношения:
  * @property MealProduct[] $mealProducts
  * @property MealCategory $mealCategory
+ * @property FoodType $foodType
  */
 class Meal extends Reference
 {
@@ -47,8 +49,8 @@ class Meal extends Reference
     public function rules()
     {
         return array_merge(parent::rules(), [
-            [['meal_category_id', 'meal_type_id'], 'integer'],
-            [['name', 'meal_category_id', 'meal_type_id'], 'required'],
+            [['meal_category_id', 'food_type_id'], 'integer'],
+            [['name', 'meal_category_id', 'food_type_id'], 'required'],
             [['description'], 'string'],
             [['price'], 'number', 'min' => 0],
         ]);
@@ -60,11 +62,11 @@ class Meal extends Reference
     public function attributeLabels()
     {
         return array_merge(parent::attributeLabels(), [
-            'mealProducts'      => 'Продукты (состав блюда)',
-            'meal_category_id'  => 'Категория блюда',
-            'meal_type_id'      => 'Тип блюда',
-            'price'             => 'Цена',
-            'description'       => 'Описание',
+            'mealProducts' => 'Продукты (состав блюда)',
+            'meal_category_id' => 'Категория блюда',
+            'food_type_id' => 'Тип блюда',
+            'price' => 'Цена',
+            'description' => 'Описание',
         ]);
     }
 
@@ -73,15 +75,15 @@ class Meal extends Reference
      */
     public function getMealCategory()
     {
-        return $this->hasOne(MealCategory::className(), ['id' => 'meal_category_id']);
+        return $this->hasOne(MealCategory::class, ['id' => 'meal_category_id']);
     }
 
     /**
      * @return ActiveQuery
      */
-    public function getMealType()
+    public function getFoodType()
     {
-        return $this->hasOne(MealType::className(), ['id' => 'meal_type_id']);
+        return $this->hasOne(FoodType::class, ['id' => 'food_type_id']);
     }
 
     /**
@@ -89,7 +91,7 @@ class Meal extends Reference
      */
     public function getMealProducts()
     {
-        return $this->hasMany(MealProduct::className(), ['parent_id' => 'id'])
+        return $this->hasMany(MealProduct::class, ['parent_id' => 'id'])
             ->orderBy('id ASC');
     }
 
@@ -99,7 +101,7 @@ class Meal extends Reference
     public function getTableParts()
     {
         return array_merge([
-            'mealProducts' => MealProduct::className(),
+            'mealProducts' => MealProduct::class,
         ], parent::getTableParts());
     }
 
@@ -137,9 +139,21 @@ class Meal extends Reference
                 'headerOptions' => ['style' => 'text-align:center;'],
                 'value' => function ($rowModel) use ($form, $model, $tablePartRelation) {
                     /** @var MealProduct $rowModel */
+                    $kilogram = Unit::find()->andWhere(['like', 'name_full', 'килограмм'])->scalar();
                     $result = 0;
-                    if (!$rowModel->isNewRecord && isset($rowModel->product->price)) {
-                        $result = $rowModel->product->price * $rowModel->product_quantity;
+                    if (!$rowModel->isNewRecord && isset($rowModel->product)) {
+                        if ($rowModel->product->unit_id == $rowModel->unit_id) {
+                            $result = $rowModel->product_quantity * $rowModel->product->price;
+                        } else {
+                            if ($rowModel->product->unit_id != $kilogram) {
+                                $result = $rowModel->product_quantity * $rowModel->product->price * 1000;
+                            } else {
+                                $productSum = $rowModel->product_quantity * $rowModel->product->price;
+                                if ($productSum != 0) {
+                                    $result = $productSum / 1000;
+                                }
+                            }
+                        }
                     }
                     return number_format($result, 2);
                 }
@@ -151,18 +165,30 @@ class Meal extends Reference
 
     /**
      * @inheritdoc
+     * @throws InvalidConfigException
      */
     public function beforeSave($insert)
     {
         $parentResult = parent::beforeSave($insert);
         if ($parentResult) {
             $sum = 0;
+            $kilogram = Unit::find()->andWhere(['like', 'name_full', 'килограмм'])->scalar();
             foreach ($this->mealProducts as $mealProduct) {
-                if (isset($mealProduct->product)) {
+                if (isset($mealProduct->product) && $kilogram) {
                     if ($mealProduct->product->unit_id == $mealProduct->unit_id) {
                         $sum += $mealProduct->product_quantity * $mealProduct->product->price;
+                    } else {
+                        if ($mealProduct->product->unit_id != $kilogram) {
+                            $sum += $mealProduct->product_quantity * $mealProduct->product->price * 1000;
+                        } else {
+                            $productSum = $mealProduct->product_quantity * $mealProduct->product->price;
+                            if ($productSum != 0) {
+                                $sum += $productSum / 1000;
+                            }
+                        }
                     }
                 }
+
             }
             $this->price = $sum;
         }

@@ -15,9 +15,9 @@ class m190807_082424_add_ref_meal_category extends Migration
         $this->createReferenceTable('{{%ref_meal_category}}');
         $this->insert('{{%sys_entity}}', ['class_name' => 'common\models\reference\MealCategory']);
 
-        $this->createEnumTable('{{%enum_meal_type}}', [
+        $this->createEnumTable('{{%enum_food_type}}', [
             1 => 'Прочее',
-            2 => 'Блюда для буфета',
+            2 => 'Для буфета',
             3 => 'Горячее питание',
         ]);
     }
@@ -27,7 +27,7 @@ class m190807_082424_add_ref_meal_category extends Migration
      */
     public function safeDown()
     {
-        $this->dropTable('{{%enum_meal_type}}');
+        $this->dropTable('{{%enum_food_type}}');
         $this->delete('{{%sys_entity}}', ['class_name' => 'common\models\reference\MealCategory']);
         $this->dropTable('{{%ref_meal_category}}');
     }

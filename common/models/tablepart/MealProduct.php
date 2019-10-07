@@ -39,11 +39,15 @@ class MealProduct extends TablePart
 
     /**
      * Проверка на правильность единицы измерения
+     * @throws \yii\base\InvalidConfigException
      */
     public function validateUnit()
     {
         if ($this->unit_id != $this->product->unit_id) {
-            $this->addError('unit_id', 'Выбрана неверная единица измерения. Выберите "' . Html::encode($this->product->unit) . '"');
+            $units = Unit::find()->andWhere(['like', 'name_full', 'грамм'])->column();
+            if (!in_array($this->unit_id, $units) || !in_array($this->product->unit_id, $units)) {
+                $this->addError('unit_id', 'Выбрана неверная единица измерения. Выберите "' . Html::encode($this->product->unit) . '"');
+            }
         }
     }
 
@@ -64,7 +68,7 @@ class MealProduct extends TablePart
      */
     public function getParent()
     {
-        return $this->hasOne(Meal::className(), ['id' => 'parent_id']);
+        return $this->hasOne(Meal::class, ['id' => 'parent_id']);
     }
 
     /**
@@ -72,7 +76,7 @@ class MealProduct extends TablePart
      */
     public function getProduct()
     {
-        return $this->hasOne(Product::className(), ['id' => 'product_id']);
+        return $this->hasOne(Product::class, ['id' => 'product_id']);
     }
 
     /**
@@ -80,6 +84,6 @@ class MealProduct extends TablePart
      */
     public function getUnit()
     {
-        return $this->hasOne(Unit::className(), ['id' => 'unit_id']);
+        return $this->hasOne(Unit::class, ['id' => 'unit_id']);
     }
 }

@@ -16,17 +16,18 @@ class m190807_084045_add_ref_complex extends Migration
             4 => 'Ужин',
         ]);
 
-        $this->createReferenceTable('{{%ref_complex}}',[
+        $this->createReferenceTable('{{%ref_complex}}', [
             'complex_type_id' => $this->integer()->notNull()->indexed()->foreignKey('{{%enum_complex_type}}', 'id'),
+            'food_type_id' => $this->integer()->notNull()->indexed()->foreignKey('{{%enum_food_type}}', 'id'),
             'price' => $this->decimal(10, 2)->notNull(),
             'description' => $this->text(),
         ]);
 
         $this->insert('{{%sys_entity}}', ['class_name' => 'common\models\reference\Complex']);
 
-        $this->createTablePartTable('{{%tab_complex_meal}}','{{%ref_complex}}',[
+        $this->createTablePartTable('{{%tab_complex_meal}}', '{{%ref_complex}}', [
             'meal_id' => $this->integer()->notNull()->indexed()->foreignKey('{{%ref_meal}}', 'id'),
-            'meal_quantity' => $this->decimal(10,2)->notNull(),
+            'meal_quantity' => $this->decimal(10, 2)->notNull(),
         ]);
     }
 

@@ -15,7 +15,7 @@ return [
         'is_active' => true,
     ],
     'product-category-3' => [
-        'name' => 'Мясо',
+        'name' => 'Мясо и фарш',
         'is_active' => true,
     ],
     'product-category-4' => [

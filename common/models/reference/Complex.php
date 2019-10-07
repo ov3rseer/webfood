@@ -5,6 +5,7 @@ namespace common\models\reference;
 use backend\controllers\reference\ReferenceController;
 use backend\widgets\ActiveForm;
 use common\models\enum\ComplexType;
+use common\models\enum\FoodType;
 use common\models\tablepart\ComplexMeal;
 use yii\base\InvalidConfigException;
 use yii\db\ActiveQuery;
@@ -15,10 +16,13 @@ use yii\helpers\Html;
  *
  * Свойства:
  * @property integer $complex_type_id
+ * @property integer $food_type_id
  * @property float $price
+ * @property string $description
  *
  * Отношения:
  * @property ComplexType $complexType
+ * @property FoodType $foodType
  * @property ComplexMeal[] $complexMeals
  */
 class Complex extends Reference
@@ -45,9 +49,10 @@ class Complex extends Reference
     public function rules()
     {
         return array_merge(parent::rules(), [
-            [['complex_type_id'], 'integer'],
+            [['complex_type_id', 'food_type_id'], 'integer'],
             [['price'], 'number', 'min' => 0],
-            [['complex_type_id'], 'required'],
+            [['description'], 'string'],
+            [['complex_type_id', 'food_type_id'], 'required'],
 
         ]);
     }
@@ -59,7 +64,9 @@ class Complex extends Reference
     {
         return array_merge(parent::attributeLabels(), [
             'complex_type_id' => 'Тип комплекса',
+            'food_type_id' => 'Тип комплекса',
             'price' => 'Цена',
+            'description' => 'Описание',
             'complexMeals' => 'Блюда (состав комплекса)',
         ]);
     }
@@ -70,6 +77,14 @@ class Complex extends Reference
     public function getComplexType()
     {
         return $this->hasOne(ComplexType::class, ['id' => 'complex_type_id']);
+    }
+
+    /**
+     * @return ActiveQuery
+     */
+    public function getFoodType()
+    {
+        return $this->hasOne(FoodType::class, ['id' => 'food_type_id']);
     }
 
     /**

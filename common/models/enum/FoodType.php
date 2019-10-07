@@ -5,7 +5,7 @@ namespace common\models\enum;
 /**
  * Тип блюда
  */
-class MealType extends Enum
+class FoodType extends Enum
 {
     /**
      * Прочее
@@ -13,12 +13,12 @@ class MealType extends Enum
     const OTHER = 1;
 
     /**
-     * Блюда для буфета
+     * Для буфета
      */
-    const BUFFET_MEALS = 2;
+    const BUFFET = 2;
 
     /**
      * Горячее питание
      */
-    const HOT_MEALS = 3;
+    const HOT = 3;
 }
