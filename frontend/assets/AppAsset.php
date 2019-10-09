@@ -14,9 +14,10 @@ class AppAsset extends AssetBundle
     public $css = [
         'css/site.css',
     ];
+
     public $js = [
-        'js/main.js',
     ];
+
     public $depends = [
         //'frontend\assets\FontAwesomeAsset',
         'common\assets\Html5ShivAsset',

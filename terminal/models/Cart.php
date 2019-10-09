@@ -6,7 +6,7 @@ use common\models\form\Report;
 use Yii;
 use yii\data\ArrayDataProvider;
 
-class CartForm extends Report
+class Cart extends Report
 {
     public $meals;
 

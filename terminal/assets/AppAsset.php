@@ -16,7 +16,6 @@ class AppAsset extends AssetBundle
     ];
     public $js = [
         'js/main.js',
-        'js/all.min.js',
     ];
     public $depends = [
         'terminal\assets\FontAwesomeAsset',

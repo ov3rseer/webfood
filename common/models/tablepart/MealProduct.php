@@ -6,7 +6,6 @@ use common\models\reference\Meal;
 use common\models\reference\Product;
 use common\models\reference\Unit;
 use yii\db\ActiveQuery;
-use yii\helpers\Html;
 
 /**
  * Модель строки табличной части "Продукты(состав блюда)" справочника "Блюдо"
@@ -46,7 +45,7 @@ class MealProduct extends TablePart
         if ($this->unit_id != $this->product->unit_id) {
             $units = Unit::find()->andWhere(['like', 'name_full', 'грамм'])->column();
             if (!in_array($this->unit_id, $units) || !in_array($this->product->unit_id, $units)) {
-                $this->addError('unit_id', 'Выбрана неверная единица измерения. Выберите "' . Html::encode($this->product->unit) . '"');
+                $this->addError('unit_id', 'Выбрана неверная единица измерения.');
             }
         }
     }

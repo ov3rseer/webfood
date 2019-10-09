@@ -4,7 +4,7 @@ use backend\controllers\system\SystemController;
 use backend\widgets\GridView\GridView;
 use backend\widgets\GridView\GridViewWithToolbar;
 use common\models\reference\Meal;
-use terminal\models\CartForm;
+use terminal\models\Cart;
 use terminal\models\MealForm;
 use yii\bootstrap\ButtonDropdown;
 use yii\bootstrap\ButtonGroup;
@@ -14,7 +14,7 @@ use yii\helpers\Html;
 use backend\widgets\ActiveForm;
 
 /* @var yii\web\View $this */
-/* @var CartForm $model */
+/* @var Cart $model */
 /* @var array $columns */
 /* @var array $dataProvider */
 
