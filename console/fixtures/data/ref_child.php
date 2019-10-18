@@ -14,36 +14,36 @@ $children['child-1'] = [
     'surname' => 'Ерофеев',
     'forename' => 'Михаил',
     'patronymic' => 'Валентинович',
-    'father_id' => $this->getFixtureModel(Father::className(), 'father-1')->primaryKey,
-    'school_class_id' => $this->getFixtureModel(SchoolClass::className(), 'school-class-1')->primaryKey,
+    'father_id' => $this->getFixtureModel(Father::class, 'father-1')->primaryKey,
+    'school_class_id' => $this->getFixtureModel(SchoolClass::class, 'school-class-1')->primaryKey,
 ];
 $children['child-2'] = [
     'surname' => 'Симонов',
     'forename' => 'Константин',
     'patronymic' => 'Савельевич',
-    'father_id' => $this->getFixtureModel(Father::className(), 'father-1')->primaryKey,
-    'school_class_id' => $this->getFixtureModel(SchoolClass::className(), 'school-class-2')->primaryKey,
+    'father_id' => $this->getFixtureModel(Father::class, 'father-1')->primaryKey,
+    'school_class_id' => $this->getFixtureModel(SchoolClass::class, 'school-class-2')->primaryKey,
 ];
 $children['child-3'] = [
     'surname' => 'Королёва',
     'forename' => 'Елизавета',
     'patronymic' => 'Андреевна',
-    'father_id' => $this->getFixtureModel(Father::className(), 'father-1')->primaryKey,
-    'school_class_id' => $this->getFixtureModel(SchoolClass::className(), 'school-class-3')->primaryKey,
+    'father_id' => $this->getFixtureModel(Father::class, 'father-1')->primaryKey,
+    'school_class_id' => $this->getFixtureModel(SchoolClass::class, 'school-class-3')->primaryKey,
 ];
 $children['child-4'] = [
     'surname' => 'Исакова',
     'forename' => 'Екатерина',
     'patronymic' => 'Владимировна',
-    'father_id' => $this->getFixtureModel(Father::className(), 'father-2')->primaryKey,
-    'school_class_id' => $this->getFixtureModel(SchoolClass::className(), 'school-class-4')->primaryKey,
+    'father_id' => $this->getFixtureModel(Father::class, 'father-2')->primaryKey,
+    'school_class_id' => $this->getFixtureModel(SchoolClass::class, 'school-class-4')->primaryKey,
 ];
 $children['child-5'] = [
     'surname' => 'Наумов',
     'forename' => 'Эдуард',
-    'patronymic' => 'Алекссандрович',
-    'father_id' => $this->getFixtureModel(Father::className(), 'father-2')->primaryKey,
-    'school_class_id' => $this->getFixtureModel(SchoolClass::className(), 'school-class-5')->primaryKey,
+    'patronymic' => 'Александрович',
+    'father_id' => $this->getFixtureModel(Father::class, 'father-2')->primaryKey,
+    'school_class_id' => $this->getFixtureModel(SchoolClass::class, 'school-class-5')->primaryKey,
 ];
 
 $result = [];
@@ -59,7 +59,7 @@ foreach ($keys as $key) {
         'surname' => $children[$key]['surname'],
         'forename' => $children[$key]['forename'],
         'patronymic' => $children[$key]['patronymic'],
-        'service_object_id' => $this->getFixtureModel(ServiceObject::className(), 'object-1')->primaryKey,
+        'service_object_id' => $this->getFixtureModel(ServiceObject::class, 'object-1')->primaryKey,
         'school_class_id' => $children[$key]['school_class_id'],
         'father_id' => $children[$key]['father_id'],
     ];

@@ -132,7 +132,7 @@ abstract class ActiveRecord extends yii\db\ActiveRecord
             if (isset($columns[$key])) {
                 $column = $columns[$key];
                 if (strpos($column->type, 'date') !== false || strpos($column->type, 'timestamp') !== false) {
-                    $result[$key] = function($model) use ($key) {
+                    $result[$key] = function ($model) use ($key) {
                         return (string)$model->$key;
                     };
                 }
@@ -140,8 +140,6 @@ abstract class ActiveRecord extends yii\db\ActiveRecord
         }
         return $result;
     }
-
-
 
     /**
      * Получение публичных свойств класса
@@ -345,8 +343,8 @@ abstract class ActiveRecord extends yii\db\ActiveRecord
                         $query = $this->$getter();
                         if ($query instanceof ActiveQuery) {
                             $this->_attributesWithRelations[$attribute] = [
-                                'name'   => lcfirst($relation),
-                                'class'  => $query->modelClass,
+                                'name' => lcfirst($relation),
+                                'class' => $query->modelClass,
                                 'method' => $getter,
                             ];
                         }
@@ -455,7 +453,7 @@ abstract class ActiveRecord extends yii\db\ActiveRecord
                     // для возможности сохранения нового документа сразу с табличной частью
                     if ($attribute != 'parent_id') {
                         foreach ($errors as $error) {
-                            $this->addError('[' . $relationName  . '][' . $tablePartRow->primaryKey . ']' . $attribute, $error);
+                            $this->addError('[' . $relationName . '][' . $tablePartRow->primaryKey . ']' . $attribute, $error);
                         }
                     }
                 }
@@ -576,7 +574,7 @@ abstract class ActiveRecord extends yii\db\ActiveRecord
         if (!isset($rulesForProcessingTableParts[$relationName]) ||
             !isset($rulesForProcessingTableParts[$relationName][$rule]['function']) ||
             !is_callable($rulesForProcessingTableParts[$relationName][$rule]['function'])) {
-            throw new Exception('Ошибка в ActiveRecord::processTablePartByRule(). Неизвестное правило заполнения табличной части "' . $relationName . '": '.$rule);
+            throw new Exception('Ошибка в ActiveRecord::processTablePartByRule(). Неизвестное правило заполнения табличной части "' . $relationName . '": ' . $rule);
         }
         $ruleFunction = $rulesForProcessingTableParts[$relationName][$rule]['function'];
         call_user_func($ruleFunction, $this);

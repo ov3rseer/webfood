@@ -3,13 +3,15 @@
 namespace common\models\reference;
 
 use common\models\tablepart\MenuComplex;
+use common\models\tablepart\MenuMeal;
 use yii\db\ActiveQuery;
 
 /**
- * Модель справочника "Комплекс"
+ * Модель справочника "Меню"
  *
  * Отношения:
- * @property MenuComplex[] $menuComplexes
+ * @property MenuComplex[]  $menuComplexes
+ * @property MenuMeal[]     $menuMeals
  */
 class Menu extends Reference
 {
@@ -35,7 +37,8 @@ class Menu extends Reference
     public function attributeLabels()
     {
         return array_merge(parent::attributeLabels(), [
-            'menuComplexes' => 'Комплексы (состав меню)',
+            'menuComplexes' => 'Комплексы',
+            'menuMeals' => 'Блюда',
         ]);
     }
 
@@ -44,7 +47,16 @@ class Menu extends Reference
      */
     public function getMenuComplexes()
     {
-        return $this->hasMany(MenuComplex::className(), ['parent_id' => 'id'])
+        return $this->hasMany(MenuComplex::class, ['parent_id' => 'id'])
+            ->orderBy('id ASC');
+    }
+
+    /**
+     * @return ActiveQuery
+     */
+    public function getMenuMeals()
+    {
+        return $this->hasMany(MenuMeal::class, ['parent_id' => 'id'])
             ->orderBy('id ASC');
     }
 
@@ -54,7 +66,8 @@ class Menu extends Reference
     public function getTableParts()
     {
         return array_merge([
-            'menuComplexes' => MenuComplex::className(),
+            'menuComplexes' => MenuComplex::class,
+            'menuMeals' => MenuMeal::class,
         ], parent::getTableParts());
     }
 }

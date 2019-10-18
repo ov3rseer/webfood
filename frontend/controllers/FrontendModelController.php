@@ -8,7 +8,6 @@ use common\models\form\Form;
 use Yii;
 use yii\base\InvalidConfigException;
 use yii\filters\AccessControl;
-use yii\filters\VerbFilter;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\web\Response;
@@ -44,7 +43,7 @@ class FrontendModelController extends Controller
     {
         return array_merge(parent::actions(), [
             'index' => [
-                'class' => 'frontend\actions\form\base\IndexAction',
+                'class' => 'frontend\actions\base\IndexAction',
                 'modelClass' => $this->modelClass,
                 'viewPath' => '@frontend/views/base/index',
             ],
@@ -65,13 +64,6 @@ class FrontendModelController extends Controller
                         'allow' => true,
                         'roles' => ['super-admin'],
                     ],
-                ],
-            ],
-            'verbs' => [
-                'class' => VerbFilter::class,
-                'actions' => [
-                    'delete' => ['POST'],
-                    'delete-checked' => ['POST'],
                 ],
             ],
         ]);

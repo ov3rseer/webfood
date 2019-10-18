@@ -1,6 +1,6 @@
 <?php
 
-namespace frontend\models\serviceObject\request;
+namespace frontend\models\serviceObject;
 
 use common\components\DateTime;
 use common\models\cross\RequestDateProduct;

@@ -13,7 +13,7 @@ use common\models\tablepart\ServiceObjectContract;
 use common\models\tablepart\RequestDate;
 use Exception;
 use frontend\controllers\FrontendModelController;
-use frontend\models\serviceObject\request\RequestForm;
+use frontend\models\serviceObject\RequestForm;
 use Yii;
 use yii\base\InvalidConfigException;
 use yii\base\UserException;
@@ -29,7 +29,7 @@ class RequestController extends FrontendModelController
     /**
      * @var string имя класса модели
      */
-    public $modelClass = 'frontend\models\serviceObject\request\RequestForm';
+    public $modelClass = 'frontend\models\serviceObject\RequestForm';
 
     /**
      * @inheritdoc
@@ -147,7 +147,7 @@ class RequestController extends FrontendModelController
 
         if (empty($contracts)) {
             Yii::$app->session->setFlash('info', 'У вас нет активных договоров.');
-            return $this->goHome();
+            return $this->redirect(Yii::$app->request->referrer);
         }
 
         $model->load($requestData);

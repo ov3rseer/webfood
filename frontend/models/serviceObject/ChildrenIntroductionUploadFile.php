@@ -1,6 +1,6 @@
 <?php
 
-namespace frontend\models\serviceObject\childrenIntroduction;
+namespace frontend\models\serviceObject;
 
 use backend\widgets\ActiveField;
 use common\models\enum\UserType;
@@ -130,7 +130,6 @@ class ChildrenIntroductionUploadFile extends SystemForm
                         'service_object_id' => $serviceObject->id,
                         'school_class_id' => $schoolClass->id
                     ]);
-
 
                     if (!$child) {
                         $cardNumber = '';

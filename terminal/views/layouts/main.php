@@ -1,6 +1,7 @@
 <?php
 
 /* @var $this View */
+
 /* @var $content string */
 
 use common\models\enum\FoodType;
@@ -48,7 +49,10 @@ $categories = MealCategory::find()
     ->all();
 
 $categoryId = Yii::$app->request->get('categoryId') ?? null;
+
+$session = Yii::$app->session;
 $active = !empty($session['meals']) ? 'active' : '';
+$sum = !empty($session['sum']) ? explode('.', $session['sum']) : [];
 
 echo Html::beginTag('div', ['class' => 'topbar container-fluid pt-3']);
 echo Html::tag('div', Html::tag('span', Yii::$app->view->title, ['class' => 'mb-0 pl-3 ellipsis']), ['class' => 'category-title']);
@@ -62,7 +66,7 @@ echo Html::a(Html::tag('i', '', ['class' => 'fas fa-shopping-cart mr-2']) . 'К�
     ['cart-form/index'], ['class' => 'wf-cart-btn-cart btn btn-lg ml-3 h-100']);
 // Кнопка "Оплатить"
 echo Html::a(Html::tag('i', '', ['class' => 'fas fa-money-bill-wave mr-2']) . 'Оплатить '
-    . Html::tag('span', Html::tag('span', '153<small>,50</small>', ['class' => 'js_e_sum']) . ' &#8381', ['class' => 'price']),
+    . Html::tag('span', Html::tag('span', (!empty($sum) ? $sum[0] . '<small>,' . $sum[1] . '</small>' : 0), ['class' => 'js_e_sum']) . ' &#8381', ['class' => 'price']),
     '#', ['class' => 'wf-cart-btn-checkout btn btn-lg ml-2 h-100']);
 echo Html::endTag('div');
 echo Html::endTag('div');

@@ -4,7 +4,9 @@ namespace common\models\form;
 
 use backend\widgets\ActiveField;
 use common\models\enum\Enum;
+use yii\base\InvalidParamException;
 use yii\base\Model;
+use yii\base\UnknownMethodException;
 use yii\db\ActiveQuery;
 use yii\db\ActiveQueryInterface;
 use yii\helpers\Inflector;
@@ -154,5 +156,52 @@ class Form extends Model
             }
         }
         return parent::__get($name);
+    }
+
+    /**
+     * Returns the relation object with the specified name.
+     * A relation is defined by a getter method which returns an [[ActiveQueryInterface]] object.
+     * It can be declared in either the Active Record class itself or one of its behaviors.
+     * @param string $name the relation name, e.g. `orders` for a relation defined via `getOrders()` method (case-sensitive).
+     * @param bool $throwException whether to throw exception if the relation does not exist.
+     * @return ActiveQueryInterface|ActiveQuery the relational query object. If the relation does not exist
+     * and `$throwException` is `false`, `null` will be returned.
+     * @throws \ReflectionException
+     */
+    public function getRelation($name, $throwException = true)
+    {
+        $getter = 'get' . $name;
+        try {
+            // the relation could be defined in a behavior
+            $relation = $this->$getter();
+        } catch (UnknownMethodException $e) {
+            if ($throwException) {
+                throw new InvalidParamException(get_class($this) . ' has no relation named "' . $name . '".', 0, $e);
+            } else {
+                return null;
+            }
+        }
+        if (!$relation instanceof ActiveQueryInterface) {
+            if ($throwException) {
+                throw new InvalidParamException(get_class($this) . ' has no relation named "' . $name . '".');
+            } else {
+                return null;
+            }
+        }
+
+        if (method_exists($this, $getter)) {
+            // relation name is case sensitive, trying to validate it when the relation is defined within this class
+            $method = new \ReflectionMethod($this, $getter);
+            $realName = lcfirst(substr($method->getName(), 3));
+            if ($realName !== $name) {
+                if ($throwException) {
+                    throw new InvalidParamException('Relation names are case sensitive. ' . get_class($this) . " has a relation named \"$realName\" instead of \"$name\".");
+                } else {
+                    return null;
+                }
+            }
+        }
+
+        return $relation;
     }
 }

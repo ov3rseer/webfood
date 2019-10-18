@@ -2,7 +2,6 @@
 
 namespace frontend\controllers;
 
-use common\models\enum\UserType;
 use frontend\models\site\PasswordResetRequestForm;
 use frontend\models\site\ResendVerificationEmailForm;
 use frontend\models\site\ResetPasswordForm;
@@ -81,20 +80,7 @@ class SiteController extends Controller
         if (Yii::$app->user->isGuest) {
             return $this->redirect(['site/login']);
         }
-        switch (Yii::$app->user->identity->user_type_id) {
-            case UserType::ADMIN:
-                return $this->render('@frontend/views/admin/index');
-            case UserType::SERVICE_OBJECT:
-                return $this->render('@frontend/views/service-object/index');
-            case UserType::EMPLOYEE:
-                return $this->render('@frontend/views/employee/index');
-            case UserType::FATHER:
-                return $this->render('@frontend/views/father/index');
-            case UserType::PRODUCT_PROVIDER:
-                return $this->render('@frontend/views/product-provider/index');
-            default:
-                return $this->render('index');
-        }
+        return $this->render('index');
     }
 
     /**

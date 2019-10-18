@@ -2,10 +2,8 @@
 
 namespace common\components\pgsql;
 
-use Yii;
 use yii\base\NotSupportedException;
 use yii\db\Exception;
-use yii\rbac\Permission;
 
 /**
  * Расширенный класс миграции
@@ -35,11 +33,6 @@ class Migration extends \yii\db\Migration
      */
     protected $tablesForSchemaRefresh = [];
 
-    public function __construct($config = [])
-    {
-        parent::__construct($config);
-    }
-
     /**
      * @inheritdoc
      */
@@ -52,7 +45,7 @@ class Migration extends \yii\db\Migration
                     $this->createIndexWithAutoName($table, $column, $type->isUnique);
                 }
                 if ($type->foreignKeyData) {
-                    $this->addForeignKeyWithAutoName($table, $column, $type->foreignKeyData[0], $type->foreignKeyData[1], 'CASCADE');
+                    $this->addForeignKeyWithAutoName($table, $column, $type->foreignKeyData[0], $type->foreignKeyData[1]);
                 }
             }
         }
@@ -88,7 +81,7 @@ class Migration extends \yii\db\Migration
                 $this->createIndexWithAutoName($table, $column, $type->isUnique);
             }
             if ($type->foreignKeyData) {
-                $this->addForeignKeyWithAutoName($table, $column, $type->foreignKeyData[0], $type->foreignKeyData[1], 'CASCADE');
+                $this->addForeignKeyWithAutoName($table, $column, $type->foreignKeyData[0], $type->foreignKeyData[1]);
             }
         }
         $this->refreshTableSchema($table);
@@ -424,71 +417,5 @@ class Migration extends \yii\db\Migration
             'id' => $this->primaryKey(),
         ];
         $this->createTable($table, array_merge($columnsBefore, $specificColumns));
-    }
-
-    /**
-     * Получение массива прав
-     * @param integer $permissionCode Десятичное представление комбинации назначаемых прав
-     * @param string $controllerPath
-     * @param string $descriptionTitle
-     * @return array
-     * @throws \Exception
-     */
-    protected function getPermissions($controllerPath, $descriptionTitle, $permissionCode = 0)
-    {
-        $permissionArray = [];
-        $permissionList  = [
-            'Index'   => 'Журнал',
-            'View'    => 'Просмотр',
-            'Create'  => 'Создать',
-            'Update'  => 'Изменить',
-            'Delete'  => 'Удалить',
-            'Restore' => 'Восстановить',
-        ];
-
-        $binPermissionCode = strrev(decbin($permissionCode));
-
-        $i = 0;
-        foreach ($permissionList as $name => $description) {
-            if ($binPermissionCode[$i]) {
-                $permissionArray[] = [
-                    'name' => $controllerPath.'.'.$name,
-                    'description' => $descriptionTitle.': '.$description,
-                ];
-            }
-            $i++;
-        }
-
-        return $permissionArray;
-    }
-
-    /**
-     * Добавление прав
-     * @param array $permissionForAdd
-     * @throws \Exception
-     */
-    protected function addPermissions($permissionForAdd = [])
-    {
-        $auth = Yii::$app->authManager;
-        foreach ($permissionForAdd as $permissionData) {
-            $permission = new Permission($permissionData);
-            $auth->add($permission);
-        }
-    }
-
-    /**
-     * Удаление прав
-     * @param array $permissionForDelete
-     * @throws \Exception
-     */
-    protected function deletePermissions($permissionForDelete = [])
-    {
-        $auth = Yii::$app->authManager;
-        foreach ($permissionForDelete as $permissionData) {
-            $permission = $auth->getPermission($permissionData['name']);
-            if ($permission) {
-                $auth->remove($permission);
-            }
-        }
     }
 }

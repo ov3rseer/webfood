@@ -2,22 +2,22 @@
 
 namespace common\models\tablepart;
 
-use common\models\reference\Complex;
+use common\models\reference\Meal;
 use common\models\reference\Menu;
 use yii\db\ActiveQuery;
 
 /**
- * Модель строки табличной части "Комплексы" справочника "Меню"
+ * Модель строки табличной части "Блюда" справочника "Меню"
  *
  * Свойства:
  * @property integer $parent_id
- * @property integer $complex_id
+ * @property integer $meal_id
  *
  * Отношения:
  * @property Menu       $parent
- * @property Complex    $complex
+ * @property Meal       $meal
  */
-class MenuComplex extends TablePart
+class MenuMeal extends TablePart
 {
     /**
      * @inheritdoc
@@ -25,8 +25,8 @@ class MenuComplex extends TablePart
     public function rules()
     {
         return array_merge(parent::rules(), [
-            [['complex_id'], 'integer'],
-            [['complex_id'], 'required'],
+            [['meal_id'], 'integer'],
+            [['meal_id'], 'required'],
         ]);
     }
 
@@ -36,7 +36,7 @@ class MenuComplex extends TablePart
     public function attributeLabels()
     {
         return array_merge(parent::attributeLabels(), [
-            'complex_id' => 'Комплекс',
+            'meal_id' => 'Комплекс',
         ]);
     }
 
@@ -51,8 +51,8 @@ class MenuComplex extends TablePart
     /**
      * @return ActiveQuery
      */
-    public function getComplex()
+    public function getMeal()
     {
-        return $this->hasOne(Complex::class, ['id' => 'complex_id']);
+        return $this->hasOne(Meal::class, ['id' => 'meal_id']);
     }
 }

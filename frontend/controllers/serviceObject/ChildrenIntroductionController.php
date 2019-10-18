@@ -4,8 +4,8 @@ namespace frontend\controllers\serviceObject;
 
 use common\helpers\ArrayHelper;
 use frontend\controllers\FrontendModelController;
-use frontend\models\serviceObject\childrenIntroduction\ChildrenIntroductionForm;
-use frontend\models\serviceObject\childrenIntroduction\ChildrenIntroductionUploadFile;
+use frontend\models\serviceObject\ChildrenIntroductionForm;
+use frontend\models\serviceObject\ChildrenIntroductionUploadFile;
 use PhpOffice\PhpSpreadsheet\Exception as SpreedsheetException;
 use PhpOffice\PhpSpreadsheet\Reader\Exception;
 use Yii;
@@ -21,7 +21,7 @@ class ChildrenIntroductionController extends FrontendModelController
     /**
      * @var string имя класса модели
      */
-    public $modelClass = 'frontend\models\serviceObject\childrenIntroduction\ChildrenIntroductionForm';
+    public $modelClass = 'frontend\models\serviceObject\ChildrenIntroductionForm';
 
     /**
      * @inheritdoc

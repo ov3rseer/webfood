@@ -83,6 +83,8 @@ function eTerminalQtyButtons() {
     $("input[type=number]").change(function () {
         // при изменении количества, если товар добавлен в корзину - добавляем css-класс active элементу с data-e_product_id равным id товара (id записан как name у инпута)
         var id = $(this).attr("name");
+        var category = $(this).data("category");
+        var price = $(this).data("price");
         var cards = $("*[data-e_product_id=" + id + "]");
         var qty_btn_remove = $('.js_e_qty_remove[data-for="' + id + '"]');
         var qty = $(this).val();
@@ -104,8 +106,8 @@ function eTerminalQtyButtons() {
         $('.js_e_qty[data-for="' + id + '"]').text(qty);
 
         $.ajax({
-            url: '../cart/cart-revision',
-            data: {'qty' : qty, 'id': id},
+            url: location.origin + '/terminal/cart/cart-revision',
+            data: {'qty': qty, 'id': id, 'category': category, 'price': price},
             dataType: 'json',
             type: 'POST',
         });

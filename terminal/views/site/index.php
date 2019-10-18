@@ -22,7 +22,6 @@ if (!empty($foods)) {
     echo Html::beginTag('div', ['class' => 'row']);
     foreach ($foods as $foodId => $food) {
         $price = explode('.', $food['price']);
-
         echo Html::beginTag('div', ['class' => 'col-xs-4 px-4 py-3 h-3v']);
         echo Html::beginTag('div', ['class' => 'e_product e_product-card rounded shadow embed-responsive h-100', 'data' => ['e_product_id' => $foodId]]);
 
@@ -60,8 +59,16 @@ if (!empty($foods)) {
         echo Html::endTag('div');
 
         echo Html::beginTag('div', ['class' => 'col-xs-4']);
-        echo Html::input('number', $foodId, $session['meals'][$foodId] ?? 0, ['class' => 'e_product-quantity-input hidden', 'min' => 0, 'step' => 1]);
-        echo Html::tag('label', 0, ['class' => 'js_e_qty e_qty_addon m-0', 'data' => ['for' => $foodId, 'unit' => ' шт.']]);
+        echo Html::input('number', $foodId, $session['meals'][$foodId] ?? 0, [
+            'class' => 'e_product-quantity-input hidden',
+            'min' => 0,
+            'step' => 1,
+            'data' => [
+                'category' => $food['category'],
+                'price' => $food['price'],
+            ]
+        ]);
+        echo Html::tag('label', null, ['class' => 'js_e_qty e_qty_addon m-0', 'data' => ['for' => $foodId, 'unit' => ' шт.']]);
         echo Html::endTag('div');
 
         echo Html::beginTag('div', ['class' => 'col-xs-4']);

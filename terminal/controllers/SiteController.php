@@ -46,8 +46,8 @@ class SiteController extends Controller
         }
         $query = $query->andWhere([
             'is_active' => true,
-            'food_type_id' => FoodType::BUFFET]
-        );
+            'food_type_id' => FoodType::BUFFET
+        ]);
 
         $countQuery = clone $query;
         $pages = new Pagination([

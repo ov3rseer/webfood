@@ -1,6 +1,6 @@
 <?php
 
-namespace frontend\models\serviceObject\childrenIntroduction;
+namespace frontend\models\serviceObject;
 
 use common\models\enum\UserType;
 use common\models\reference\CardChild;
@@ -57,7 +57,7 @@ class ChildrenIntroductionForm extends SystemForm
      */
     public function getName()
     {
-        return 'Загрузка учащихся';
+        return 'Ученики';
     }
 
     /**
