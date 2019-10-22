@@ -63,7 +63,7 @@ class Complex extends Reference
     public function attributeLabels()
     {
         return array_merge(parent::attributeLabels(), [
-            'complex_type_id' => 'Тип комплекса',
+            'complex_type_id' => 'Период питания',
             'food_type_id' => 'Тип комплекса',
             'price' => 'Цена',
             'description' => 'Описание',

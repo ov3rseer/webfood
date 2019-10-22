@@ -47,50 +47,40 @@ class CartController extends TerminalModelController
     /**
      * @return string
      */
-    public function actionDeleteAllMeals()
+    public function actionCartEmptying()
     {
         $session = Yii::$app->session;
         if (isset($session['meals'])) {
             unset($session['meals']);
         }
-        return $this->redirect(Yii::$app->request->referrer);
     }
 
-    /**
-     * @return string
-     */
-    public function actionDeleteMeal()
-    {
-        $session = Yii::$app->session;
-        $mealId = Yii::$app->request->post('mealId');
-        if ($mealId && isset($session['meals'])) {
-            $meals = $session['meals'];
-            if (isset($meals[$mealId])) {
-                unset($meals[$mealId]);
-                $session['meals'] = $meals;
-            }
-        }
-        return $this->redirect(Yii::$app->request->referrer);
-    }
-
-    public function actionCartRevision()
-    {
-        $requestData = Yii::$app->request->post();
-        $session = Yii::$app->session;
-        if (isset($requestData['qty']) && isset($requestData['id'])) {
-            $quantity = $requestData['qty'];
-            $id = $requestData['id'];
-            if (!isset($session['meals'])) {
-                $session->set('meals', []);
-            }
-            $meals = $session['meals'];
-            if ($quantity == 0) {
-                unset($meals[$id]);
-            } else {
-                $meals[$id] = $quantity;
-            }
-            $session['meals'] = $meals;
-        }
-        var_dump($session['meals']);
-    }
+//    public function actionCartRevision()
+//    {
+//        $id = Yii::$app->request->post('id');
+//        $qty = Yii::$app->request->post('qty');
+//        $price = Yii::$app->request->post('price');
+//        $category = Yii::$app->request->post('category');
+//        $session = Yii::$app->session;
+//        if (isset($id) && isset($qty) && isset($price) && isset($category)) {
+//            $categoryType = $category == 'Комплексы' ? 'complexes' : 'meals';
+//
+//            if (!isset($session[$categoryType])) {
+//                $session->set($categoryType, []);
+//            }
+//            $food = $session[$categoryType];
+//
+//
+//
+//            if (!isset($session['sum'])) {
+//                $sum = $qty * $price;
+//                $session['sum'] = $sum;
+//            } else {
+//                $totalSum = $session['sum'];
+//                $totalSum += $qty * $price;
+//                $session['sum'] = $totalSum;
+//            }
+//            $session[$categoryType] = $food;
+//        }
+//    }
 }
