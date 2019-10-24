@@ -7,6 +7,9 @@ use yii\base\InvalidConfigException;
 use yii\base\UserException;
 use yii\data\ActiveDataProvider;
 
+/**
+ * Форма добавления категорий продуктов
+ */
 class ProductCategoryForm extends CategoryForm
 {
     /**

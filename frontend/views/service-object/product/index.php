@@ -40,7 +40,7 @@ echo $form->field($model, 'product_code')->textInput(['class' => 'form-control']
 echo $form->field($model, 'price')->textInput(['class' => 'form-control']);
 echo $form->field($model, 'unit_id')->dropDownList($units, ['class' => 'form-control']);
 echo $form->field($model, 'product_category_id')->dropDownList($productCategories, ['class' => 'form-control']);
-echo Html::submitInput('Добавить', ['class' => 'btn btn-success']);
+echo Html::submitInput('Сохранить', ['class' => 'btn btn-success']);
 echo Html::endTag('div');
 echo Html::beginTag('div', ['class' => 'col-xs-8']);
 

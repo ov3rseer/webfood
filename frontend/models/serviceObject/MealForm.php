@@ -6,12 +6,21 @@ use common\models\enum\FoodType;
 use common\models\form\SystemForm;
 use common\models\reference\Meal;
 use common\models\reference\MealCategory;
+use common\models\reference\Product;
+use common\models\reference\Unit;
 use yii\base\InvalidConfigException;
+use yii\base\UserException;
+use yii\data\BaseDataProvider;
 use yii\db\ActiveQuery;
 use yii\helpers\Html;
 
 /**
  * Форма добавления блюд
+ *
+ * Свойства:
+ * @property string $name наименование
+ * @property BaseDataProvider $dataProvider источник данных
+ * @property array $columns колонки
  */
 class MealForm extends SystemForm
 {
@@ -189,10 +198,35 @@ class MealForm extends SystemForm
     }
 
     /**
-     * @return mixed|void
+     * @return array
+     * @throws InvalidConfigException
+     */
+    public function getProducts()
+    {
+        return Product::find()->select('name')->indexBy('id')->column();
+    }
+
+    /**
+     * @return array
+     * @throws InvalidConfigException
+     */
+    public function getUnits()
+    {
+        return Unit::find()->select('name_full')->indexBy('id')->column();
+    }
+
+    /**
+     * @throws UserException
      */
     public function proceed()
     {
-
+        $meal = new Meal();
+        $meal->is_active = true;
+        $meal->name = $this->name;
+        $meal->meal_category_id = $this->meal_category_id;
+        $meal->food_type_id = $this->food_type_id;
+        $meal->description = $this->description;
+        $meal->save();
     }
+
 }

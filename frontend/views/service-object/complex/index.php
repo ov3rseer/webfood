@@ -5,7 +5,6 @@ use backend\widgets\GridView\GridView;
 use common\models\enum\ComplexType;
 use common\models\enum\FoodType;
 use common\models\reference\Complex;
-use common\models\reference\Meal;
 use yii\data\ActiveDataProvider;
 use yii\helpers\Html;
 use yii\helpers\Url;
@@ -42,7 +41,7 @@ echo Html::endTag('div');
 echo Html::beginTag('div', ['class' => 'row']);
 echo Html::beginTag('div', ['class' => 'col-xs-12']);
 echo $form->field($model, 'description')->textarea(['class' => 'form-control', 'style' => 'max-width:100%; min-width:100%;']);
-echo Html::submitInput('Добавить', ['class' => 'btn btn-success']);
+echo Html::submitInput('Сохранить', ['class' => 'btn btn-success']);
 echo Html::endTag('div');
 echo Html::endTag('div');
 

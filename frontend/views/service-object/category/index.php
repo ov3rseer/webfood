@@ -39,7 +39,7 @@ foreach ($model->getFieldsOptions() as $field => $fieldOptions) {
         echo $form->autoField($model, $field, $fieldOptions);
     }
 }
-echo Html::submitInput('Добавить', ['class' => 'btn btn-success']);
+echo Html::submitInput('Сохранить', ['class' => 'btn btn-success']);
 echo Html::endTag('div');
 echo Html::beginTag('div', ['class' => 'col-xs-8']);
 
