@@ -5,13 +5,14 @@ use backend\widgets\ActiveForm;
 use backend\widgets\GridView\GridViewWithToolbar;
 use common\models\reference\MealCategory;
 use common\models\reference\ProductCategory;
+use frontend\models\serviceObject\CategoryForm;
 use yii\bootstrap\Modal;
 use yii\helpers\Html;
 use yii\helpers\Url;
 use yii\widgets\Pjax;
 
 /* @var yii\web\View $this */
-/* @var common\models\form\Report $model */
+/* @var CategoryForm $model */
 
 $this->title = $model->getName();
 $this->params['breadcrumbs'][] = $this->title;
@@ -62,6 +63,7 @@ echo GridViewWithToolbar::widget([
                     $modalId = 'update-modal-' . $rowModel->id;
                     $showModalButtonId = 'show-modal-button-' . $rowModel->id;
                     $updateButtonId = 'update-button-' . $rowModel->id;
+                    unset($url);
 
                     Modal::begin([
                         'id' => $modalId,
@@ -72,7 +74,6 @@ echo GridViewWithToolbar::widget([
                             'data-id' => $rowModel->id,
                         ]),
                     ]);
-                    echo Html::tag('span', '', ['id' => 'modelContent']);
                     echo Html::beginTag('div', ['class' => 'row']);
                     echo Html::beginTag('div', ['class' => 'col-xs-12']);
                     echo Html::label('Наименование категории', 'category-name-' . $rowModel->id);
@@ -96,8 +97,8 @@ echo GridViewWithToolbar::widget([
                                 $('#" . $modalId . "').modal('hide');                   
                                 e.preventDefault();
                                 var id = $(this).data('id');
-                                var is_active = $('#active-" . $rowModel->id . "').is(':checked');
                                 var category_name = $('#category-name-" . $rowModel->id . "').val();
+                                var is_active = $('#active-" . $rowModel->id . "').is(':checked');
                                 $.ajax({
                                     url: 'update',
                                     data: {id: id, is_active: is_active, category_name: category_name},
@@ -120,6 +121,7 @@ echo GridViewWithToolbar::widget([
                 'delete' => function ($url, $rowModel) use ($pjaxId) {
                     /** @var MealCategory|ProductCategory $rowModel */
                     $buttonId = 'delete-button-' . $rowModel->id;
+                    unset($url);
                     $this->registerJs("
                         $('#" . $buttonId . "').click(function(e){
                             e.preventDefault();

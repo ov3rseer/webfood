@@ -40,8 +40,9 @@ class Product extends Reference
     public function rules()
     {
         return array_merge(parent::rules(), [
-            [['product_code', 'unit_id', 'product_category_id'], 'integer'],
+            [['unit_id', 'product_category_id'], 'integer'],
             [['price'], 'number', 'min' => 0],
+            [['product_code'], 'string', 'max' => 9],
             [['name', 'product_code', 'price', 'unit_id', 'product_category_id'], 'required'],
         ]);
     }

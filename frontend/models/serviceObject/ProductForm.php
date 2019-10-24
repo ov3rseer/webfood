@@ -7,11 +7,19 @@ use common\models\reference\Product;
 use common\models\reference\ProductCategory;
 use common\models\reference\Unit;
 use yii\base\InvalidConfigException;
+use yii\base\UserException;
+use yii\data\ActiveDataProvider;
+use yii\data\BaseDataProvider;
 use yii\db\ActiveQuery;
 use yii\helpers\Html;
 
 /**
  * Форма добавления продуктов
+ *
+ * Свойства:
+ * @property string $name наименование
+ * @property BaseDataProvider $dataProvider источник данных отчета
+ * @property array $columns колонки отчета
  */
 class ProductForm extends SystemForm
 {
@@ -19,6 +27,11 @@ class ProductForm extends SystemForm
      * @var string название продукта
      */
     public $name;
+
+    /**
+     * @var string код продукта
+     */
+    public $product_code;
 
     /**
      * @var string цена
@@ -53,6 +66,7 @@ class ProductForm extends SystemForm
             [['unit_id', 'product_category_id'], 'integer'],
             [['price'], 'number', 'min' => 0],
             [['name'], 'string', 'max' => 255],
+            [['product_code'], 'string', 'max' => 9],
             [['name'], 'filter', 'filter' => 'trim'],
         ]);
     }
@@ -67,6 +81,7 @@ class ProductForm extends SystemForm
             'price' => 'Цена',
             'unit_id' => 'Единица измерения',
             'product_category_id' => 'Категория продукта',
+            'product_code' => 'Код продукта',
         ]);
     }
 
@@ -89,6 +104,25 @@ class ProductForm extends SystemForm
         return ProductCategory::find()->andWhere(['id' => $this->product_category_id]);
     }
 
+    /**
+     * @return ActiveDataProvider
+     * @throws InvalidConfigException
+     */
+    public function getDataProvider()
+    {
+        $query = Product::find();
+
+        return new ActiveDataProvider([
+            'query' => $query,
+            'pagination' => [
+                'defaultPageSize' => 20,
+                'pageSizeLimit' => false,
+            ],
+            'sort' => [
+                'defaultOrder' => ['id' => SORT_DESC],
+            ],
+        ]);
+    }
 
     /**
      * @inheritdoc
@@ -147,9 +181,17 @@ class ProductForm extends SystemForm
 
     /**
      * @return mixed|void
+     * @throws UserException
      */
     public function proceed()
     {
-
+        $product = new Product();
+        $product->name = $this->name;
+        $product->product_code = $this->product_code;
+        $product->is_active = true;
+        $product->price = $this->price;
+        $product->unit_id = $this->unit_id;
+        $product->product_category_id = $this->product_category_id;
+        $product->save();
     }
 }

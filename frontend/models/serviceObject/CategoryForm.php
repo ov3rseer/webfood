@@ -2,14 +2,19 @@
 
 namespace frontend\models\serviceObject;
 
-use common\models\ActiveRecord;
 use common\models\form\SystemForm;
 use common\models\reference\MealCategory;
 use common\models\reference\ProductCategory;
+use yii\data\BaseDataProvider;
 use yii\helpers\Html;
 
 /**
  * Базовая форма категорий
+ *
+ * Свойства:
+ * @property string $name наименование
+ * @property BaseDataProvider $dataProvider источник данных отчета
+ * @property array $columns колонки отчета
  */
 abstract class CategoryForm extends SystemForm
 {
