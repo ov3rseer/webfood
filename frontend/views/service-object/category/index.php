@@ -16,7 +16,7 @@ use yii\widgets\Pjax;
 $this->title = $model->getName();
 $this->params['breadcrumbs'][] = $this->title;
 
-$reflection = new \ReflectionClass($model->className());
+$reflection = new ReflectionClass($model->className());
 $shortClassName = $reflection->getShortName();
 $gridId = 'grid-' . $shortClassName;
 $formId = 'form-' . $shortClassName;
@@ -59,14 +59,58 @@ echo GridViewWithToolbar::widget([
             'buttons' => [
                 'update' => function ($url, $rowModel) use ($pjaxId, $formId) {
                     /** @var MealCategory|ProductCategory $rowModel */
-                    $showModalButtonId = 'show-modal-button'. $rowModel->id;
+                    $modalId = 'update-modal-' . $rowModel->id;
+                    $showModalButtonId = 'show-modal-button-' . $rowModel->id;
+                    $updateButtonId = 'update-button-' . $rowModel->id;
+
+                    Modal::begin([
+                        'id' => $modalId,
+                        'header' => '<h2>Изменить категорию</h2>',
+                        'footer' => Html::button('Изменить', [
+                            'id' => $updateButtonId,
+                            'class' => 'btn btn-success',
+                            'data-id' => $rowModel->id,
+                        ]),
+                    ]);
+                    echo Html::tag('span', '', ['id' => 'modelContent']);
+                    echo Html::beginTag('div', ['class' => 'row']);
+                    echo Html::beginTag('div', ['class' => 'col-xs-12']);
+                    echo Html::label('Наименование категории', 'category-name-' . $rowModel->id);
+                    echo Html::textInput('category_name', Html::encode($rowModel), [
+                        'id' => 'category-name-' . $rowModel->id,
+                        'class' => 'form-control',
+                    ]);
+                    echo Html::endTag('div');
+                    echo Html::endTag('div');
+                    echo Html::beginTag('div', ['class' => 'row mt-3']);
+                    echo Html::beginTag('div', ['class' => 'col-xs-12']);
+                    echo Html::checkbox('is_active', $rowModel->is_active, ['id' => 'active-' . $rowModel->id, 'label' => 'Активен']);
+                    echo Html::endTag('div');
+                    echo Html::endTag('div');
+                    Modal::end();
+
                     $this->registerJs("
-                        $('#" . $showModalButtonId . "').click(function(){                          
-                            var url = 'show';
-                            var data = 'vapapapapaapapapapapapapapapapapapappaap';
-                            $.get(url, {'data': data},function(data){
-                                $('#events').modal('show');
-                            });                                 
+                        $('#" . $showModalButtonId . "').click(function(){ 
+                            $('#" . $modalId . "').modal('show');
+                            $('#" . $updateButtonId . "').click(function(e){    
+                                $('#" . $modalId . "').modal('hide');                   
+                                e.preventDefault();
+                                var id = $(this).data('id');
+                                var is_active = $('#active-" . $rowModel->id . "').is(':checked');
+                                var category_name = $('#category-name-" . $rowModel->id . "').val();
+                                $.ajax({
+                                    url: 'update',
+                                    data: {id: id, is_active: is_active, category_name: category_name},
+                                    dataType: 'json',
+                                    type: 'POST',
+                                    success: function(data) {
+                                        $.pjax.reload('#" . $pjaxId . "', {
+                                            replace: true,
+                                            timeout: 5000,
+                                        });
+                                    }
+                                });
+                            });                   
                         });
                     ");
                     return Html::a('<span class="glyphicon glyphicon-pencil"></span>', '#', [

@@ -34,7 +34,7 @@ abstract class CategoryController extends FrontendModelController
                 'class' => AccessControl::class,
                 'rules' => [
                     [
-                        'actions' => ['index', 'delete-checked', 'delete', 'update', 'show'],
+                        'actions' => ['index', 'delete-checked', 'delete', 'update'],
                         'allow' => true,
                         'roles' => ['service-object'],
                     ],
@@ -77,7 +77,7 @@ abstract class CategoryController extends FrontendModelController
                 $transaction = Yii::$app->db->beginTransaction();
                 try {
                     /** @var ActiveRecord[] $models */
-                    $models = $this->categoryModel::findAll($ids);
+                    $models = $this->categoryModel::find()->andWhere(['id' => $ids])->all();
                     foreach ($models as $model) {
                         if ($model instanceof Reference || $model instanceof Document) {
                             $model->is_active = false;
@@ -108,17 +108,6 @@ abstract class CategoryController extends FrontendModelController
             $model->save();
         }
         return true;
-    }
-
-    /**
-     * @param $id
-     * @return string
-     */
-    public function actionShow($data)
-    {
-        return $this->renderAjax('@frontend/views/service-object/modal/_show', [
-            'data' => $data,
-        ]);
     }
 
     /**
