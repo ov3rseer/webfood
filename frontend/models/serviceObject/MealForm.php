@@ -63,7 +63,7 @@ class MealForm extends SystemForm
     public function rules()
     {
         return array_merge(parent::rules(), [
-            [['name', 'description', 'price', 'meal_category_id', 'food_type_id'], 'required'],
+            [['name', 'price', 'meal_category_id', 'food_type_id'], 'required'],
             [['meal_category_id', 'food_type_id'], 'integer'],
             [['description'], 'string'],
             [['price'], 'number', 'min' => 0],
