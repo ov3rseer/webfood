@@ -163,7 +163,10 @@ $form = ActiveForm::begin([
                 var selectedUnit = unitInput.find('option:selected');
                
                 $('#empty-products').remove();
-                $('#meal-products').append('<p>' + selectedProduct.text() + ' - ' + quantityInput.val() + ' ' + selectedUnit.text() + '</p>');
+                $('#meal-products').append(
+                    '<span>' + selectedProduct.text() + ' - ' + quantityInput.val() + ' ' + selectedUnit.text() + '</span>' 
+                    + '<a id=\"\"><span class=\"glyphicon glyphicon-remove\"></span></a>'
+                );
               
                 var hiddenInput = $('#" . Html::getInputId($model, 'products') . "');
                 
