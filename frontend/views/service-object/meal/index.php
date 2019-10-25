@@ -1,6 +1,5 @@
 <?php
 
-
 use backend\widgets\GridView\GridView;
 use backend\widgets\Select2\Select2;
 use common\models\enum\FoodType;
