@@ -1,6 +1,5 @@
 <?php
 
-
 namespace frontend\controllers\serviceObject;
 
 use backend\controllers\BackendModelController;
