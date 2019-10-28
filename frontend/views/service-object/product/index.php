@@ -67,7 +67,7 @@ echo GridViewWithToolbar::widget([
 
                     Modal::begin([
                         'id' => $modalId,
-                        'header' => '<h2>Изменить категорию</h2>',
+                        'header' => '<h2>Изменить продукт</h2>',
                         'footer' => Html::button('Изменить', [
                             'id' => $updateButtonId,
                             'class' => 'btn btn-success',

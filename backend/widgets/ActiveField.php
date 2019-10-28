@@ -10,6 +10,7 @@ use common\models\document\Document;
 use common\models\enum\Enum;
 use common\models\reference\Reference;
 use ReflectionClass;
+use Yii;
 use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
 use yii\helpers\Inflector;
@@ -271,7 +272,7 @@ class ActiveField extends \yii\widgets\ActiveField
                 return $this;
             } else if (is_subclass_of($class, Reference::class, true) || is_subclass_of($class, Document::class, true)) {
                 $isDocument = is_subclass_of($class, Document::class, true);
-                $controllerId = '/' . ($isDocument ? 'document' : 'reference') . '/' . Inflector::camel2id((new ReflectionClass($class))->getShortName());
+                $controllerId = (Yii::$app->id == 'app-frontend' ? 'admin' : '') . '/' . ($isDocument ? 'document' : 'reference') . '/' . Inflector::camel2id((new ReflectionClass($class))->getShortName());
                 $widgetConfig = [
                     'options' => array_merge($this->inputOptions, [
                         'class' => 'reference-field',

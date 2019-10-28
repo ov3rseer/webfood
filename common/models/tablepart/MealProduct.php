@@ -5,6 +5,7 @@ namespace common\models\tablepart;
 use common\models\reference\Meal;
 use common\models\reference\Product;
 use common\models\reference\Unit;
+use yii\base\InvalidConfigException;
 use yii\db\ActiveQuery;
 
 /**
@@ -38,14 +39,15 @@ class MealProduct extends TablePart
 
     /**
      * Проверка на правильность единицы измерения
-     * @throws \yii\base\InvalidConfigException
+     * @throws InvalidConfigException
      */
     public function validateUnit()
     {
         if ($this->unit_id != $this->product->unit_id) {
             $units = Unit::find()->andWhere(['like', 'name_full', 'грамм'])->column();
             if (!in_array($this->unit_id, $units) || !in_array($this->product->unit_id, $units)) {
-                $this->addError('unit_id', 'Выбрана неверная единица измерения.');
+                $this->addError('unit_id', 'Выбрана неверная единица измерения для "'
+                    . $this->product . '", необходимо выбрать "' . $this->product->unit . '" или аналогичную в данной системе мер.');
             }
         }
     }

@@ -2,19 +2,20 @@
 
 namespace frontend\controllers\serviceObject;
 
+use backend\controllers\BackendModelController;
 use common\helpers\ArrayHelper;
-use frontend\controllers\FrontendModelController;
 use yii\filters\AccessControl;
+use yii\filters\VerbFilter;
 
 /**
  * Контроллер для формы "Блюда"
  */
-class MealController extends FrontendModelController
+class MealController extends BackendModelController
 {
     /**
      * @var string имя класса модели
      */
-    public $modelClass = 'frontend\models\serviceObject\MealForm';
+    public $modelClass = 'common\models\reference\Meal';
 
     /**
      * @inheritdoc
@@ -26,12 +27,19 @@ class MealController extends FrontendModelController
                 'class' => AccessControl::class,
                 'rules' => [
                     [
-                        'actions' => ['index'],
+                        'actions' => ['index', 'delete-checked', 'delete', 'create', 'update'],
                         'allow' => true,
                         'roles' => ['service-object'],
                     ],
                 ],
-            ]
+            ],
+            'verbs' => [
+                'class' => VerbFilter::class,
+                'actions' => [
+                    'delete' => ['POST'],
+                    'delete-checked' => ['POST'],
+                ],
+            ],
         ]);
     }
 
@@ -42,9 +50,14 @@ class MealController extends FrontendModelController
     {
         return array_merge(parent::actions(), [
             'index' => [
-                'class' => 'frontend\actions\base\IndexAction',
+                'class' => 'backend\actions\base\IndexAction',
                 'modelClass' => $this->modelClass,
-                'viewPath' => '@frontend/views/service-object/meal/index',
+                'viewPath' => '@backend/views/reference/base/index',
+            ],
+            'search' => [
+                'class' => 'backend\actions\reference\base\SearchAction',
+                'modelClass' => $this->modelClass,
+                'searchFields' => ['name'],
             ],
         ]);
     }

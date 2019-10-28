@@ -188,7 +188,6 @@ class Meal extends Reference
                         }
                     }
                 }
-
             }
             $this->price = $sum;
         }
