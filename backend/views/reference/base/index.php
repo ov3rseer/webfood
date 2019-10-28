@@ -35,11 +35,7 @@ $toolbarLayout = [['refresh']];
 if (!$model instanceof \common\models\reference\User) {
     $toolbarLayout[0][] = 'create';
 }
-if (Yii::$app->user->can($controller::className() . '.Delete')) {
-    $toolbarLayout[0][] = 'delete';
-} else {
-    $gridOptions['checkboxColumn'] = false;
-}
+$toolbarLayout[0][] = 'delete';
 
 ?>
 <div class="reference-index">
