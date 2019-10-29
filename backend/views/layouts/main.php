@@ -65,11 +65,6 @@ AppAsset::register($this);
                             'url' => ['/document/refill-balance/index'],
                             'visible' => Yii::$app->user->can('super-admin'),
                         ],
-                        [
-                            'label' => 'Установка меню',
-                            'url' => ['/document/set-menu/index'],
-                            'visible' => Yii::$app->user->can('super-admin'),
-                        ],
                     ],
                 ],
                 [
@@ -159,6 +154,11 @@ AppAsset::register($this);
                         [
                             'label' => 'Меню',
                             'url' => ['/reference/menu/index'],
+                            'visible' => Yii::$app->user->can('super-admin'),
+                        ],
+                        [
+                            'label' => 'Установка меню',
+                            'url' => ['/reference/set-menu/index'],
                             'visible' => Yii::$app->user->can('super-admin'),
                         ],
                     ],

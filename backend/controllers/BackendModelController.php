@@ -115,7 +115,7 @@ abstract class BackendModelController extends Controller
                     [
                         'actions' => ['search', 'select'],
                         'allow' => true,
-                        'roles' => ['@'],
+                        'roles' => ['?'],
                     ],
                     [
                         'actions' => ['create'],

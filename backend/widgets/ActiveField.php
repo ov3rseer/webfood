@@ -266,7 +266,7 @@ class ActiveField extends \yii\widgets\ActiveField
                 }
                 $items = isset($this->additionalOptions['items'])
                     ? $this->additionalOptions['items']
-                    : $class::find()->indexBy('id')->orderBy('name')->all();
+                    : $class::find()->indexBy('id')->orderBy('id ASC, name ASC')->all();
                 $this->dropDownList($items, $this->inputOptions);
                 $this->parts['{label}'] = Html::activeLabel($this->model, $relation['name'], $this->labelOptions);
                 return $this;

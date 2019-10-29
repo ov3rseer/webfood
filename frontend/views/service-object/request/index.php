@@ -2,7 +2,7 @@
 
 use backend\widgets\ActiveForm;
 use backend\widgets\GridView\GridViewWithToolbar;
-use frontend\models\serviceObject\request\RequestForm;
+use frontend\models\serviceObject\RequestForm;
 use yii\helpers\Html;
 use yii\widgets\Pjax;
 

@@ -158,12 +158,13 @@ $this->registerJs("
                                 'data-toggle' => 'dropdown',
                             ]);
                             echo Html::beginTag('ul', ['class' => 'dropdown-menu', 'role' => 'menu']);
-                            echo '<li>' . Html::a('Меню', ['serviceObject/menu/index'], ['class' => 'hidden-btn']) . '</li>';
                             echo '<li>' . Html::a('Категории продуктов', ['serviceObject/product-category/index'], ['class' => 'hidden-btn']) . '</li>';
                             echo '<li>' . Html::a('Продукты', ['serviceObject/product/index'], ['class' => 'hidden-btn']) . '</li>';
                             echo '<li>' . Html::a('Категории блюд', ['serviceObject/meal-category/index'], ['class' => 'hidden-btn']) . '</li>';
                             echo '<li>' . Html::a('Блюда', ['serviceObject/meal/index'], ['class' => 'hidden-btn']) . '</li>';
                             echo '<li>' . Html::a('Комплексы', ['serviceObject/complex/index'], ['class' => 'hidden-btn']) . '</li>';
+                            echo '<li>' . Html::a('Меню', ['serviceObject/menu/index'], ['class' => 'hidden-btn']) . '</li>';
+                            echo '<li>' . Html::a('Установка меню', ['serviceObject/set-menu/index'], ['class' => 'hidden-btn']) . '</li>';
                             echo Html::endTag('ul');
                             echo Html::endTag('div');
                             break;
