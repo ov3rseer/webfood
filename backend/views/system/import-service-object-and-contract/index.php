@@ -1,4 +1,5 @@
 <?php
+
 use backend\controllers\system\SystemController;
 use yii\bootstrap\ButtonGroup;
 use yii\helpers\Html;
@@ -16,7 +17,7 @@ $this->params['breadcrumbs'][] = ['label' => (string)$this->title];
 $reflection = new ReflectionClass($model->className());
 $shortClassName = $reflection->getShortName();
 
-$formId = $shortClassName.'-form';
+$formId = $shortClassName . '-form';
 if ($info = Yii::$app->session->getFlash('proceed')) {
     ?>
     <div class="alert alert-info" role="alert">
@@ -27,9 +28,9 @@ if ($info = Yii::$app->session->getFlash('proceed')) {
 
 $form = ActiveForm::begin(
     [
-        'id'                   => $formId,
+        'id' => $formId,
         'enableAjaxValidation' => true,
-        'options'              => ['enctype' => 'multipart/form-data'],
+        'options' => ['enctype' => 'multipart/form-data'],
     ]
 );
 ?>
@@ -49,12 +50,12 @@ $form = ActiveForm::begin(
                     </div>
                 </div>
                 <?php
-                    echo '<div class="col-xs-12 col-sm-6 col-md-3">';
-                    echo $form->field($model, 'uploadedFiles[]')->fileInput(['multiple' => true]);
-                    echo '</div>';
-                    echo '<div class="col-xs-12 col-sm-6 col-md-3">';
-                    echo $form->autoField($model, 'contract_type_id');
-                    echo '</div>';
+                echo '<div class="col-xs-12 col-sm-6 col-md-3">';
+                echo $form->field($model, 'uploadedFiles[]')->fileInput(['multiple' => true]);
+                echo '</div>';
+                echo '<div class="col-xs-12 col-sm-6 col-md-3">';
+                echo $form->autoField($model, 'contract_type_id');
+                echo '</div>';
                 ?>
             </div>
             <div class="row">

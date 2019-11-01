@@ -10,5 +10,5 @@ class DayType extends Enum
     /**
      * Выходной
      */
-    const NOT_WORKING  = 1;
+    const WEEKEND  = 1;
 }

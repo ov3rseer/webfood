@@ -17,8 +17,8 @@ $this->params['breadcrumbs'][] = $this->title;
 $reflection = new ReflectionClass($model->className());
 $shortClassName = $reflection->getShortName();
 $gridWidgetId = $shortClassName . '-grid';
-$formId = $shortClassName . '-pjax';
-$pjaxId = $shortClassName . '-form';
+$formId = $shortClassName . '-form';
+$pjaxId = $shortClassName . '-pjax';
 
 
 $form = ActiveForm::begin([

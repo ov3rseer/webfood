@@ -4,9 +4,9 @@ namespace frontend\models\serviceObject;
 
 use common\models\enum\MenuCycle;
 use common\models\enum\WeekDay;
+use common\models\form\Form;
 use common\models\reference\Menu;
-use common\models\reference\Reference;
-use yii\db\ActiveQuery;
+use yii\base\InvalidConfigException;
 
 /**
  * Модель документа "Установка меню"
@@ -21,7 +21,7 @@ use yii\db\ActiveQuery;
  * @property MenuCycle $menuCycle
  * @property WeekDay $weekDay
  */
-class SetMenu extends Reference
+class SetMenuForm extends Form
 {
     /**
      * @var integer
@@ -37,6 +37,11 @@ class SetMenu extends Reference
      * @var integer
      */
     public $week_day_id;
+
+    public function getName()
+    {
+        return 'Установка меню и выходных';
+    }
 
     /**
      * @inheritdoc
@@ -62,26 +67,29 @@ class SetMenu extends Reference
     }
 
     /**
-     * @return ActiveQuery
+     * @return array
+     * @throws InvalidConfigException
      */
     public function getMenu()
     {
-        return $this->hasOne(Menu::class, ['id' => 'menu_id']);
+        return Menu::find()->select('name')->indexBy('id')->column();
     }
 
     /**
-     * @return ActiveQuery
+     * @return array
+     * @throws InvalidConfigException
      */
     public function getMenuCycle()
     {
-        return $this->hasOne(MenuCycle::class, ['id' => 'menu_cycle_id']);
+        return MenuCycle::find()->select('name')->indexBy('id')->column();
     }
 
     /**
-     * @return ActiveQuery
+     * @return array
+     * @throws InvalidConfigException
      */
     public function getWeekDay()
     {
-        return $this->hasOne(WeekDay::class, ['id' => 'week_day_id']);
+        return WeekDay::find()->select('name')->indexBy('id')->column();
     }
 }

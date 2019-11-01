@@ -1,12 +1,10 @@
 <?php
 
-namespace common\models\document;
+namespace common\models\reference;
 
 use common\components\DateTime;
 use common\models\enum\MenuCycle;
 use common\models\enum\WeekDay;
-use common\models\reference\Menu;
-use common\models\reference\Reference;
 use yii\db\ActiveQuery;
 
 /**

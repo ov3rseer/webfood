@@ -13,7 +13,7 @@ use yii\helpers\ArrayHelper;
 class GridView extends YiiGridView
 {
     /**
-     * @var string шабло отображения
+     * @var string шаблон отображения
      */
     public $layout = "{items}\n{pager}\n{summary}";
 

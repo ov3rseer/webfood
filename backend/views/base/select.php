@@ -2,10 +2,8 @@
 
 use backend\controllers\BackendModelController;
 use backend\widgets\GridView\GridView;
-use backend\widgets\GridView\GridViewToolbar;
 use backend\widgets\IframeDialog\IframeDialogAsset;
 use yii\helpers\Html;
-use yii\helpers\Url;
 use yii\widgets\Pjax;
 
 /* @var yii\web\View $this */
@@ -24,19 +22,19 @@ echo Html::beginTag('div', ['class' => 'reference-select']);
 $gridId = 'reference-select-grid';
 $pjaxId = 'reference-select-pjax';
 
-echo GridViewToolbar::widget([
-    'gridId' => $gridId,
-    'gridPjaxId' => $pjaxId,
-    'layout' => ['main' => ['refresh', 'create']],
-    'tokens' => [
-        'create' => function() {
-            return Html::a('<i class="glyphicon glyphicon-plus"></i>',
-                ['create', 'layout' => 'iframe', 'redirect' => Url::to(['select', 'layout' => 'iframe'])],
-                ['class' => 'btn btn-success']
-            );
-        },
-    ],
-]);
+//echo GridViewToolbar::widget([
+//    'gridId' => $gridId,
+//    'gridPjaxId' => $pjaxId,
+//    'layout' => ['main' => ['refresh', 'create']],
+//    'tokens' => [
+//        'create' => function() {
+//            return Html::a('<i class="glyphicon glyphicon-plus"></i>',
+//                ['create', 'layout' => 'iframe', 'redirect' => Url::to(['select', 'layout' => 'iframe'])],
+//                ['class' => 'btn btn-success']
+//            );
+//        },
+//    ],
+//]);
 
 $pjaxGridWidget = Pjax::begin(['id' => $pjaxId,]);
 

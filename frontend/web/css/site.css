@@ -100,9 +100,9 @@ a.desc:after {
     border: none;
 }
 
-@media(max-width:767px) {
+@media (max-width: 767px) {
     .nav li > form > button.logout {
-        display:block;
+        display: block;
         text-align: left;
         width: 100%;
         padding: 10px 15px;
@@ -788,3 +788,61 @@ a.desc:after {
     border-radius: 4px 4px 0 0;
     border-bottom: none;
 }
+
+/* MenuCalendar */
+
+.fc-event {
+    border: 0;
+    border-radius: 0;
+    opacity: .5;
+}
+
+.fc-highlight {
+    opacity: .8;
+}
+
+.fc-today {
+    background: #ceffa9;
+    font-weight: bold;
+}
+
+
+.fc-day-top.fc-other-month {
+    color: #333333;
+    opacity: .5;
+}
+
+.fc-content {
+    white-space: normal;
+    text-align: center;
+}
+
+.fc-title {
+    font-weight: bold;
+    bottom: 0;
+}
+
+.fc-other-month.fc-past {
+    background: #e6e6e6;
+}
+
+.fc-other-month.fc-future {
+    background: #e6e6e6;
+}
+
+.fc-day-top.fc-other-month {
+    opacity: .5;
+}
+
+.fc-day-top.fc-other-month {
+    opacity: .5;
+}
+
+.fc-event-container .fc-day-grid-event {
+    margin: 0;
+}
+
+.fc-day-top {
+    color: #000000;
+}
+

@@ -19,7 +19,7 @@ class BootstrapDateRangePickerAsset extends AssetBundle
     public $depends = [
         'yii\web\JqueryAsset',
         'yii\bootstrap\BootstrapAsset',
-        'backend\assets\MomentAsset',
-        'backend\assets\MomentLocaleAsset',
+        'common\assets\MomentAsset',
+        'common\assets\MomentLocaleAsset',
     ];
 }
