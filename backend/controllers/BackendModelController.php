@@ -115,7 +115,7 @@ abstract class BackendModelController extends Controller
                     [
                         'actions' => ['search', 'select'],
                         'allow' => true,
-                        'roles' => ['?'],
+                        'roles' => ['?', '@'],
                     ],
                     [
                         'actions' => ['create'],
@@ -244,11 +244,11 @@ abstract class BackendModelController extends Controller
         $result = [];
         foreach ($model->getTableParts() as $relation => $relationClass) {
             $result[$relation] = [
-                'label'      => $model->getAttributeLabel($relation) . ' (' . count($model->{$relation}) . ')',
+                'label' => $model->getAttributeLabel($relation) . ' (' . count($model->{$relation}) . ')',
                 'viewUpdate' => '@backend/views/base/_tablePartUpdate',
-                'viewView'   => '@backend/views/base/_tablePartView',
-                'params'     => [
-                    'relation'      => $relation,
+                'viewView' => '@backend/views/base/_tablePartView',
+                'params' => [
+                    'relation' => $relation,
                     'relationClass' => $relationClass,
                 ],
             ];
@@ -295,7 +295,7 @@ abstract class BackendModelController extends Controller
                 'label' => $tablePartModel->getAttributeLabel($attribute),
                 'headerOptions' => $headerOptions,
                 'format' => 'raw',
-                'value' => function($tablePartRow) use ($form, $model, $tablePartRelation, $attribute, $readonly) {
+                'value' => function ($tablePartRow) use ($form, $model, $tablePartRelation, $attribute, $readonly) {
                     /** @var TablePart $tablePartRow */
                     if ($readonly) {
                         $result = $form->field($tablePartRow, $attribute, [
@@ -364,7 +364,7 @@ abstract class BackendModelController extends Controller
                     'label' => $crossTableRowModel->getAttributeLabel($attribute),
                     'headerOptions' => $headerOptions,
                     'format' => 'raw',
-                    'value' => function($crossTableRow) use ($attribute, $fieldOptions, $attributesWithRelation) {
+                    'value' => function ($crossTableRow) use ($attribute, $fieldOptions, $attributesWithRelation) {
                         /** @var CrossTable $crossTableRow */
                         switch ($fieldOptions['displayType']) {
                             case ActiveField::BOOL:
@@ -389,7 +389,7 @@ abstract class BackendModelController extends Controller
                     'label' => $crossTableRowModel->getAttributeLabel($attribute),
                     'headerOptions' => $headerOptions,
                     'format' => 'raw',
-                    'value' => function($crossTableRow) use ($form, $model, $crossTableRelation, $attribute) {
+                    'value' => function ($crossTableRow) use ($form, $model, $crossTableRelation, $attribute) {
                         /** @var CrossTable $crossTableRow */
                         return $form->autoField($crossTableRow, $attribute, [
                             'template' => "{input}\n{hint}\n{error}",
@@ -417,7 +417,8 @@ abstract class BackendModelController extends Controller
     public function generateAutoColumns($model, $filterModel)
     {
         $result = [];
-        $form = new ActiveForm(); ob_get_clean();
+        $form = new ActiveForm();
+        ob_get_clean();
         $filterFieldsOptions = $filterModel->getFieldsOptions();
         foreach ($model->getFieldsOptions() as $field => $fieldOptions) {
             $originalField = $field;

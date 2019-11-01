@@ -36,7 +36,7 @@ class MenuMeal extends TablePart
     public function attributeLabels()
     {
         return array_merge(parent::attributeLabels(), [
-            'meal_id' => 'Комплекс',
+            'meal_id' => 'Блюдо',
         ]);
     }
 
