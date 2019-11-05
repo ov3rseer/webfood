@@ -12,10 +12,11 @@ use yii\db\ActiveQuery;
  * Свойства:
  * @property integer $parent_id
  * @property integer $meal_id
+ * @property integer $quantity
  *
  * Отношения:
- * @property Menu       $parent
- * @property Meal       $meal
+ * @property Menu $parent
+ * @property Meal $meal
  */
 class MenuMeal extends TablePart
 {
@@ -25,8 +26,8 @@ class MenuMeal extends TablePart
     public function rules()
     {
         return array_merge(parent::rules(), [
-            [['meal_id'], 'integer'],
-            [['meal_id'], 'required'],
+            [['meal_id', 'quantity'], 'integer'],
+            [['meal_id', 'quantity'], 'required'],
         ]);
     }
 
@@ -37,6 +38,7 @@ class MenuMeal extends TablePart
     {
         return array_merge(parent::attributeLabels(), [
             'meal_id' => 'Блюдо',
+            'quantity' => 'Количество',
         ]);
     }
 

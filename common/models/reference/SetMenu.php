@@ -2,7 +2,6 @@
 
 namespace common\models\reference;
 
-use common\components\DateTime;
 use common\models\enum\MenuCycle;
 use common\models\enum\WeekDay;
 use yii\db\ActiveQuery;
@@ -14,9 +13,6 @@ use yii\db\ActiveQuery;
  * @property integer $menu_id
  * @property integer $menu_cycle_id
  * @property integer $week_day_id
- * @property DateTime $begin_date
- * @property DateTime $end_date
- * @property float $day
  *
  * Отношения:
  * @property Menu $menu
@@ -48,8 +44,7 @@ class SetMenu extends Reference
     {
         return array_merge(parent::rules(), [
             [['menu_id', 'menu_cycle_id', 'week_day_id'], 'integer'],
-            [['begin_date', 'end_date'], 'date', 'format' => 'php:' . DateTime::DB_DATE_FORMAT],
-            [['menu_id', 'menu_cycle_id', 'week_day_id', 'begin_date', 'end_date'], 'required'],
+            [['menu_id', 'menu_cycle_id', 'week_day_id'], 'required'],
         ]);
     }
 
@@ -62,8 +57,6 @@ class SetMenu extends Reference
             'menu_id'       => 'Меню',
             'menu_cycle_id' => 'Цикличность меню',
             'week_day_id'   => 'День недели',
-            'begin_date'    => 'Начало периода питания',
-            'end_date'      => 'Окончание периода питания',
         ]);
     }
 

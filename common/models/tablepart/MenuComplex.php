@@ -12,6 +12,7 @@ use yii\db\ActiveQuery;
  * Свойства:
  * @property integer $parent_id
  * @property integer $complex_id
+ * @property integer $quantity
  *
  * Отношения:
  * @property Menu       $parent
@@ -25,8 +26,8 @@ class MenuComplex extends TablePart
     public function rules()
     {
         return array_merge(parent::rules(), [
-            [['complex_id'], 'integer'],
-            [['complex_id'], 'required'],
+            [['complex_id', 'quantity'], 'integer'],
+            [['complex_id', 'quantity'], 'required'],
         ]);
     }
 
@@ -37,6 +38,7 @@ class MenuComplex extends TablePart
     {
         return array_merge(parent::attributeLabels(), [
             'complex_id' => 'Комплекс',
+            'quantity' => 'Количество',
         ]);
     }
 

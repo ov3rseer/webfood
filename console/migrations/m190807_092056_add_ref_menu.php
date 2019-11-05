@@ -14,9 +14,11 @@ class m190807_092056_add_ref_menu extends Migration
 
         $this->createTablePartTable('{{%tab_menu_meal}}', '{{%ref_menu}}', [
             'meal_id' => $this->integer()->notNull()->indexed()->foreignKey('{{%ref_meal}}', 'id'),
+            'quantity' => $this->integer()->notNull(),
         ]);
         $this->createTablePartTable('{{%tab_menu_complex}}', '{{%ref_menu}}', [
             'complex_id' => $this->integer()->notNull()->indexed()->foreignKey('{{%ref_complex}}', 'id'),
+            'quantity' => $this->integer()->notNull(),
         ]);
 
         $this->createEnumTable('{{%enum_menu_cycle}}', [

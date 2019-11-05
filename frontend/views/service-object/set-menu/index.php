@@ -3,11 +3,14 @@
 use backend\widgets\ActiveForm;
 use backend\widgets\Select2\Select2;
 use common\models\enum\DayType;
+use frontend\models\serviceObject\SetMenuForm;
 use frontend\widgets\MenuCalendar\MenuCalendar;
 use yii\helpers\Html;
 use yii\helpers\Url;
 use yii\web\JsExpression;
 use yii\widgets\Pjax;
+
+/* @var SetMenuForm $model */
 
 $this->title = $model->getName();
 $this->params['breadcrumbs'][] = $this->title;
@@ -78,44 +81,34 @@ $form->end();
             'selectable' => true,
         ],
         'select' => new JSExpression("
-            function(start, end, allDay, jsEvent, view){     
-           
-            var events = $('#menu-calendar').fullCalendar('clientEvents');
-            $.each(events, function(index, event){           
-                var dayTypeId = event.id.day_type_id;
-                if(dayTypeId == '".DayType::WEEKEND."'){
-                   dates = event.id.date;
-                }
-            });
-            console.log(events);
+            function(start, end, allDay, jsEvent, view){                
+                var events = $('#menu-calendar').fullCalendar('clientEvents');
+                var beginDay = start.format();
+                var endDay = end.format(); 
+                var dates = [];              
+                $.each(events, function(index, event){           
+                    var dayTypeId = event.id.day_type_id;
+                    if(beginDay <= event.id.date && endDay > event.id.date & dayTypeId == '" . DayType::WEEKEND . "'){
+                        dates.push(event.id.date);
+                    }
+                });
                 $.ajax({
                     url: '" . Url::to(['add-weekend']) . "',
                     method: 'POST',
                     dataType: 'json',
-                    data: {'beginDay': start.format(), 'endDay': end.format()},   
+                    data: {'beginDay': beginDay, 'endDay': endDay},   
                     success: function(data) {
                         $('#menu-calendar').fullCalendar('refetchEvents');
                     }                          
                 });
             }
         "),
-        'eventRender' => new JsExpression("
-            function(event, el , isMirror, isStart, isEnd, view){
-                var eventId = event.id.id;
-                console.log(el);
-               
-            }
-        "),
         'eventClick' => new JsExpression("
             function(event, jsEvent, view) {
-     
-                var dayTypeId = event.id.day_type_id;
-                var date = event.id.date;
-                if(dayTypeId == '". DayType::WEEKEND."'){
-                    var link = '" . Url::to(['delete-weekend']) . "';
-                }
+                console.log(event);
+                var date = event.start.format();
                 $.ajax({
-                    url: link,
+                    url: '" . Url::to(['delete-weekend']) . "',
                     method: 'POST',
                     dataType: 'json',
                     data: {'date': date},   
