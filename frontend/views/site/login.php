@@ -78,9 +78,8 @@ $this->registerJs("
                 <?=
                 Html::submitButton('Вход', [
                     'id' => 'login-submit-btn',
-                    'class' => 'hidden-btn disabled',
+                    'class' => 'hidden-btn',
                     'name' => 'login-button',
-                    'disabled' => true
                 ])
                 ?>
             </div>

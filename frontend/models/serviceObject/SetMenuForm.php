@@ -7,7 +7,6 @@ use common\models\enum\WeekDay;
 use common\models\form\SystemForm;
 use common\models\reference\Menu;
 use common\models\reference\SetMenu;
-use Yii;
 use yii\base\InvalidConfigException;
 use yii\base\UserException;
 
@@ -41,9 +40,12 @@ class SetMenuForm extends SystemForm
      */
     public $week_day_id;
 
+    /**
+     * @return string
+     */
     public function getName()
     {
-        return 'Установка меню и выходных';
+        return 'Установка меню и выходных дней';
     }
 
     /**
@@ -54,7 +56,36 @@ class SetMenuForm extends SystemForm
         return array_merge(parent::rules(), [
             [['menu_id', 'menu_cycle_id', 'week_day_id'], 'integer'],
             [['menu_id', 'menu_cycle_id', 'week_day_id'], 'required'],
+            [['menu_cycle_id'], 'validateMenuCycle'],
         ]);
+    }
+
+    /**
+     * @throws InvalidConfigException
+     */
+    public function validateMenuCycle()
+    {
+        $menuCycles = [MenuCycle::WEEKLY, MenuCycle::ODD_WEEKS, MenuCycle::EVEN_WEEKS];
+        switch ($this->menu_cycle_id) {
+            case MenuCycle::ODD_WEEKS:
+                $menuCycles = [MenuCycle::ODD_WEEKS, MenuCycle::WEEKLY];
+                break;
+            case MenuCycle::EVEN_WEEKS:
+                $menuCycles = [MenuCycle::EVEN_WEEKS, MenuCycle::WEEKLY];
+                break;
+            default:
+                break;
+        }
+        $setMenu = SetMenu::find()
+            ->andWhere([
+                'week_day_id' => $this->week_day_id,
+                'menu_cycle_id' => $menuCycles,
+                'is_active' => true,
+            ])
+            ->one();
+        if ($setMenu) {
+            $this->addError('menu_cycle_id', 'Для того чтобы установить другую цикличность, вам необходимо удалить текущее меню с цикличностью "' . $setMenu->menuCycle . '" в день недели "' . $setMenu->weekDay . '".');
+        }
     }
 
     /**
@@ -103,27 +134,14 @@ class SetMenuForm extends SystemForm
      */
     public function proceed()
     {
-        $menuCycles = [];
-        switch ($this->menu_cycle_id) {
-            case MenuCycle::WEEKLY:
-                $menuCycles = [MenuCycle::WEEKLY, MenuCycle::ODD_WEEKS, MenuCycle::EVEN_WEEKS];
-                break;
-            case MenuCycle::ODD_WEEKS:
-                $menuCycles = [MenuCycle::ODD_WEEKS, MenuCycle::WEEKLY];
-                break;
-            case MenuCycle::EVEN_WEEKS:
-                $menuCycles = [MenuCycle::EVEN_WEEKS, MenuCycle::WEEKLY];
-                break;
-        }
-        $setMenu = SetMenu::find()->andWhere(['week_day_id' => $this->week_day_id, 'menu_cycle_id' => $menuCycles])->one();
+        $setMenu = SetMenu::find()->andWhere(['week_day_id' => $this->week_day_id, 'menu_cycle_id' => $this->menu_cycle_id])->one();
         if (!$setMenu) {
             $setMenu = new SetMenu();
-            $setMenu->menu_id = $this->menu_id;
-            $setMenu->menu_cycle_id = $this->menu_cycle_id;
-            $setMenu->week_day_id = $this->week_day_id;
-            $setMenu->save();
-        } else {
-            Yii::$app->session->setFlash('warning', 'Меню на этот день уже существует');
         }
+        $setMenu->menu_id = $this->menu_id;
+        $setMenu->is_active = true;
+        $setMenu->menu_cycle_id = $this->menu_cycle_id;
+        $setMenu->week_day_id = $this->week_day_id;
+        $setMenu->save();
     }
 }

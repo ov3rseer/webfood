@@ -35,7 +35,7 @@ class SetMenuController extends FrontendModelController
                 'class' => AccessControl::class,
                 'rules' => [
                     [
-                        'actions' => ['index', 'render-calendar', 'add-weekend', 'delete-weekend'],
+                        'actions' => ['index', 'render-calendar', 'delete-menu', 'edit-weekend'],
                         'allow' => true,
                         'roles' => ['service-object'],
                     ],
@@ -82,7 +82,7 @@ class SetMenuController extends FrontendModelController
 
         $eventsByDate = [];
         /** @var SetMenu[] $setMenus */
-        $setMenus = SetMenu::find()->all();
+        $setMenus = SetMenu::find()->andWhere(['is_active' => true])->all();
         foreach ($setMenus as $setMenu) {
             foreach ($daysByWeekDay[$setMenu->week_day_id] as $day) {
                 $menuCycleId = null;
@@ -95,6 +95,7 @@ class SetMenuController extends FrontendModelController
                     $event = new Event();
                     $event->id = StringHelper::generateFakeId();
                     $event->nonstandard = $setMenu;
+                    $event->description = 'menu';
                     $event->title = Html::encode($setMenu->menu);
                     $event->backgroundColor = 'blue';
                     $event->start = $day->format('Y-m-d');
@@ -108,7 +109,8 @@ class SetMenuController extends FrontendModelController
         foreach ($weekends as $weekend) {
             $event = new Event();
             $event->id = StringHelper::generateFakeId();
-            $event->className = $weekend;
+            $event->nonstandard = $weekend;
+            $event->description = 'weekend';
             $event->title = Html::encode($weekend->dayType->name);
             $event->backgroundColor = 'red';
             $event->start = $weekend->date->format('Y-m-d');
@@ -119,23 +121,26 @@ class SetMenuController extends FrontendModelController
 
     /**
      * @throws Exception
+     * @throws \Throwable
      */
-    public function actionAddWeekend()
+    public function actionEditWeekend()
     {
-        $requestData = Yii::$app->request->post();
-        if (isset($requestData['beginDay']) && isset($requestData['endDay'])) {
-            $end = new DateTime($requestData['endDay']);
-            $start = new DateTime($requestData['beginDay']);
-            while ($start < $end) {
-                $weekend = Weekend::findOne(['date' => $start]);
+        $beginDay = Yii::$app->request->post('beginDay');
+        $endDay = Yii::$app->request->post('endDay');
+        if ($beginDay) {
+            $beginDay = new DateTime($beginDay);
+            do {
+                $weekend = Weekend::findOne(['day_type_id' => DayType::WEEKEND, 'date' => $beginDay,]);
                 if (!$weekend) {
                     $weekend = new Weekend();
-                    $weekend->date = $start;
+                    $weekend->date = $beginDay;
                     $weekend->day_type_id = DayType::WEEKEND;
                     $weekend->save();
+                } else {
+                    $weekend->delete();
                 }
-                $start->modify('+ 1 days');
-            }
+                $beginDay->modify('+ 1 days');
+            } while ($beginDay < $endDay);
             return true;
         }
         return false;
@@ -145,14 +150,14 @@ class SetMenuController extends FrontendModelController
      * @throws Exception
      * @throws \Throwable
      */
-    public function actionDeleteWeekend()
+    public function actionDeleteMenu()
     {
-        $requestData = Yii::$app->request->post();
-        if (isset($requestData['date'])) {
-            $date = new DateTime($requestData['date']);
-            $weekend = Weekend::findOne(['date' => $date]);
-            if ($weekend) {
-                $weekend->delete();
+        $setMenuId = Yii::$app->request->post('setMenuId');
+        if ($setMenuId) {
+            $setMenu = SetMenu::findOne(['id' => $setMenuId]);
+            if ($setMenu) {
+                $setMenu->is_active = false;
+                $setMenu->save();
             }
         }
         return true;

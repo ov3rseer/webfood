@@ -164,7 +164,7 @@ $this->registerJs("
                             echo '<li>' . Html::a('Блюда', ['serviceObject/meal/index'], ['class' => 'hidden-btn']) . '</li>';
                             echo '<li>' . Html::a('Комплексы', ['serviceObject/complex/index'], ['class' => 'hidden-btn']) . '</li>';
                             echo '<li>' . Html::a('Меню', ['serviceObject/menu/index'], ['class' => 'hidden-btn']) . '</li>';
-                            echo '<li>' . Html::a('Установка меню', ['serviceObject/set-menu/index'], ['class' => 'hidden-btn']) . '</li>';
+                            echo '<li>' . Html::a('Установка меню и выходных дней', ['serviceObject/set-menu/index'], ['class' => 'hidden-btn']) . '</li>';
                             echo Html::endTag('ul');
                             echo Html::endTag('div');
                             break;
