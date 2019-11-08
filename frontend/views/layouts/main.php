@@ -174,7 +174,7 @@ AppAsset::register($this);
         }
 
         $menuItems[] = '<li class="ml-5">' .
-            Html::a('Мой профиль ' . Yii::$app->user->identity->name_full ?? Yii::$app->user->identity->name,
+            Html::a(Yii::$app->user->identity->name_full ?? Yii::$app->user->identity->name,
                 ['/user/profile/index'], ['class' => 'btn btn-link'])
             . '</li>';
         $menuItems[] = '<li>'

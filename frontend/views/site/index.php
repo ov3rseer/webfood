@@ -12,7 +12,7 @@ $this->title = 'WebFood';
 ?>
 <div class="site-index">
 
-    <div class="jumbotron">
+    <div class="container">
 
         <?php
         $father = null;
@@ -77,7 +77,6 @@ $this->title = 'WebFood';
             echo Html::endTag('div'); // panel panel-default
             echo Html::endTag('div'); // col-xs-4
             echo Html::endTag('div'); // container
-
 
 
             $this->registerJs("
@@ -157,13 +156,25 @@ $this->title = 'WebFood';
                     'id' => $addChildModalId
                 ]
             ]);
-            echo Html::beginTag('div', ['class' => 'input-group']);
-            echo Html::textInput(null, null, ['id' => $searchChildInputId, 'aria-describedby' => 'basic-addon2', 'class' => 'form-control', 'placeholder' => 'Введите ФИО ребёнка']);
-            echo Html::beginTag('span', ['class' => 'input-group-btn']);
-            echo Html::button('<span class="glyphicon glyphicon-ok"></span>', ['id' => $addChildInputId, 'class' => 'btn btn-success']);
-            echo Html::endTag('span');
-            echo Html::endTag('div');
-            echo Html::tag('div', null, ['id' => 'search-result-area', 'class' => 'mt-3']);
+            ?>
+            <div class="input-group">
+                <?= Html::textInput(null, null, [
+                    'id' => $searchChildInputId,
+                    'aria-describedby' => 'basic-addon2',
+                    'class' => 'form-control',
+                    'placeholder' => 'Введите ФИО ребёнка'
+                ]); ?>
+                <span class="input-group-btn">
+                <?= Html::button('<span class="glyphicon glyphicon-ok"></span>', [
+                    'id' => $addChildInputId,
+                    'class' => 'btn btn-success'
+                ]); ?>
+                </span>
+            </div>
+            <div id="search-result-area" class="mt-3">
+            </div>
+
+            <?php
             Modal::end();
         }
         ?>
