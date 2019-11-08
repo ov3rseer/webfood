@@ -33,7 +33,10 @@ foreach ($keys as $key) {
         'surname' => $fathers[$key]['surname'],
         'forename' => $fathers[$key]['forename'],
         'patronymic' => $fathers[$key]['patronymic'],
-        'user_id' => $this->getFixtureModel(User::className(), 'user-' . $key)->primaryKey,
+        'user_id' => $this->getFixtureModel(User::class, 'user-' . $key)->primaryKey,
     ];
+    $user = User::findOne(['id' => $this->getFixtureModel(User::class, 'user-' . $key)->primaryKey]);
+    $user->name_full = $fathers[$key]['surname'] . ' ' . $fathers[$key]['forename'] . ' ' . $fathers[$key]['patronymic'];
+    $user->save();
 }
 return $result;
