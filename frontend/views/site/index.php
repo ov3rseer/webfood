@@ -54,7 +54,7 @@ $this->title = 'WebFood';
                         'aria-controls' => 'collapse' . $fatherChild->child_id
                     ]);
                     echo Html::a('<span class="glyphicon glyphicon-minus"></span><span class="glyphicon glyphicon-user"></span>',
-                        '#', ['class' => $deleteChildButtonId . ' text-danger', 'data' => ['child-id' => $fatherChild->child_id]]);
+                        '#', ['id' => $deleteChildButtonId, 'class' => 'text-danger', 'data' => ['child-id' => $fatherChild->child_id]]);
                     echo Html::endTag('span');
                     echo Html::endTag('div');
                     echo Html::beginTag('div', ['id' => 'collapse' . $fatherChild->child_id, 'class' => 'collapse', 'data-parent' => '#accordionExample']);
@@ -79,75 +79,63 @@ $this->title = 'WebFood';
             echo Html::endTag('div'); // container
 
 
-            $this->registerJs("
-                $().ready(function() {
-                    var childSearchFluent = new FluentUI({
-                        '#" . $addChildButtonId . "' : {
-                            'click' : function() {
-                                $('#" . $addChildModalId . "').modal('show');
-                            }
+            $this->registerJs("        
+                $('#" . $addChildButtonId . "').click(function(){
+                    $('#" . $addChildModalId . "').modal('show');
+                }),
+                $(document).on('input', '#" . $searchChildInputId . "', function(){  
+                    var userInput = $(this).val();
+                    $.ajax({
+                        url: 'father/my-child/search-child',
+                        data: {
+                            'userInput' : userInput
                         },
-                        '#" . $searchChildInputId . "' : {
-                            'input' : function() {                       
-                                var userInput = $(this).val();
-                                $.ajax({
-                                    url: 'father/my-child/search-child',
-                                    data: {
-                                        'userInput' : userInput
-                                    },
-                                    dataType: 'html',
-                                    type: 'POST',                           
-                                    success: function(data) {
-                                        $('#search-result-area').html(data);
-                                        $('#search-result-area .list-group-item').on('click', function() {                             
-                                            var child = $(this).text();                                   
-                                            var childId = $(this).data('child-id');                                 
-                                            $('#" . $searchChildInputId . "').val(child);                                   
-                                            $('#" . $searchChildInputId . "').attr('data-child-id', childId);
-                                            $('#search-result-area').empty();                 
-                                        });
-                                    },
-                                });
-                            }
+                        dataType: 'html',
+                        type: 'POST',                           
+                        success: function(data) {
+                            $('#search-result-area').html(data);
+                            $('#search-result-area .list-group-item').on('click', function() {                             
+                                var child = $(this).text();                                   
+                                var childId = $(this).data('child-id');                                 
+                                $('#" . $searchChildInputId . "').val(child);                                   
+                                $('#" . $searchChildInputId . "').attr('data-child-id', childId);
+                                $('#search-result-area').empty();                 
+                            });
                         },
-                        '#" . $addChildInputId . "' : {
-                            'click' : function() {           
-                                var childId = $('#" . $searchChildInputId . "').data('child-id');
-                                $.ajax({
-                                    url: 'father/my-child/add-child',
-                                    data: {'childId' : childId},
-                                    dataType: 'json',
-                                    type: 'POST', 
-                                    success: function () {
-                                        location.reload();
-                                    },        
-                                    error: function (data) {                     
-                                        alert(data.responseText);
-                                    },               
-                                });
-                            }  
-                        }, 
-                        '." . $deleteChildButtonId . "' : {
-                            'click' : function(e) {          
-                                e.stopPropagation();
-                                e.preventDefault();
-                                var childId = $(this).data('child-id');
-                                $.ajax({
-                                    url: 'father/my-child/delete-child',
-                                    data: {'childId' : childId},
-                                    dataType: 'json',
-                                    type: 'POST', 
-                                    success: function () {
-                                        location.reload();
-                                    },               
-                                    error: function (data) { 
-                                        alert(data.responseText);                      
-                                    },               
-                                });
-                            }  
-                        },                
                     });
-                });
+                })
+                $('#" . $addChildInputId . "').click(function(){           
+                    var childId = $('#" . $searchChildInputId . "').data('child-id');
+                    $.ajax({
+                        url: 'father/my-child/add-child',
+                        data: {'childId' : childId},
+                        dataType: 'json',
+                        type: 'POST', 
+                        success: function () {
+                            location.reload();
+                        },        
+                        error: function (data) {                     
+                            alert(data.responseText);
+                        },               
+                    });
+                }) 
+                $('#" . $deleteChildButtonId . "').click(function(e){          
+                    e.stopPropagation();
+                    e.preventDefault();
+                    var childId = $(this).data('child-id');
+                    $.ajax({
+                        url: 'father/my-child/delete-child',
+                        data: {'childId' : childId},
+                        dataType: 'json',
+                        type: 'POST', 
+                        success: function () {
+                            location.reload();
+                        },               
+                        error: function (data) { 
+                            alert(data.responseText);                      
+                        },               
+                    });
+                });  
             ");
 
             Modal::begin([

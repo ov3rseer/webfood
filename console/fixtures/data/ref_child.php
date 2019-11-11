@@ -1,5 +1,6 @@
 <?php
 
+use common\models\reference\CardChild;
 use common\models\reference\Father;
 use common\models\reference\SchoolClass;
 use common\models\reference\ServiceObject;
@@ -16,6 +17,7 @@ $children['child-1'] = [
     'patronymic' => 'Валентинович',
     'father_id' => $this->getFixtureModel(Father::class, 'father-1')->primaryKey,
     'school_class_id' => $this->getFixtureModel(SchoolClass::class, 'school-class-1')->primaryKey,
+    'card_id' => $this->getFixtureModel(CardChild::class, 'card-1')->primaryKey,
 ];
 $children['child-2'] = [
     'surname' => 'Симонов',
@@ -23,6 +25,7 @@ $children['child-2'] = [
     'patronymic' => 'Савельевич',
     'father_id' => $this->getFixtureModel(Father::class, 'father-1')->primaryKey,
     'school_class_id' => $this->getFixtureModel(SchoolClass::class, 'school-class-2')->primaryKey,
+    'card_id' => $this->getFixtureModel(CardChild::class, 'card-2')->primaryKey,
 ];
 $children['child-3'] = [
     'surname' => 'Королёва',
@@ -30,6 +33,7 @@ $children['child-3'] = [
     'patronymic' => 'Андреевна',
     'father_id' => $this->getFixtureModel(Father::class, 'father-1')->primaryKey,
     'school_class_id' => $this->getFixtureModel(SchoolClass::class, 'school-class-3')->primaryKey,
+    'card_id' => $this->getFixtureModel(CardChild::class, 'card-3')->primaryKey,
 ];
 $children['child-4'] = [
     'surname' => 'Исакова',
@@ -37,6 +41,7 @@ $children['child-4'] = [
     'patronymic' => 'Владимировна',
     'father_id' => $this->getFixtureModel(Father::class, 'father-2')->primaryKey,
     'school_class_id' => $this->getFixtureModel(SchoolClass::class, 'school-class-4')->primaryKey,
+    'card_id' => $this->getFixtureModel(CardChild::class, 'card-4')->primaryKey,
 ];
 $children['child-5'] = [
     'surname' => 'Наумов',
@@ -44,6 +49,7 @@ $children['child-5'] = [
     'patronymic' => 'Александрович',
     'father_id' => $this->getFixtureModel(Father::class, 'father-2')->primaryKey,
     'school_class_id' => $this->getFixtureModel(SchoolClass::class, 'school-class-5')->primaryKey,
+    'card_id' => $this->getFixtureModel(CardChild::class, 'card-5')->primaryKey,
 ];
 
 $result = [];
@@ -62,6 +68,7 @@ foreach ($keys as $key) {
         'service_object_id' => $this->getFixtureModel(ServiceObject::class, 'object-1')->primaryKey,
         'school_class_id' => $children[$key]['school_class_id'],
         'father_id' => $children[$key]['father_id'],
+        'card_id' => $children[$key]['card_id']
     ];
 }
 return $result;
