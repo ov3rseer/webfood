@@ -2,11 +2,9 @@
 
 /* @var  yii\web\View $this */
 /* @var  Form $model */
-
-/* @var  integer $categoryId */
-/* @var  array $foods */
-
 /* @var  Pagination $pages */
+/* @var  array $foods */
+/* @var  integer $categoryId */
 
 use common\models\form\Form;
 use yii\bootstrap\Modal;

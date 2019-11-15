@@ -2,10 +2,13 @@
 
 namespace terminal\controllers;
 
+use common\components\DateTime;
 use common\models\enum\FoodType;
+use common\models\enum\MenuCycle;
 use common\models\reference\Complex;
 use common\models\reference\Meal;
 use common\models\reference\MealCategory;
+use common\models\reference\SetMenu;
 use Yii;
 use yii\base\InvalidConfigException;
 use yii\data\Pagination;
@@ -37,13 +40,39 @@ class SiteController extends Controller
     {
         $requestData = array_merge(Yii::$app->request->post(), Yii::$app->request->get());
 
-        $query = null;
-        if (isset($requestData['categoryId'])) {
-            $category = MealCategory::findOne(['id' => $requestData['categoryId']]);
-            $query = Meal::find()->andWhere(['meal_category_id' => $category->id]);
+        $currentDate = new DateTime('now');
+        $weekDayId = $currentDate->format('N');
+        $menuCycleIds[] = MenuCycle::WEEKLY;
+        if ($currentDate->format('W') % 2 == 0) {
+            $menuCycleIds[] = MenuCycle::EVEN_WEEKS;
         } else {
-            $query = Complex::find();
+            $menuCycleIds[] = MenuCycle::ODD_WEEKS;
         }
+        /** @var SetMenu $setMenu */
+        $setMenu = SetMenu::find()
+            ->andWhere([
+                'week_day_id' => $weekDayId,
+                'is_active' => true,
+                'menu_cycle_id' => $menuCycleIds
+            ])
+            ->one();
+
+        $query = null;
+        if ($setMenu && $setMenu->menu && isset($requestData['categoryId'])) {
+            $mealIds = [];
+            foreach ($setMenu->menu->menuMeals as $menuMeal) {
+                $mealIds[] = $menuMeal->meal_id;
+            }
+            $category = MealCategory::findOne(['id' => $requestData['categoryId']]);
+            $query = Meal::find()->andWhere(['id' => $mealIds, 'meal_category_id' => $category->id]);
+        } else {
+            $complexIds = [];
+            foreach ($setMenu->menu->menuMeals as $menuMeal) {
+                $complexIds[] = $menuMeal->meal_id;
+            }
+            $query = Complex::find()->andWhere(['id' => $complexIds]);
+        }
+
         $query = $query->andWhere([
             'is_active' => true,
             'food_type_id' => FoodType::BUFFET

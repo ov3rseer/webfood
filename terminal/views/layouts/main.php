@@ -52,7 +52,6 @@ $categoryId = Yii::$app->request->get('categoryId') ?? null;
 
 $session = Yii::$app->session;
 $active = !empty($session['meals']) ? 'active' : '';
-$sum = !empty($session['sum']) ? explode('.', $session['sum']) : [];
 
 echo Html::beginTag('div', ['class' => 'topbar container-fluid pt-3']);
 echo Html::tag('div', Html::tag('span', Yii::$app->view->title, ['class' => 'mb-0 pl-3 ellipsis']), ['class' => 'category-title']);
