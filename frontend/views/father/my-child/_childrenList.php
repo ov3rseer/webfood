@@ -55,6 +55,8 @@ if (!empty($card)) {
             var divs = $('#child-list-accordion').find('.collapse').hide();
             var div = $(this).attr('href'); 
             $(div).show();
+            var childButtonsPanel = $('.child-buttons-panel');
+            $(childButtonsPanel).html('<button class=\"btn btn-success\">Заказать питание</button>');
             var cardId = $('." . $openAddMoneyModalClass . "').data('card-id');
             $.ajax({
                 url: '" . Url::to(['index']) . "',
