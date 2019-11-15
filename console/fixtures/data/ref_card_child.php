@@ -9,6 +9,7 @@ foreach ($keys as $key) {
         $cardNumber .= mt_rand(0, 9);
     }
     $result[$key] = [
+        'name' => 'Карта №' . $cardNumber,
         'card_number' => $cardNumber,
         'balance' => 0,
         'limit_per_day' => 0,

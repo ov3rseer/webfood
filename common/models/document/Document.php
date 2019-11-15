@@ -138,6 +138,15 @@ abstract class Document extends ActiveRecord
      * Получение номера и даты документа
      * @return string
      */
+    public function getDocumentDate()
+    {
+        return ($this->isNewRecord ? '(новый)' : 'от ' . $this->date->format('d.m.Y'));
+    }
+
+    /**
+     * Получение номера и даты документа
+     * @return string
+     */
     public function getNumberAndDate()
     {
         return ($this->isNewRecord ? '(новый)' : '№' .$this->id . ' от ' . $this->date->format('d.m.Y'));

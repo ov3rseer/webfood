@@ -4,7 +4,9 @@ namespace common\models\register\registerAccumulate;
 
 use common\models\reference\CardChild;
 use common\models\reference\Child;
+use yii\base\InvalidConfigException;
 use yii\db\ActiveQuery;
+use yii\db\ActiveRecord;
 
 /**
  * Модель регистра накопления "История карты"
@@ -55,7 +57,7 @@ class CardHistory extends RegisterAccumulate
      */
     public function getCard()
     {
-        return $this->hasOne(CardChild::className(), ['id' => 'card_id']);
+        return $this->hasOne(CardChild::class, ['id' => 'card_id']);
     }
 
     /**
@@ -76,5 +78,16 @@ class CardHistory extends RegisterAccumulate
         return [
             'sum',
         ];
+    }
+
+    /**
+     * Получение истории движений по картам
+     * @param integer $cardId
+     * @return ActiveRecord[]
+     * @throws InvalidConfigException
+     */
+    static public function getCardHistory($cardId)
+    {
+        return self::find()->andWhere(['card_id' => $cardId])->orderBy('date DESC')->all();
     }
 }

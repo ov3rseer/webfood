@@ -10,7 +10,7 @@ use common\models\tablepart\PurchaseMeal;
 use yii\db\ActiveQuery;
 
 /**
- * Модель документа "Покупка"
+ * Модель документа "Пополнение карты"
  *
  * Свойства:
  * @property integer $card_id
@@ -28,7 +28,7 @@ class RefillBalance extends Document
      */
     public function getSingularName()
     {
-        return 'Пополнение счёта';
+        return 'Пополнение карты';
     }
 
     /**
@@ -36,7 +36,7 @@ class RefillBalance extends Document
      */
     public function getPluralName()
     {
-        return 'Пополнения счетов';
+        return 'Пополнения карт';
     }
 
     /**
@@ -88,7 +88,7 @@ class RefillBalance extends Document
     {
         return [
             // Заказы покупателей
-            CardHistory::className() => [
+            CardHistory::class => [
                 'balance_error' => function () {
                     return '';
                 },

@@ -16,6 +16,7 @@ use yii\bootstrap\Html;
 use yii\db\StaleObjectException;
 use yii\filters\AccessControl;
 use yii\web\Controller;
+use yii\web\NotFoundHttpException;
 
 /**
  * Контроллер для управления детьми
@@ -32,13 +33,44 @@ class MyChildController extends Controller
                 'class' => AccessControl::class,
                 'rules' => [
                     [
-                        'actions' => ['add-child', 'delete-child', 'search-child'],
+                        'actions' => ['index', 'add-child', 'delete-child', 'search-child'],
                         'allow' => true,
                         'roles' => ['father'],
                     ],
                 ],
             ],
         ]);
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function actions()
+    {
+        $result = parent::actions();
+        unset($result['index']);
+        return $result;
+    }
+
+    /**
+     * @return string
+     * @throws NotFoundHttpException
+     */
+    public function actionIndex()
+    {
+        $father = null;
+        $requestData = array_merge(Yii::$app->request->post(), Yii::$app->request->get());
+        if (Yii::$app->request->isAjax && isset($requestData['cardId'])) {
+            return $this->renderAjax('_cardHistory', ['cardId' => $requestData['cardId']]);
+        }
+        if (Yii::$app->user) {
+            /** @var Father $father */
+            $father = Father::findOne(['user_id' => Yii::$app->user->id]);
+            if ($father === null) {
+                throw new NotFoundHttpException('Вы не являетесь родителем, чтобы просматривать данную страницу.');
+            }
+        }
+        return $this->render('index', ['father' => $father]);
     }
 
     /**

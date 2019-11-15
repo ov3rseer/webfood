@@ -14,7 +14,6 @@ class m190822_094907_add_ref_card_child extends Migration
             'balance' => $this->decimal(10, 2)->defaultValue(0)->notNull(),
             'limit_per_day' => $this->decimal(10, 2)->defaultValue(0)->notNull(),
         ]);
-        $this->dropColumn('{{%ref_card_child}}', 'name');
         $this->insert('{{%sys_entity}}', ['class_name' => 'common\models\reference\CardChild']);
         $this->addColumn('{{%ref_child}}', 'card_id', $this->integer()->indexed()->foreignKey('{{%ref_card_child}}', 'id'));
     }

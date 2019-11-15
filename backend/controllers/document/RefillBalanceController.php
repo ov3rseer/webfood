@@ -3,7 +3,7 @@
 namespace backend\controllers\document;
 
 /**
- * Контроллер для документов "Пополнение счетов"
+ * Контроллер для документов "Пополнение карты"
  */
 class RefillBalanceController extends DocumentController
 {
