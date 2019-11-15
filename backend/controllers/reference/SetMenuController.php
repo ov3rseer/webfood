@@ -1,14 +1,14 @@
 <?php
 
-namespace backend\controllers\document;
+namespace backend\controllers\reference;
 
 /**
  * Контроллер для документов "Установки меню"
  */
-class SetMenuController extends DocumentController
+class SetMenuController extends ReferenceController
 {
     /**
      * @var string имя класса модели
      */
-    public $modelClass = 'common\models\document\SetMenu';
+    public $modelClass = 'common\models\reference\SetMenu';
 }
