@@ -51,7 +51,7 @@ if (!empty($children)) {
         echo Html::a($child['name'], '#childInfo-wrap-' . $childId, [
             'class' => $childNameLink,
             'style' => 'text-decoration:none; border-bottom: 1px dashed #000080;',
-            'data-card-link' => true,
+            'data-card-id' => $cards[$childId]['id']
         ]);
         echo Html::a('<span class="glyphicon glyphicon-minus"></span><span class="glyphicon glyphicon-user"></span>',
             '#', ['class' => 'text-danger ' . $deleteChildButtonClass, 'data' => ['child-id' => $childId]]);
@@ -129,8 +129,8 @@ $this->registerJs("
         var div = $(this).attr('href'); 
         $(div).show();
         var childButtonsPanel = $('.child-buttons-panel');
-      //  $(childButtonsPanel).html('<button class=\"btn btn-success\">Заказать питание</button>');
-        var cardId = $('." . $openAddMoneyModalClass . "').data('card-id');
+        //$(childButtonsPanel).html('<button class=\"btn btn-success\">Заказать питание</button>');
+        var cardId = $(this).data('card-id');
         $.ajax({
             url: '" . Url::to(['index']) . "',
             data: {'cardId' : cardId},
