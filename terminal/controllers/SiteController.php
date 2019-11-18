@@ -89,23 +89,25 @@ class SiteController extends Controller
         }
 
         $foods = [];
-        foreach ($models as $model) {
-            $foods[$model->id] = [
-                'name' => Html::encode($model),
-                'category' => isset($model->mealCategory) ? Html::encode($model->mealCategory) : 'Комплексы',
-                'description' => Html::encode($model->description),
-                'price' => $model->price,
-                'parts' => [],
-            ];
-
-            $parts = $model->mealProducts ?? $model->complexMeals ?? [];
-            $parameter = isset($model->mealProducts) ? 'product' : 'meal';
-
-            foreach ($parts as $part) {
-                $foods[$model->id]['parts'][Html::encode($part->{$parameter})] = [
-                    'quantity' => (float)$part->{($parameter . '_quantity')},
-                    'unit' => isset($part->unit->name) ? Html::encode($part->unit->name) : ''
+        if ($models) {
+            foreach ($models as $model) {
+                $foods[$model->id] = [
+                    'name' => Html::encode($model),
+                    'category' => isset($model->mealCategory) ? Html::encode($model->mealCategory) : 'Комплексы',
+                    'description' => Html::encode($model->description),
+                    'price' => $model->price,
+                    'parts' => [],
                 ];
+
+                $parts = $model->mealProducts ?? $model->complexMeals ?? [];
+                $parameter = isset($model->mealProducts) ? 'product' : 'meal';
+
+                foreach ($parts as $part) {
+                    $foods[$model->id]['parts'][Html::encode($part->{$parameter})] = [
+                        'quantity' => (float)$part->{($parameter . '_quantity')},
+                        'unit' => isset($part->unit->name) ? Html::encode($part->unit->name) : ''
+                    ];
+                }
             }
         }
         return $this->render('index', ['foods' => $foods, 'pages' => $pages]);
