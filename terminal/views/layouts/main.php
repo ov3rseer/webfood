@@ -91,7 +91,7 @@ echo '<br>';
 echo Html::beginTag('li', ['class' => 'sidebar-item' . ($categoryId == null ? ' active' : '')]);
 $logo = Html::tag('div', '', ['class' => 'icon fas fa-fw fa-th-list']);
 $logo .= Html::tag('span', 'Комплексы', ['class' => 'menu-title']);
-echo Html::a($logo, 'index', ['method' => 'post']);
+echo Html::a($logo, ['site/index'], ['method' => 'post']);
 echo Html::endTag('li');
 
 foreach ($categories as $category) {
