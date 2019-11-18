@@ -9,7 +9,7 @@ use console\fixtures\Fixture;
 $keys = ['father-1', 'father-2'];
 
 $fathers['father-1'] = [
-    'surname' => 'Пупкин',
+    'surname' => 'Иванов',
     'forename' => 'Иван',
     'patronymic' => 'Иванович'
 ];

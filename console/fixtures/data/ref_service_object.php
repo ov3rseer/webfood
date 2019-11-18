@@ -11,12 +11,12 @@ $keys = ['object-1', 'object-2'];
 
 $objects = [
     'object-1' => [
-        'name' => 'Частный лицей N777 с уклоном в экономику',
+        'name' => 'Школа №23',
         'service_object_code' => '01',
         'service_object_type_id' => ServiceObjectType::SCHOOL,
     ],
     'object-2' => [
-        'name' => 'Детский сад',
+        'name' => 'Детский сад "Колобок"',
         'service_object_code' => '02',
         'service_object_type_id' => ServiceObjectType::KINDERGARTEN,
     ],
