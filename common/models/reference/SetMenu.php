@@ -83,4 +83,16 @@ class SetMenu extends Reference
     {
         return $this->hasOne(WeekDay::class, ['id' => 'week_day_id']);
     }
+
+    /**
+     * @inheritdoc
+     */
+    public function beforeSave($insert)
+    {
+        $parentResult = parent::beforeSave($insert);
+        if ($parentResult) {
+            $this->name = $this->menu->name . ' (' . $this->weekDay . ' - ' . $this->menuCycle . ')';
+        }
+        return $parentResult;
+    }
 }
