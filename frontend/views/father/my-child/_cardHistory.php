@@ -14,7 +14,6 @@ foreach ($cardHistories as $cardHistory) {
     /** @var RefillBalance|Purchase $document */
     $document = $modelClass::findOne(['id' => $cardHistory->document_basis_id]);
 
-
     echo Html::beginTag('div', ['class' => 'row list-group-item']);
     echo Html::beginTag('div', ['class' => 'col-xs-4']);
     echo $cardHistory->date;

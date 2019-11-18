@@ -55,13 +55,14 @@ class CartController extends TerminalModelController
         }
     }
 
-//    public function actionCartRevision()
-//    {
-//        $id = Yii::$app->request->post('id');
-//        $qty = Yii::$app->request->post('qty');
-//        $price = Yii::$app->request->post('price');
-//        $category = Yii::$app->request->post('category');
-//        $session = Yii::$app->session;
+    public function actionCartRevision()
+    {
+        $id = Yii::$app->request->post('id');
+        $qty = Yii::$app->request->post('qty');
+        $price = Yii::$app->request->post('price');
+        $category = Yii::$app->request->post('category');
+        $session = Yii::$app->session;
+        var_dump($id,$qty,$price, $category);
 //        if (isset($id) && isset($qty) && isset($price) && isset($category)) {
 //            $categoryType = $category == 'Комплексы' ? 'complexes' : 'meals';
 //
@@ -82,5 +83,5 @@ class CartController extends TerminalModelController
 //            }
 //            $session[$categoryType] = $food;
 //        }
-//    }
+    }
 }

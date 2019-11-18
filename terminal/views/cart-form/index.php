@@ -107,7 +107,7 @@ echo GridView::widget([
         'quantity' => [
             'header' => 'Количество',
             'format' => 'raw',
-            'value' => function ($quantity, $mealId) {
+            'value' => function ($quantity) {
                 if (isset($quantity)) {
                     return Html::encode($quantity);
                 }

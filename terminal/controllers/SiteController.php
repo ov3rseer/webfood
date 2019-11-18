@@ -58,32 +58,35 @@ class SiteController extends Controller
             ->one();
 
         $query = null;
+        $pages = null;
+        $models = null;
         if ($setMenu && $setMenu->menu && isset($requestData['categoryId'])) {
-            $mealIds = [];
-            foreach ($setMenu->menu->menuMeals as $menuMeal) {
-                $mealIds[] = $menuMeal->meal_id;
+            $foodIds = [];
+            if (isset($setMenu->menu->menuMeals)) {
+                foreach ($setMenu->menu->menuMeals as $menuMeal) {
+                    $foodIds[] = $menuMeal->meal_id;
+                }
+                $category = MealCategory::findOne(['id' => $requestData['categoryId']]);
+                $query = Meal::find()->andWhere(['id' => $foodIds, 'meal_category_id' => $category->id]);
+
+            } else if (isset($setMenu->menu->menuComplexes)) {
+                foreach ($setMenu->menu->menuComplexes as $menuComplex) {
+                    $foodIds[] = $menuComplex->complex_id;
+                }
+                $query = Complex::find()->andWhere(['id' => $foodIds]);
             }
-            $category = MealCategory::findOne(['id' => $requestData['categoryId']]);
-            $query = Meal::find()->andWhere(['id' => $mealIds, 'meal_category_id' => $category->id]);
-        } else {
-            $complexIds = [];
-            foreach ($setMenu->menu->menuMeals as $menuMeal) {
-                $complexIds[] = $menuMeal->meal_id;
-            }
-            $query = Complex::find()->andWhere(['id' => $complexIds]);
+            $query = $query->andWhere([
+                'is_active' => true,
+                'food_type_id' => FoodType::BUFFET
+            ]);
+
+            $countQuery = clone $query;
+            $pages = new Pagination([
+                'totalCount' => $countQuery->count(),
+                'pageSizeLimit' => [1, 9]
+            ]);
+            $models = $query->orderBy('id ASC')->offset($pages->offset)->limit($pages->limit)->all();
         }
-
-        $query = $query->andWhere([
-            'is_active' => true,
-            'food_type_id' => FoodType::BUFFET
-        ]);
-
-        $countQuery = clone $query;
-        $pages = new Pagination([
-            'totalCount' => $countQuery->count(),
-            'pageSizeLimit' => [1, 9]
-        ]);
-        $models = $query->orderBy('id ASC')->offset($pages->offset)->limit($pages->limit)->all();
 
         $foods = [];
         foreach ($models as $model) {

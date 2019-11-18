@@ -58,7 +58,7 @@ AppAsset::register($this);
                         'visible' => Yii::$app->user->can('super-admin'),
                     ],
                     [
-                        'label' => 'Пополнения счетов',
+                        'label' => 'Пополнения карт',
                         'url' => ['/document/refill-balance/index'],
                         'visible' => Yii::$app->user->can('super-admin'),
                     ],
