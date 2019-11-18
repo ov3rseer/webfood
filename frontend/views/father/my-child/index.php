@@ -45,8 +45,6 @@ if (!empty($children)) {
     echo Html::beginTag('div', ['class' => 'list-group accordion', 'id' => 'child-list-accordion']);
     foreach ($children as $childId => $child) {
         echo Html::beginTag('div', ['class' => 'list-group-item list-group-item-action']);
-
-        //
         echo Html::beginTag('span', ['style' => 'display: flex; justify-content: space-between;']);
         echo Html::a($child['name'], '#childInfo-wrap-' . $childId, [
             'class' => $childNameLink,
