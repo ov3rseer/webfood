@@ -41,7 +41,7 @@ $this->registerJs("
     $('#" . $addChildButtonId . "').click(function(){           
         var childId = $('#" . $searchChildInputId . "').data('child-id');
         $.ajax({
-            url: 'father/my-child/add-child',
+            url: '" . Url::to(['father/my-child/add-child']) . "',
             data: {'childId' : childId},
             dataType: 'json',
             type: 'POST', 
