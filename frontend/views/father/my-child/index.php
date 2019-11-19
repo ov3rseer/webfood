@@ -166,7 +166,7 @@ $this->registerJs("
         }          
         var childId = $(this).data('child-id');
         $.ajax({
-            url: " . Url::to(['father/my-child/delete-child']) . ",
+            url: '" . Url::to(['father/my-child/delete-child']) . "',
             data: {'childId' : childId},
             dataType: 'json',
             type: 'POST', 
