@@ -4,6 +4,7 @@ use backend\widgets\ActiveForm;
 use backend\widgets\GridView\GridViewWithToolbar;
 use frontend\models\serviceObject\RequestForm;
 use yii\helpers\Html;
+use yii\helpers\Url;
 use yii\widgets\Pjax;
 
 /* @var RequestForm $model */
@@ -62,7 +63,7 @@ echo GridViewWithToolbar::widget([
                     $('#" . $buttonId . "').click(function(e){             
                         var data = $('#" . $formId . "').serialize() + '&scenario=" . $model->scenario . "';           
                         $.ajax({
-                            url: 'save-request-table',
+                            url: '" . Url::to(['save-request-table']) . "',
                             replace: false,
                             timeout: 5000,
                             type: 'POST',

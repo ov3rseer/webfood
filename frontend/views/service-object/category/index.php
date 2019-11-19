@@ -100,8 +100,8 @@ echo GridViewWithToolbar::widget([
                                 var category_name = $('#category-name-" . $rowModel->id . "').val();
                                 var is_active = $('#active-" . $rowModel->id . "').is(':checked');
                                 $('#".$modalId."').on('hidden.bs.modal', function () { 
-                                    $.ajax({
-                                        url: 'update',
+                                    $.ajax({                                   
+                                        url: '" . Url::to(['update']) . "',
                                         data: {id: id, is_active: is_active, category_name: category_name},
                                         dataType: 'json',
                                         type: 'POST',
@@ -132,7 +132,7 @@ echo GridViewWithToolbar::widget([
                             }
                             var id = $(this).data('id');
                             $.ajax({
-                                url: 'delete',
+                                url: '" . Url::to(['delete']) . "',
                                 data: {id: id},
                                 dataType: 'json',
                                 type: 'POST',

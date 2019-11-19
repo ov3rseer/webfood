@@ -1,17 +1,12 @@
 <?php
 
-use backend\controllers\system\SystemController;
 use backend\widgets\GridView\GridView;
-use backend\widgets\GridView\GridViewWithToolbar;
 use common\models\reference\Meal;
 use terminal\models\Cart;
-use terminal\models\MealForm;
-use yii\bootstrap\ButtonDropdown;
-use yii\bootstrap\ButtonGroup;
 use yii\grid\ActionColumn;
 use yii\grid\SerialColumn;
 use yii\helpers\Html;
-use backend\widgets\ActiveForm;
+use yii\helpers\Url;
 
 /* @var yii\web\View $this */
 /* @var Cart $model */
@@ -63,7 +58,7 @@ echo GridView::widget([
                                     return;
                                 }                           
                                 $.ajax({
-                                    url: 'delete-meal',
+                                    url: '" . Url::to(['delete-meal']) . "',
                                     method: 'POST',
                                     dataType: 'json',
                                     data: {mealId: " . $mealId . "},                          

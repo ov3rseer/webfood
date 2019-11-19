@@ -123,9 +123,9 @@ echo GridViewWithToolbar::widget([
                                 var price = $('#product-price-" . $rowModel->id . "').val();
                                 var unit_id = $('#product-unit-" . $rowModel->id . "').val();
                                 var category_id = $('#product-category-" . $rowModel->id . "').val();
-                                $('#".$modalId."').on('hidden.bs.modal', function () {                 
+                                $('#" . $modalId . "').on('hidden.bs.modal', function () {                 
                                     $.ajax({
-                                        url: 'update',
+                                        url: '" . Url::to(['update']) . "',
                                         data: {id: id, is_active: is_active, name: name, product_code: product_code, price: price, unit_id: unit_id, category_id: category_id},
                                         dataType: 'json',
                                         type: 'POST',
@@ -156,7 +156,7 @@ echo GridViewWithToolbar::widget([
                             }
                             var id = $(this).data('id');
                             $.ajax({
-                                url: 'delete',
+                                url: '" . Url::to(['delete']) . "',
                                 data: {id: id},
                                 dataType: 'json',
                                 type: 'POST',
