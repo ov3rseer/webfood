@@ -15,7 +15,6 @@ use yii\db\ActiveQuery;
 /**
  * Модель документа "Предварительная заявка"
  *
- * @property integer $contract_type_id
  * @property integer $contract_id
  * @property integer $service_object_id
  * @property string  $service_object_code
@@ -51,9 +50,9 @@ class Request extends Document
     public function rules()
     {
         return array_merge(parent::rules(), [
-            [['contract_id', 'service_object_id', 'contract_type_id'], 'integer'],
+            [['contract_id', 'service_object_id'], 'integer'],
             [['address', 'contract_code', 'service_object_code'], 'string'],
-            [['service_object_code', 'contract_code', 'contract_type_id', 'address', 'service_object_id', 'contract_id'], 'required'],
+            [['service_object_code', 'contract_code', 'address', 'service_object_id', 'contract_id'], 'required'],
         ]);
     }
 
@@ -63,7 +62,6 @@ class Request extends Document
     public function attributeLabels()
     {
         return array_merge(parent::attributeLabels(), [
-            'contract_type_id'      => 'Тип заявки',
             'service_object_id'     => 'Объект обслуживания',
             'service_object_code'   => 'Код объекта обслуживания',
             'contract_id'           => 'Контракт',
@@ -91,20 +89,12 @@ class Request extends Document
     }
 
     /**
-     * @return ActiveQuery
-     */
-    public function getContractType()
-    {
-        return $this->hasOne(ContractType::class, ['id' => 'contract_type_id']);
-    }
-
-    /**
      * @inheritdoc
      */
     public function getTableParts()
     {
         return array_merge([
-            'requestDates' => RequestDate::className(),
+            'requestDates' => RequestDate::class,
         ], parent::getTableParts());
     }
 
