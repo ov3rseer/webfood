@@ -11,6 +11,7 @@ use yii\bootstrap\Modal;
 use yii\bootstrap\Nav;
 use yii\bootstrap\NavBar;
 use yii\helpers\Html;
+use yii\helpers\Url;
 use yii\web\View;
 use yii\widgets\Breadcrumbs;
 use frontend\assets\AppAsset;
@@ -53,11 +54,11 @@ AppAsset::register($this);
 
     $this->registerJs(" 
         $('#preliminary-request, #correction-request').click(function(e) {
-            var url = this.attributes['data-action'].value;
+            e.preventDefault();
             var action = this.id;
-            $('#" . $modalId . " a').each(function() {
-                var contractTypeId = this.attributes['data-contract-type'].value;
-                this.href = location.origin + '/' + url + '?contractTypeId=' + contractTypeId + '&action=' + action;
+            var contractTypeId = $(this).attr('contract-type');
+            $('#" . $modalId . " a').each(function(){
+                this.href =  '" . Url::to(['serviceObject/request/index']) . "' + '?contractTypeId=' + contractTypeId + '&action=' + action;
             });
             $('#" . $modalId . "').modal('show');
         });"
@@ -98,7 +99,6 @@ AppAsset::register($this);
                                 'visible' => Yii::$app->user->can('service-object'),
                                 'linkOptions' => [
                                     'id' => 'preliminary-request',
-                                    'data-action' => 'serviceObject/request/index',
                                 ]
                             ],
                             [
@@ -107,7 +107,6 @@ AppAsset::register($this);
                                 'visible' => Yii::$app->user->can('service-object'),
                                 'linkOptions' => [
                                     'id' => 'correction-request',
-                                    'data-action' => 'serviceObject/request/index',
                                 ]
                             ],
                         ],
