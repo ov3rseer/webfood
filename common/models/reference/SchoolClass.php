@@ -48,6 +48,7 @@ class SchoolClass extends Reference
             [['name_full'], 'filter', 'filter' => 'trim'],
             [['number'], 'in', 'range' => range(1, 11), 'message' => 'Значение не должно быть больше 11.'],
             [['litter'], 'string', 'max' => 1],
+            [['litter'], 'filter', 'filter' => 'uppercase'],
             [['service_object_id', 'number', 'litter'], 'required'],
         ]);
     }
