@@ -130,15 +130,17 @@ $this->registerJs("
         var childButtonsPanel = $('.child-buttons-panel');
         //$(childButtonsPanel).html('<button class=\"btn btn-success\">Заказать питание</button>');
         var cardId = $(this).data('card-id');
-        $.ajax({
-            url: '" . Url::to(['index']) . "',
-            data: {'cardId' : cardId},
-            dataType: 'json',
-            type: 'POST',                    
-            complete: function(response){   
-                $('.card-history').html(response.responseText);
-            }
-        });
+        if(cardId){
+            $.ajax({
+                url: '" . Url::to(['index']) . "',
+                data: {'cardId' : cardId},
+                dataType: 'json',
+                type: 'POST',                    
+                complete: function(response){   
+                    $('.card-history').html(response.responseText);
+                }
+            });
+        }
     });
     $('." . $openAddMoneyModalClass . "').click(function() {
         $('#" . $addMoneyModalId . "').modal('show');         
