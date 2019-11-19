@@ -27,7 +27,7 @@ foreach ($keys as $key) {
         'is_active' => true,
         'user_id' => $this->getFixtureModel(User::class, 'user-' . $key)->primaryKey
     ];
-    $result[$key] = $objects[$key];
+    $result[$key] = array_merge($objects[$key], $result[$key]);
 
     $user = User::findOne(['id' => $this->getFixtureModel(User::class, 'user-' . $key)->primaryKey]);
     $user->name_full = $objects[$key]['name'];

@@ -119,6 +119,10 @@ class ImportServiceObjectAndContract extends BaseObject implements TaskProcessor
                     $product->name = $product_values['name'];
                     $product->product_code = $product_values['product_code'];
                     $product->unit_id = $product_values['unit_id'];
+
+                    /////Править две следующие строки
+                    $product->price = 0;
+                    $product->product_category_id = 1;
                     $product->save() ? $result['added']++ : $result['skipped']++;
 
                     $contractProduct = ContractProduct::findOne(['parent_id' => $contract->id, 'product_id' => $product->id]) ?: new ContractProduct();

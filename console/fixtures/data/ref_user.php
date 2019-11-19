@@ -6,8 +6,9 @@ use console\fixtures\Fixture;
 /** @var Fixture $this */
 /** @noinspection PhpUnhandledExceptionInspection */
 
-return [
+$users = [
     'super-admin' => [
+        'id' => 1,
         'is_active' => true,
         'name' => 'admin',
         'name_full' => 'Администратор',
@@ -16,6 +17,7 @@ return [
         'password_hash' => Yii::$app->security->generatePasswordHash('admin')
     ],
     'user-father-1' => [
+        'id' => 2,
         'is_active' => true,
         'name' => 'father1',
         'user_type_id' => UserType::FATHER,
@@ -23,6 +25,7 @@ return [
         'password_hash' => Yii::$app->security->generatePasswordHash('father1')
     ],
     'user-father-2' => [
+        'id' => 3,
         'is_active' => true,
         'name' => 'father2',
         'user_type_id' => UserType::FATHER,
@@ -30,6 +33,7 @@ return [
         'password_hash' => Yii::$app->security->generatePasswordHash('father2')
     ],
     'user-object-1' => [
+        'id' => 4,
         'is_active' => true,
         'name' => 'object1',
         'user_type_id' => UserType::SERVICE_OBJECT,
@@ -37,6 +41,7 @@ return [
         'password_hash' => Yii::$app->security->generatePasswordHash('object1')
     ],
     'user-object-2' => [
+        'id' => 5,
         'is_active' => true,
         'name' => 'object2',
         'user_type_id' => UserType::SERVICE_OBJECT,
@@ -44,3 +49,24 @@ return [
         'password_hash' => Yii::$app->security->generatePasswordHash('object2')
     ],
 ];
+
+$auth = Yii::$app->authManager;
+foreach ($users as $userKey => $user) {
+    if ($userKey != 'super-admin') {
+        $role = \common\models\reference\User::checkRole($user['user_type_id']);
+        if ($role) {
+            $role = $auth->getRole($role);
+            $auth->revoke($role, $user['id']);
+        }
+    }
+}
+foreach ($users as $userKey => $user) {
+    if ($userKey != 'super-admin') {
+        $role = \common\models\reference\User::checkRole($user['user_type_id']);
+        if ($role) {
+            $role = $auth->getRole($role);
+            $auth->assign($role, $user['id']);
+        }
+    }
+}
+return $users;
