@@ -99,18 +99,20 @@ echo GridViewWithToolbar::widget([
                                 var id = $(this).data('id');
                                 var category_name = $('#category-name-" . $rowModel->id . "').val();
                                 var is_active = $('#active-" . $rowModel->id . "').is(':checked');
-                                $.ajax({
-                                    url: 'update',
-                                    data: {id: id, is_active: is_active, category_name: category_name},
-                                    dataType: 'json',
-                                    type: 'POST',
-                                    success: function(data) {
-                                        $.pjax.reload('#" . $pjaxId . "', {
-                                            replace: true,
-                                            timeout: 5000,
-                                        });
-                                    }
-                                });
+                                $('#".$modalId."').on('hidden.bs.modal', function () { 
+                                    $.ajax({
+                                        url: 'update',
+                                        data: {id: id, is_active: is_active, category_name: category_name},
+                                        dataType: 'json',
+                                        type: 'POST',
+                                        success: function(data) {
+                                            $.pjax.reload('#" . $pjaxId . "', {
+                                                replace: true,
+                                                timeout: 5000,
+                                            });
+                                        }
+                                    });
+                                }):
                             });                   
                         });
                     ");
