@@ -96,7 +96,7 @@ class MyChildController extends Controller
                 ->select(['concat(c.name_full, \', \',sc.name, \', \', so.name) as name'])
                 ->innerJoin(ServiceObject::tableName() . ' AS so', 'so.id = c.service_object_id')
                 ->innerJoin(SchoolClass::tableName() . ' AS sc', 'sc.id = c.school_class_id')
-                ->andWhere(['c.is_active' => true])
+                ->andWhere(['c.is_active' => true, 'so.is_active' => true, 'sc.is_active' => true])
                 ->filterWhere($sql)
                 ->indexBy('id')
                 ->asArray()
