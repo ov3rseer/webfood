@@ -59,7 +59,8 @@ $this->registerJs("
 Modal::begin([
     'header' => '<h2>Выберите своего ребенка</h2>',
     'options' => [
-        'id' => $addChildModalId]
+        'id' => $addChildModalId
+    ]
 ]);
 echo '<div class="input-group">';
 echo Html::textInput(null, null, [

@@ -50,7 +50,7 @@ if (!empty($children)) {
         echo Html::a($child['name'], '#childInfo-wrap-' . $childId, [
             'class' => $childNameLink,
             'style' => 'text-decoration:none; border-bottom: 1px dashed #000080;',
-            'data-card-id' => $cards[$childId]['id']
+            'data-card-id' => isset($cards[$childId]['id']) ?? 0,
         ]);
         echo Html::a('<span class="glyphicon glyphicon-minus"></span><span class="glyphicon glyphicon-user"></span>',
             '#', ['class' => 'text-danger ' . $deleteChildButtonClass, 'data' => ['child-id' => $childId]]);
