@@ -89,6 +89,14 @@ class Request extends Document
     }
 
     /**
+     * @return ActiveQuery
+     */
+    public function getContract()
+    {
+        return $this->hasOne(Contract::class, ['id' => 'contract_id']);
+    }
+
+    /**
      * @inheritdoc
      */
     public function getTableParts()
