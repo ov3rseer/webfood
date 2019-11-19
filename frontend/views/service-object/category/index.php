@@ -112,7 +112,7 @@ echo GridViewWithToolbar::widget([
                                             });
                                         }
                                     });
-                                }):
+                                });
                             });                   
                         });
                     ");
