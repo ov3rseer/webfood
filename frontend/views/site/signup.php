@@ -11,47 +11,6 @@ use yii\bootstrap\ActiveForm;
 
 $this->title = 'Регистрация в личном кабинете родителя';
 
-$this->registerJs("
-$().ready(function() {
-
-    var signupFluent = new FluentUI({
-        '#signup-container, #signup-container input, #signup-container a, #signup-container button' : {
-            'mouseover focus' : function() {
-                let el = $('#signup-submit-btn, #signup-tooltip-block');
-                el.addClass('highlight'); 
-            },
-            'mouseout blur' : function() {
-                let el = $('#signup-submit-btn, #signup-tooltip-block');
-                el.removeClass('highlight'); 
-            }
-        },
-        '#signup-submit-btn' : {
-            'mouseover focus' : function() {
-                let el = $('#signup-submit-btn');
-                el.addClass('hover'); 
-            },
-            'mouseout blur' : function() {
-                let el = $('#signup-submit-btn');
-                el.removeClass('hover'); 
-            },
-            'valid-form-signup' : function() {
-                let el = $('#signup-submit-btn');
-                el.addClass('success');
-                el.removeClass('disabled');
-                el.removeAttr('disabled');
-            },
-            'invalid-form-signup' : function() {
-                let el = $('#signup-submit-btn');
-                el.removeClass('success');
-                el.addClass('disabled');
-                el.attr({'disabled' : true});
-            }
-        }
-    });
-
-});
-");
-
 ?>
 <div class="container" id="signup-container">
     <h1><?= Html::encode($this->title) ?></h1>
@@ -95,9 +54,8 @@ $().ready(function() {
         <?=
         Html::submitButton('Зарегистрироваться', [
             'id' => 'signup-submit-btn',
-            'class' => 'hidden-btn disabled',
+            'class' => 'hidden-btn',
             'name' => 'signup-button',
-            'disabled' => true
         ])
         ?>
     </div>
