@@ -1,6 +1,7 @@
 <?php
 
 /* @var $this yii\web\View */
+
 /* @var Father $father */
 
 use common\models\reference\Father;
@@ -165,7 +166,7 @@ $this->registerJs("
         }          
         var childId = $(this).data('child-id');
         $.ajax({
-            url: 'father/my-child/delete-child',
+            url: " . Url::to(['father/my-child/delete-child']) . ",
             data: {'childId' : childId},
             dataType: 'json',
             type: 'POST', 

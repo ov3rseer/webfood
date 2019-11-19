@@ -9,14 +9,14 @@ use yii\db\ActiveQuery;
 /**
  * Модель справочника "Класс"
  *
- * @property string   $name_full
- * @property integer  $service_object_id
- * @property integer  $teacher_id
- * @property integer  $number
- * @property string   $litter
+ * @property string $name_full
+ * @property integer $service_object_id
+ * @property integer $teacher_id
+ * @property integer $number
+ * @property string $litter
  *
  * Отношения:
- * @property ServiceObject      $serviceObject
+ * @property ServiceObject $serviceObject
  * @property SchoolClassChild[] $schoolClassChildren
  */
 class SchoolClass extends Reference
@@ -48,7 +48,7 @@ class SchoolClass extends Reference
             [['name_full'], 'filter', 'filter' => 'trim'],
             [['number'], 'in', 'range' => range(1, 11), 'message' => 'Значение не должно быть больше 11.'],
             [['litter'], 'string', 'max' => 1],
-            [['litter'], 'filter', 'filter' => 'uppercase'],
+            [['litter'], 'filter', 'filter' => 'mb_strtoupper'],
             [['service_object_id', 'number', 'litter'], 'required'],
         ]);
     }
@@ -80,7 +80,7 @@ class SchoolClass extends Reference
      */
     public function getSchoolClassChildren()
     {
-        return $this->hasMany(SchoolClassChild::className(), ['parent_id' => 'id'])
+        return $this->hasMany(SchoolClassChild::class, ['parent_id' => 'id'])
             ->orderBy('id ASC');
     }
 
@@ -105,7 +105,7 @@ class SchoolClass extends Reference
     public function getTableParts()
     {
         return array_merge([
-            'schoolClassChildren' => SchoolClassChild::className(),
+            'schoolClassChildren' => SchoolClassChild::class,
         ], parent::getTableParts());
     }
 
