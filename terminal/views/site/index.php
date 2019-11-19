@@ -4,6 +4,7 @@
 /* @var  Form $model */
 /* @var  Pagination $pages */
 /* @var  array $foods */
+
 /* @var  integer $categoryId */
 
 use common\models\form\Form;

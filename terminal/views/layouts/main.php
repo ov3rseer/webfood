@@ -89,14 +89,28 @@ echo Html::endTag('li');
 echo '<br>';
 
 echo Html::beginTag('li', ['class' => 'sidebar-item' . ($categoryId == null ? ' active' : '')]);
-$logo = Html::tag('div', '', ['class' => 'icon fas fa-fw fa-th-list']);
+$logo = Html::tag('div', '', ['class' => 'icon bg-contain fas fa-fw fa-th-list']);
 $logo .= Html::tag('span', 'Комплексы', ['class' => 'menu-title']);
 echo Html::a($logo, ['site/index'], ['method' => 'post']);
 echo Html::endTag('li');
 
 foreach ($categories as $category) {
     echo Html::beginTag('li', ['class' => 'sidebar-item ' . ($categoryId == $category->id ? ' active' : '')]);
-    $logo = Html::tag('div', '', ['class' => 'icon fas fa-fw fa-coffee']);
+    switch($category->id){
+        case 1: $icon = 'fa-mortar-pestle';
+            break;
+        case 2: $icon = 'fa-drumstick-bite';
+            break;
+        case 3: $icon = 'fa-liquid-soap';
+            break;
+        case 4: $icon = 'fa-mug-hot';
+            break;
+        case 5: $icon = 'fa-bread-slice';
+            break;
+        case 6: $icon = 'fa-leaf';
+            break;
+    }
+    $logo = Html::tag('div', '', ['class' => 'icon bg-contain fas fa-fw '.$icon]);
     $logo .= Html::tag('span', Html::encode($category), ['class' => 'menu-title']);
     echo Html::a($logo, ['site/index', 'categoryId' => $category->id]);
     echo Html::endTag('li');
