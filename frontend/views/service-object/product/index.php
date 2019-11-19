@@ -114,7 +114,7 @@ echo GridViewWithToolbar::widget([
                         $('#" . $showModalButtonId . "').click(function(){ 
                             $('#" . $modalId . "').modal('show');
                             $('#" . $updateButtonId . "').click(function(e){    
-                                $('#" . $modalId . "').modal('hide');                   
+                                $('#" . $modalId . "').modal('hide');  
                                 e.preventDefault();
                                 var id = $(this).data('id');
                                 var name = $('#product-name-" . $rowModel->id . "').val();
@@ -123,17 +123,19 @@ echo GridViewWithToolbar::widget([
                                 var price = $('#product-price-" . $rowModel->id . "').val();
                                 var unit_id = $('#product-unit-" . $rowModel->id . "').val();
                                 var category_id = $('#product-category-" . $rowModel->id . "').val();
-                                $.ajax({
-                                    url: 'update',
-                                    data: {id: id, is_active: is_active, name: name, product_code: product_code, price: price, unit_id: unit_id, category_id: category_id},
-                                    dataType: 'json',
-                                    type: 'POST',
-                                    success: function(data) {
-                                        $.pjax.reload('#" . $pjaxId . "', {
-                                            replace: true,
-                                            timeout: 5000,
-                                        });
-                                    }
+                                $('#".$modalId."').on('hidden.bs.modal', function () {                 
+                                    $.ajax({
+                                        url: 'update',
+                                        data: {id: id, is_active: is_active, name: name, product_code: product_code, price: price, unit_id: unit_id, category_id: category_id},
+                                        dataType: 'json',
+                                        type: 'POST',
+                                        success: function(data) {    
+                                            $.pjax.reload('#" . $pjaxId . "', {
+                                                replace: true,
+                                                timeout: 5000,
+                                            });
+                                        }
+                                    });
                                 });
                             });                   
                         });
