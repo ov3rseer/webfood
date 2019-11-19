@@ -122,19 +122,20 @@ echo GridViewWithToolbar::widget([
                                 var product_code = $('#product-code-" . $rowModel->id . "').val();
                                 var price = $('#product-price-" . $rowModel->id . "').val();
                                 var unit_id = $('#product-unit-" . $rowModel->id . "').val();
-                                var category_id = $('#product-category-" . $rowModel->id . "').val();              
-                                $.ajax({
-                                    url: 'update',
-                                    data: {id: id, is_active: is_active, name: name, product_code: product_code, price: price, unit_id: unit_id, category_id: category_id},
-                                    dataType: 'json',
-                                    type: 'POST',
-                                    success: function(data) {    
-                                        $('.modal-backdrop').remove();
-                                        $.pjax.reload('#" . $pjaxId . "', {
-                                            replace: true,
-                                            timeout: 5000,
-                                        });
-                                    }
+                                var category_id = $('#product-category-" . $rowModel->id . "').val();
+                                $('#".$modalId."').on('hidden.bs.modal', function () {                 
+                                    $.ajax({
+                                        url: 'update',
+                                        data: {id: id, is_active: is_active, name: name, product_code: product_code, price: price, unit_id: unit_id, category_id: category_id},
+                                        dataType: 'json',
+                                        type: 'POST',
+                                        success: function(data) {    
+                                            $.pjax.reload('#" . $pjaxId . "', {
+                                                replace: true,
+                                                timeout: 5000,
+                                            });
+                                        }
+                                    });
                                 });
                             });                   
                         });
