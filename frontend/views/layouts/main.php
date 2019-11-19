@@ -56,8 +56,8 @@ AppAsset::register($this);
         $('#preliminary-request, #correction-request').click(function(e) {
             e.preventDefault();
             var action = this.id;
-            var contractTypeId = $(this).attr('contract-type');
             $('#" . $modalId . " a').each(function(){
+                var contractTypeId = $(this).attr('data-contract-type');
                 this.href =  '" . Url::to(['serviceObject/request/index']) . "' + '?contractTypeId=' + contractTypeId + '&action=' + action;
             });
             $('#" . $modalId . "').modal('show');
