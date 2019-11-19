@@ -79,15 +79,4 @@ class CardHistory extends RegisterAccumulate
             'sum',
         ];
     }
-
-    /**
-     * Получение истории движений по картам
-     * @param integer $cardId
-     * @return ActiveRecord[]
-     * @throws InvalidConfigException
-     */
-    static public function getCardHistory($cardId)
-    {
-        return self::find()->andWhere(['card_id' => $cardId])->orderBy('date DESC')->all();
-    }
 }
