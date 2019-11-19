@@ -7,8 +7,10 @@
 use common\models\enum\FoodType;
 use common\models\reference\Meal;
 use common\models\reference\MealCategory;
+use yii\bootstrap\Modal;
 use yii\helpers\Html;
 use terminal\assets\AppAsset;
+use yii\helpers\Url;
 use yii\web\View;
 
 AppAsset::register($this);
@@ -49,24 +51,26 @@ $categories = MealCategory::find()
     ->all();
 
 $categoryId = Yii::$app->request->get('categoryId') ?? null;
-
+$openPayModal = 'open-pay-modal';
 $session = Yii::$app->session;
-$active = !empty($session['meals']) ? 'active' : '';
-
+$active = !empty($session['foods']) ? 'active' : '';
+if (!empty($session['sum'])) {
+    $price = explode('.', (string)$session['sum']);
+}
 echo Html::beginTag('div', ['class' => 'topbar container-fluid pt-3']);
 echo Html::tag('div', Html::tag('span', Yii::$app->view->title, ['class' => 'mb-0 pl-3 ellipsis']), ['class' => 'category-title']);
 echo Html::beginTag('div', ['class' => 'js_e_cart_preview  ' . $active . ' e_cart_preview  text-right h-100']);
 // Кнопка "Отменить"
 echo Html::a(Html::tag('i', '', ['class' => 'fas fa-times-circle mr-2']) . 'Отменить',
-    '#', ['class' => 'js_e_reset wf-cart-btn-reset btn btn-lg ml-3']);
+    ['cart/cart-emptying'], ['class' => 'js_e_reset wf-cart-btn-reset btn btn-lg ml-3']);
 // Кнопка "Корзина"
 echo Html::a(Html::tag('i', '', ['class' => 'fas fa-shopping-cart mr-2']) . 'Корзина ' . Html::tag('span', 'пуста ', ['class' => 'empty-only'])
-    . Html::tag('span', (!empty($session['meals']) ? count($session['meals']) : ''), ['class' => 'badge']),
-    ['cart-form/index'], ['class' => 'wf-cart-btn-cart btn btn-lg ml-3 h-100']);
+    //. Html::tag('span', (!empty($session['foods']) ? count($session['foods']) : ''), ['class' => 'badge'])
+    , ['cart/index'], ['class' => 'wf-cart-btn-cart btn btn-lg ml-3 h-100']);
 // Кнопка "Оплатить"
 echo Html::a(Html::tag('i', '', ['class' => 'fas fa-money-bill-wave mr-2']) . 'Оплатить '
-    . Html::tag('span', Html::tag('span', (!empty($sum) ? $sum[0] . '<small>,' . $sum[1] . '</small>' : 0), ['class' => 'js_e_sum']) . ' &#8381', ['class' => 'price']),
-    '#', ['class' => 'wf-cart-btn-checkout btn btn-lg ml-2 h-100']);
+    . Html::tag('span', Html::tag('span', (isset($price) ? $price[0] . '<small>,' . (isset($price[1]) ? $price[1] : '00') . '</small>' : 0), ['class' => 'js_e_sum']) . ' &#8381', ['class' => 'price']),
+    '#', ['id' => $openPayModal, 'class' => 'wf-cart-btn-checkout btn btn-lg ml-2 h-100']);
 echo Html::endTag('div');
 echo Html::endTag('div');
 
@@ -90,27 +94,32 @@ echo '<br>';
 
 echo Html::beginTag('li', ['class' => 'sidebar-item' . ($categoryId == null ? ' active' : '')]);
 $logo = Html::tag('div', '', ['class' => 'icon bg-contain fas fa-fw fa-th-list']);
-$logo .= Html::tag('span', 'Комплексы', ['class' => 'menu-title']);
+$logo .= Html::tag('span', 'Все блюда', ['class' => 'menu-title']);
 echo Html::a($logo, ['site/index'], ['method' => 'post']);
 echo Html::endTag('li');
 
 foreach ($categories as $category) {
     echo Html::beginTag('li', ['class' => 'sidebar-item ' . ($categoryId == $category->id ? ' active' : '')]);
-    switch($category->id){
-        case 1: $icon = 'fa-mortar-pestle';
+    switch ($category->id) {
+        case 3:
+        case 1:
+            $icon = 'fa-mortar-pestle';
             break;
-        case 2: $icon = 'fa-drumstick-bite';
+        case 2:
+            $icon = 'fa-drumstick-bite';
             break;
-        case 3: $icon = 'fa-liquid-soap';
+
+        case 4:
+            $icon = 'fa-mug-hot';
             break;
-        case 4: $icon = 'fa-mug-hot';
+        case 5:
+            $icon = 'fa-bread-slice';
             break;
-        case 5: $icon = 'fa-bread-slice';
-            break;
-        case 6: $icon = 'fa-leaf';
+        case 6:
+            $icon = 'fa-leaf';
             break;
     }
-    $logo = Html::tag('div', '', ['class' => 'icon bg-contain fas fa-fw '.$icon]);
+    $logo = Html::tag('div', '', ['class' => 'icon bg-contain fas fa-fw ' . $icon]);
     $logo .= Html::tag('span', Html::encode($category), ['class' => 'menu-title']);
     echo Html::a($logo, ['site/index', 'categoryId' => $category->id]);
     echo Html::endTag('li');
@@ -122,6 +131,52 @@ echo Html::endTag('div');
 echo '<div class="container-fluid py-4 px-4">';
 echo $content;
 echo '</div>';
+
+$payModal = 'pay-modal';
+$payButton = 'pay-button';
+$payInput = 'pay-input';
+
+
+Modal::begin([
+    'header' => '<h2>Введите номер карты</h2>',
+    'options' => [
+        'id' => $payModal
+    ]
+]);
+echo '<div class="input-group">';
+echo Html::textInput(null, null, [
+    'id' => $payInput,
+    'aria-describedby' => 'basic-addon2',
+    'class' => 'form-control',
+    'placeholder' => 'Введите номер карты'
+]);
+echo '<span class="input-group-btn">';
+echo Html::button('<span class="glyphicon glyphicon-ok"></span>', [
+    'id' => $payButton,
+    'class' => 'btn btn-sccess'
+]);
+echo '</span>';
+echo '</div>';
+Modal::end();
+
+
+$this->registerJs("
+    $('#" . $openPayModal . "').click(function(){
+        $('#" . $payModal . "').modal('show');  
+    });
+    $('#" . $payButton . "').click(function(){
+        var cardNumber = $('#" . $payInput . "').val();
+        $.ajax({                                   
+            url: '" . Url::to(['cart/pay']) . "',
+            data: {'cardNumber': cardNumber},
+            dataType: 'json',
+            type: 'POST',
+            success: function(data) {
+                location.reload();
+            }
+        });
+    });
+");
 
 $this->endBody();
 

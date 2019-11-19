@@ -5,7 +5,6 @@ namespace terminal\controllers;
 use common\components\DateTime;
 use common\models\enum\FoodType;
 use common\models\enum\MenuCycle;
-use common\models\reference\Complex;
 use common\models\reference\Meal;
 use common\models\reference\MealCategory;
 use common\models\reference\SetMenu;
@@ -60,53 +59,79 @@ class SiteController extends Controller
         $query = null;
         $pages = null;
         $models = null;
-        if ($setMenu && $setMenu->menu && isset($requestData['categoryId'])) {
+        if ($setMenu && $setMenu->menu) {
             $foodIds = [];
-            if (isset($setMenu->menu->menuMeals)) {
+            if (isset($requestData['categoryId']) && isset($setMenu->menu->menuMeals)) {
                 foreach ($setMenu->menu->menuMeals as $menuMeal) {
                     $foodIds[] = $menuMeal->meal_id;
                 }
+                $query = Meal::find()->andWhere([
+                    'id' => $foodIds,
+                    'is_active' => true,
+                    'food_type_id' => FoodType::BUFFET
+                ]);
                 $category = MealCategory::findOne(['id' => $requestData['categoryId']]);
-                $query = Meal::find()->andWhere(['id' => $foodIds, 'meal_category_id' => $category->id]);
-
-            } else if (isset($setMenu->menu->menuComplexes)) {
-                foreach ($setMenu->menu->menuComplexes as $menuComplex) {
-                    $foodIds[] = $menuComplex->complex_id;
+                if ($category) {
+                    $query->andWhere(['meal_category_id' => $category->id]);
                 }
-                $query = Complex::find()->andWhere(['id' => $foodIds]);
+
+//            else if (isset($setMenu->menu->menuComplexes)) {
+//                foreach ($setMenu->menu->menuComplexes as $menuComplex) {
+//                    $foodIds[] = $menuComplex->complex_id;
+//                }
+//                $query = Complex::find()->andWhere(['id' => $foodIds]);
+//            }
+
+                $countQuery = clone $query;
+                $pages = new Pagination([
+                    'totalCount' => $countQuery->count(),
+                    'pageSizeLimit' => [1, 9]
+                ]);
+                $models = $query->orderBy('id ASC')->offset($pages->offset)->limit($pages->limit)->all();
             }
-            $query = $query->andWhere([
-                'is_active' => true,
-                'food_type_id' => FoodType::BUFFET
-            ]);
 
-            $countQuery = clone $query;
-            $pages = new Pagination([
-                'totalCount' => $countQuery->count(),
-                'pageSizeLimit' => [1, 9]
-            ]);
-            $models = $query->orderBy('id ASC')->offset($pages->offset)->limit($pages->limit)->all();
-        }
-
-        $foods = [];
-        if ($models) {
-            foreach ($models as $model) {
-                $foods[$model->id] = [
-                    'name' => Html::encode($model),
-                    'category' => isset($model->mealCategory) ? Html::encode($model->mealCategory) : 'Комплексы',
-                    'description' => Html::encode($model->description),
-                    'price' => $model->price,
-                    'parts' => [],
-                ];
-
-                $parts = $model->mealProducts ?? $model->complexMeals ?? [];
-                $parameter = isset($model->mealProducts) ? 'product' : 'meal';
-
-                foreach ($parts as $part) {
-                    $foods[$model->id]['parts'][Html::encode($part->{$parameter})] = [
-                        'quantity' => (float)$part->{($parameter . '_quantity')},
-                        'unit' => isset($part->unit->name) ? Html::encode($part->unit->name) : ''
+            $foods = [];
+            if ($models) {
+                foreach ($models as $model) {
+                    $icon = 'fa-th-list';
+                    if (isset($model->meal_category_id)) {
+                        switch ($model->meal_category_id) {
+                            case 3:
+                            case 1:
+                                $icon = 'fa-mortar-pestle';
+                                break;
+                            case 2:
+                                $icon = 'fa-drumstick-bite';
+                                break;
+                            case 4:
+                                $icon = 'fa-mug-hot';
+                                break;
+                            case 5:
+                                $icon = 'fa-bread-slice';
+                                break;
+                            case 6:
+                                $icon = 'fa-leaf';
+                                break;
+                        }
+                    }
+                    $foods[$model->id] = [
+                        'name' => Html::encode($model),
+                        'icon' => $icon,
+                        'category' => $model->mealCategory,
+                        'description' => Html::encode($model->description),
+                        'price' => $model->price,
+                        'parts' => [],
                     ];
+
+                    $parts = $model->mealProducts ?? $model->complexMeals ?? [];
+                    $parameter = isset($model->mealProducts) ? 'product' : 'meal';
+
+                    foreach ($parts as $part) {
+                        $foods[$model->id]['parts'][Html::encode($part->{$parameter})] = [
+                            'quantity' => (float)$part->{($parameter . '_quantity')},
+                            'unit' => isset($part->unit->name) ? Html::encode($part->unit->name) : ''
+                        ];
+                    }
                 }
             }
         }

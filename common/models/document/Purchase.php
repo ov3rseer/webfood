@@ -177,7 +177,7 @@ class Purchase extends Document
     {
         return [
             // История карты
-            CardHistory::className() => [
+            CardHistory::class => [
                 'balance_error' => function () {
                     $balanceRow = CardHistory::findBalance(null, ['sum'], [], 't')
                         ->andWhere(['t.card_id' => $this->card_id])

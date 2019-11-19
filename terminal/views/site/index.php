@@ -25,14 +25,14 @@ if (!empty($foods)) {
         echo Html::beginTag('div', ['class' => 'e_product e_product-card rounded shadow embed-responsive h-100', 'data' => ['e_product_id' => $foodId]]);
 
         echo Html::beginTag('div', ['class' => 'embed-responsive-item icon-bg']);
-        echo Html::tag('i', '', ['class' => 'icon fas fa-th-list mr-2']);
+        echo Html::tag('i', '', ['class' => 'icon fas mr-2 ' . $food['icon']]);
         echo Html::endTag('div');
 
         echo Html::beginTag('div', ['class' => 'js_e_qty_toggle  card-body embed-responsive-item p-4', 'data' => ['for' => $foodId]]);
 
         echo Html::beginTag('div', ['class' => 'row']);
         echo Html::beginTag('p', ['class' => 'subtitle mt-0 mb-2 col-xs-7']);
-        echo Html::tag('span', Html::tag('i', '', ['class' => 'icon fas fa-th-list mr-2']) . $food['category'], ['class' => 'ellipsis']);
+        echo Html::tag('span', Html::tag('i', '', ['class' => 'icon fas mr-2 ' . $food['icon']]) . $food['category'], ['class' => 'ellipsis']);
         echo Html::endTag('p');
         echo Html::endTag('div');
 
@@ -58,7 +58,7 @@ if (!empty($foods)) {
         echo Html::endTag('div');
 
         echo Html::beginTag('div', ['class' => 'col-xs-4']);
-        echo Html::input('number', $foodId, $session['meals'][$foodId] ?? 0, [
+        echo Html::input('number', $foodId, $session['foods'][$foodId]['qty'] ?? 0, [
             'class' => 'e_product-quantity-input hidden',
             'min' => 0,
             'step' => 1,

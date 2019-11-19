@@ -8,7 +8,7 @@ use yii\data\ArrayDataProvider;
 
 class Cart extends Report
 {
-    public $meals;
+    public $foods;
 
     /**
      * @inheritdoc
@@ -33,8 +33,8 @@ class Cart extends Report
     public function getDataProvider()
     {
         $session = Yii::$app->session;
-        if (isset($session['meals'])) {
-            return new ArrayDataProvider(['allModels' => $session['meals']]);
+        if (isset($session['foods'])) {
+            return new ArrayDataProvider(['allModels' => $session['foods']]);
         }
         return new ArrayDataProvider([]);
     }
