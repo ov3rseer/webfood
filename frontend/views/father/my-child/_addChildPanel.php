@@ -2,6 +2,7 @@
 
 use yii\bootstrap\Modal;
 use yii\helpers\Html;
+use yii\helpers\Url;
 
 $openAddChildModalButtonId = 'open-add-child-modal-button';
 $addChildModalId = 'add-child-modal';
@@ -21,7 +22,7 @@ $this->registerJs("
     $(document).on('input', '#" . $searchChildInputId . "', function(){  
         var userInput = $(this).val();
         $.ajax({
-            url: location.origin + '/father/my-child/search-child',
+            url: '" . Url::to(['father/my-child/search-child']) . "',
             data: {'userInput' : userInput},
             dataType: 'html',
             type: 'POST',                           
