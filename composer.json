@@ -20,7 +20,7 @@
         "ext-zip": "*",
         "ext-json": "*",
         "ext-simplexml": "*",
-        "yiisoft/yii2": "~2.0.14",
+        "yiisoft/yii2": "2.0.26",
         "yiisoft/yii2-bootstrap": "*",
         "yiisoft/yii2-bootstrap4": "^2.0",
         "yiisoft/yii2-swiftmailer": "*",
