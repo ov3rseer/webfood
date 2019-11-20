@@ -111,7 +111,7 @@ class ChildrenIntroductionForm extends SystemForm
             if ($serviceObject) {
                 $schoolClass = SchoolClass::findOne([
                     'number' => $this->class_number,
-                    'litter' => $this->class_litter,
+                    'litter' => mb_strtoupper($this->class_litter),
                     'service_object_id' => $serviceObject->id
                 ]);
                 if (!$schoolClass) {
