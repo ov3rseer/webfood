@@ -53,6 +53,7 @@ $categories = MealCategory::find()
 
 $categoryId = Yii::$app->request->get('categoryId') ?? null;
 $openPayModal = 'open-pay-modal';
+$openCart = 'open-cart';
 $session = Yii::$app->session;
 $active = !empty($session['foods']) ? 'active' : '';
 if (!empty($session['sum'])) {
@@ -70,8 +71,8 @@ echo Html::a(Html::tag('i', '', ['class' => 'fas fa-times-circle mr-2']) . 'От
     ['cart/cart-emptying'], ['class' => 'js_e_reset wf-cart-btn-reset btn btn-lg ml-3']);
 // Кнопка "Корзина"
 echo Html::a(Html::tag('i', '', ['class' => 'fas fa-shopping-cart mr-2']) . 'Корзина ' . Html::tag('span', 'пуста ', ['class' => 'empty-only'])
-    .Html::tag('span', (!empty($session['foods']) ? count($session['foods']) : ''), ['class' => 'badge'])
-    , ['cart/index'], ['class' => 'wf-cart-btn-cart btn btn-lg ml-3 h-100']);
+    . Html::tag('span', (!empty($session['foods']) ? count($session['foods']) : ''), ['class' => 'badge']),
+    '#', ['id' => $openCart, 'class' => 'wf-cart-btn-cart btn btn-lg ml-3 h-100']);
 // Кнопка "Оплатить"
 echo Html::a(Html::tag('i', '', ['class' => 'fas fa-money-bill-wave mr-2']) . 'Оплатить '
     . Html::tag('span', Html::tag('span', (isset($price) ? $price[0] . '<small>,' . (isset($price[1]) ? $price[1] : '00') . '</small>' : 0), ['class' => 'js_e_sum']) . ' &#8381', ['class' => 'price']),
@@ -167,10 +168,13 @@ Modal::end();
 
 
 $this->registerJs("
-    $('#" . $openPayModal . "').click(function(){
+    $(document).on('click', '#" . $openCart . "', function(){
+        window.location = '".Url::to(['cart/index'])."';
+    });
+    $(document).on('click', '#" . $openPayModal . "', function(){
         $('#" . $payModal . "').modal('show');  
     });
-    $('#" . $payButton . "').click(function(){
+    $(document).on('click', '#" . $payButton . "', function(){
         var cardNumber = $('#" . $payInput . "').val();
         $.ajax({                                   
             url: '" . Url::to(['cart/pay']) . "',
