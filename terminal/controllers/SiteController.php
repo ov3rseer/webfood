@@ -61,7 +61,7 @@ class SiteController extends Controller
         $models = null;
         if ($setMenu && $setMenu->menu) {
             $foodIds = [];
-            if (isset($requestData['categoryId']) && isset($setMenu->menu->menuMeals)) {
+            if (isset($setMenu->menu->menuMeals)) {
                 foreach ($setMenu->menu->menuMeals as $menuMeal) {
                     $foodIds[] = $menuMeal->meal_id;
                 }
@@ -70,9 +70,11 @@ class SiteController extends Controller
                     'is_active' => true,
                     'food_type_id' => FoodType::BUFFET
                 ]);
-                $category = MealCategory::findOne(['id' => $requestData['categoryId']]);
-                if ($category) {
-                    $query->andWhere(['meal_category_id' => $category->id]);
+                if (isset($requestData['categoryId'])) {
+                    $category = MealCategory::findOne(['id' => $requestData['categoryId']]);
+                    if ($category) {
+                        $query->andWhere(['meal_category_id' => $category->id]);
+                    }
                 }
 
 //            else if (isset($setMenu->menu->menuComplexes)) {

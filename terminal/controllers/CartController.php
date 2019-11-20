@@ -63,10 +63,9 @@ class CartController extends TerminalModelController
     {
         $requestData = array_merge(Yii::$app->request->get(), Yii::$app->request->post());
         $session = Yii::$app->session;
-        if (isset($requestData['cardNumber'])) {
+        if (isset($requestData['cardNumber']) && isset($session['sum'])) {
             $card = CardChild::findOne(['card_number' => $requestData['cardNumber']]);
-            if ($card) {
-                $session = Yii::$app->session;
+            if ($card && $card->balance > $session['sum']) {
                 $foods = $session['foods'];
                 $purchase = new Purchase();
                 $purchase->status_id = DocumentStatus::POSTED;
@@ -83,13 +82,12 @@ class CartController extends TerminalModelController
                 }
                 $purchase->populateRelation('purchaseMeals', $purchaseMeals);
                 $purchase->save();
+                if (isset($session['foods'])) {
+                    unset($session['foods']);
+                }
+            } else {
+                Yii::$app->session->setFlash('error', 'На карте недостаточно средств.');
             }
-        }
-        if (isset($session['foods'])) {
-            unset($session['foods']);
-        }
-        if (isset($session['sum'])) {
-            unset($session['sum']);
         }
         return $this->redirect(Yii::$app->request->referrer);
     }

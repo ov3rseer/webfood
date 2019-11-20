@@ -8,6 +8,7 @@
 /* @var  integer $categoryId */
 
 use common\models\form\Form;
+use common\widgets\Alert;
 use yii\bootstrap\Modal;
 use yii\data\Pagination;
 use yii\helpers\Html;
@@ -15,6 +16,7 @@ use yii\widgets\LinkPager;
 
 $this->title = 'ВебЕда';
 
+echo Alert::widget();
 $session = Yii::$app->session;
 
 if (!empty($foods)) {
