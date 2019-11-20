@@ -110,6 +110,12 @@ function eTerminalQtyButtons() {
             data: {'qty': qty, 'id': id, 'category': category, 'price': price},
             dataType: 'json',
             type: 'POST',
+            complete: function () {
+               $.pjax.reload('#terminal-pjax', {
+                   replace: true,
+                   timeout: 5000
+               });
+            }
         });
     });
 

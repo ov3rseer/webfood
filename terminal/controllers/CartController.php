@@ -113,7 +113,7 @@ class CartController extends TerminalModelController
         $qty = Yii::$app->request->post('qty');
         $price = Yii::$app->request->post('price');
         $category = Yii::$app->request->post('category');
-        if (isset($id) && !empty($qty) && isset($price) && isset($category)) {
+        if (isset($id) && isset($qty) && isset($price) && isset($category)) {
             $session = Yii::$app->session;
             if (!isset($session['foods'])) {
                 $session->set('foods', []);
@@ -122,8 +122,14 @@ class CartController extends TerminalModelController
                 $session->set('sum', null);
             }
             $foods = $session['foods'];
-            $foods[$id]['qty'] = $qty;
-            $foods[$id]['price'] = $price;
+            if ($qty == 0) {
+                if (isset($foods[$id])) {
+                    unset($foods[$id]);
+                }
+            } else {
+                $foods[$id]['qty'] = $qty;
+                $foods[$id]['price'] = $price;
+            }
             $totalSum = 0;
             foreach ($foods as $id => $food) {
                 $totalSum += $food['qty'] * $food['price'];

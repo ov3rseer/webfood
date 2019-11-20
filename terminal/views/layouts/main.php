@@ -12,6 +12,7 @@ use yii\helpers\Html;
 use terminal\assets\AppAsset;
 use yii\helpers\Url;
 use yii\web\View;
+use yii\widgets\Pjax;
 
 AppAsset::register($this);
 ?>
@@ -57,6 +58,10 @@ $active = !empty($session['foods']) ? 'active' : '';
 if (!empty($session['sum'])) {
     $price = explode('.', (string)$session['sum']);
 }
+
+$pjax = Pjax::begin([
+    'id' => 'terminal-pjax'
+]);
 echo Html::beginTag('div', ['class' => 'topbar container-fluid pt-3']);
 echo Html::tag('div', Html::tag('span', Yii::$app->view->title, ['class' => 'mb-0 pl-3 ellipsis']), ['class' => 'category-title']);
 echo Html::beginTag('div', ['class' => 'js_e_cart_preview  ' . $active . ' e_cart_preview  text-right h-100']);
@@ -65,7 +70,7 @@ echo Html::a(Html::tag('i', '', ['class' => 'fas fa-times-circle mr-2']) . 'От
     ['cart/cart-emptying'], ['class' => 'js_e_reset wf-cart-btn-reset btn btn-lg ml-3']);
 // Кнопка "Корзина"
 echo Html::a(Html::tag('i', '', ['class' => 'fas fa-shopping-cart mr-2']) . 'Корзина ' . Html::tag('span', 'пуста ', ['class' => 'empty-only'])
-    //. Html::tag('span', (!empty($session['foods']) ? count($session['foods']) : ''), ['class' => 'badge'])
+    .Html::tag('span', (!empty($session['foods']) ? count($session['foods']) : ''), ['class' => 'badge'])
     , ['cart/index'], ['class' => 'wf-cart-btn-cart btn btn-lg ml-3 h-100']);
 // Кнопка "Оплатить"
 echo Html::a(Html::tag('i', '', ['class' => 'fas fa-money-bill-wave mr-2']) . 'Оплатить '
@@ -73,6 +78,7 @@ echo Html::a(Html::tag('i', '', ['class' => 'fas fa-money-bill-wave mr-2']) . '�
     '#', ['id' => $openPayModal, 'class' => 'wf-cart-btn-checkout btn btn-lg ml-2 h-100']);
 echo Html::endTag('div');
 echo Html::endTag('div');
+$pjax->end();
 
 
 echo Html::beginTag('div', ['class' => 'left-sidebar']);

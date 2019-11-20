@@ -36,7 +36,7 @@ $pjaxId = 'reference-select-pjax';
 //    ],
 //]);
 
-$pjaxGridWidget = Pjax::begin(['id' => $pjaxId,]);
+$pjaxGridWidget = Pjax::begin(['id' => $pjaxId]);
 
 echo GridView::widget([
     'dataProvider' => $dataProvider,
