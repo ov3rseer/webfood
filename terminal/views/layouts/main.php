@@ -169,7 +169,7 @@ Modal::end();
 
 $this->registerJs("
     $(document).on('click', '#" . $openCart . "', function(){
-        window.location = '".Url::to(['cart/index'])."';
+        window.location = '" . Url::to(['cart/index']) . "';
     });
     $(document).on('click', '#" . $openPayModal . "', function(){
         $('#" . $payModal . "').modal('show');  
