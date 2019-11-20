@@ -54,7 +54,7 @@ $this->title = 'Регистрация в личном кабинете роди
         <?=
         Html::submitButton('Зарегистрироваться', [
             'id' => 'signup-submit-btn',
-            'class' => 'hidden-btn',
+            'class' => 'btn btn-success',
             'name' => 'signup-button',
         ])
         ?>

@@ -11,46 +11,6 @@ use yii\bootstrap\ActiveForm;
 
 $this->title = 'Вход';
 
-$this->registerJs("
-    $().ready(function() {
-    
-        var loginFluent = new FluentUI({
-            '#login-container, #login-container input, #login-container a, #login-container button' : {
-                'mouseover focus' : function() {
-                    let el = $('#login-submit-btn, #login-tooltip-block');
-                    el.addClass('highlight'); 
-                },
-                'mouseout blur' : function() {
-                    let el = $('#login-submit-btn, #login-tooltip-block');
-                    el.removeClass('highlight'); 
-                }
-            },
-            '#login-submit-btn' : {
-                'mouseover focus' : function() {
-                    let el = $('#login-submit-btn');
-                    el.addClass('hover'); 
-                },
-                'mouseout blur' : function() {
-                    let el = $('#login-submit-btn');
-                    el.removeClass('hover'); 
-                },
-                'valid-login-form' : function() {
-                    let el = $('#login-submit-btn');
-                    el.addClass('success');
-                    el.removeClass('disabled');
-                    el.removeAttr('disabled');
-                },
-                'invalid-login-form' : function() {
-                    let el = $('#login-submit-btn');
-                    el.removeClass('success');
-                    el.addClass('disabled');
-                    el.attr({'disabled' : true});
-                }
-            }
-        });
-    });
-");
-
 ?>
 
 <div class="container my-3" id="login-container">
@@ -78,7 +38,7 @@ $this->registerJs("
                 <?=
                 Html::submitButton('Вход', [
                     'id' => 'login-submit-btn',
-                    'class' => 'hidden-btn',
+                    'class' => 'btn btn-success',
                     'name' => 'login-button',
                 ])
                 ?>
