@@ -74,6 +74,7 @@ class ChildrenIntroductionController extends FrontendModelController
             $model->scenario = $action;
             if ($model->validate()) {
                 $model->proceed();
+                return $this->redirect(['serviceObject/children-introduction/index']);
             }
         }
         $openCardUploadFile = new ChildrenIntroductionUploadFile();
@@ -83,6 +84,7 @@ class ChildrenIntroductionController extends FrontendModelController
                 $model->scenario = $action;
                 if ($openCardUploadFile->validate()) {
                     $openCardUploadFile->proceed();
+                    return $this->redirect(['serviceObject/children-introduction/index']);
                 }
             }
         }
