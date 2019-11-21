@@ -47,11 +47,12 @@ if (!empty($children)) {
     foreach ($children as $childId => $child) {
         echo Html::beginTag('div', ['class' => 'list-group-item list-group-item-action']);
         echo Html::beginTag('span', ['style' => 'display: flex; justify-content: space-between;']);
-        echo Html::a($child['name'], '#childInfo-wrap-' . $childId, [
+        $dataCardId = $cards[$childId]['id'] ?? null;
+        echo Html::a($child['name'], '#childInfo-wrap-' . $childId, array_merge([
             'class' => $childNameLink,
             'style' => 'text-decoration:none; border-bottom: 1px dashed #000080;',
-            'data-card-id' => $cards[$childId]['id']
-        ]);
+
+        ], $dataCardId ? ['data-card-id' => $dataCardId] : []));
         echo Html::a('<span class="glyphicon glyphicon-minus"></span><span class="glyphicon glyphicon-user"></span>',
             '#', ['class' => 'text-danger ' . $deleteChildButtonClass, 'data' => ['child-id' => $childId]]);
         echo Html::endTag('span');
@@ -130,15 +131,17 @@ $this->registerJs("
         var childButtonsPanel = $('.child-buttons-panel');
         //$(childButtonsPanel).html('<button class=\"btn btn-success\">Заказать питание</button>');
         var cardId = $(this).data('card-id');
-        $.ajax({
-            url: '" . Url::to(['index']) . "',
-            data: {'cardId' : cardId},
-            dataType: 'json',
-            type: 'POST',                    
-            complete: function(response){   
-                $('.card-history').html(response.responseText);
-            }
-        });
+        if(cardId){
+            $.ajax({
+                url: '" . Url::to(['index']) . "',
+                data: {'cardId' : cardId},
+                dataType: 'json',
+                type: 'POST',                    
+                complete: function(response){   
+                    $('.card-history').html(response.responseText);
+                }
+            });
+        }
     });
     $('." . $openAddMoneyModalClass . "').click(function() {
         $('#" . $addMoneyModalId . "').modal('show');         
