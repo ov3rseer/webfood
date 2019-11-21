@@ -3,6 +3,7 @@
 namespace frontend\models\serviceObject;
 
 use common\models\reference\ProductCategory;
+use Yii;
 use yii\base\InvalidConfigException;
 use yii\base\UserException;
 use yii\data\ActiveDataProvider;
@@ -47,9 +48,14 @@ class ProductCategoryForm extends CategoryForm
      */
     public function proceed()
     {
-        $productCategory = new ProductCategory();
-        $productCategory->name = $this->name;
-        $productCategory->is_active = true;
-        $productCategory->save();
+        $productCategory = ProductCategory::findOne(['name' => $this->name]);
+        if (!$productCategory) {
+            $productCategory = new ProductCategory();
+            $productCategory->name = $this->name;
+            $productCategory->is_active = true;
+            $productCategory->save();
+        } else {
+            Yii::$app->session->setFlash('error', 'Такая категория же существует');
+        }
     }
 }

@@ -6,6 +6,7 @@ use common\models\form\SystemForm;
 use common\models\reference\Product;
 use common\models\reference\ProductCategory;
 use common\models\reference\Unit;
+use Yii;
 use yii\base\InvalidConfigException;
 use yii\base\UserException;
 use yii\data\ActiveDataProvider;
@@ -18,6 +19,10 @@ use yii\helpers\Html;
  *
  * Свойства:
  * @property string $name наименование
+ * @property string $product_code код продукта
+ * @property string $price цена
+ * @property string $unit_id единица измерения
+ * @property string $product_category_id категория продукта
  * @property BaseDataProvider $dataProvider источник данных отчета
  * @property array $columns колонки отчета
  */
@@ -182,16 +187,22 @@ class ProductForm extends SystemForm
     /**
      * @return mixed|void
      * @throws UserException
+     * @throws InvalidConfigException
      */
     public function proceed()
     {
-        $product = new Product();
-        $product->name = $this->name;
-        $product->product_code = $this->product_code;
-        $product->is_active = true;
-        $product->price = $this->price;
-        $product->unit_id = $this->unit_id;
-        $product->product_category_id = $this->product_category_id;
-        $product->save();
+        $product = Product::find()->orWhere(['name' => $this->name, 'product_code' => $this->product_code])->one();
+        if (!$product) {
+            $product = new Product();
+            $product->name = $this->name;
+            $product->product_code = $this->product_code;
+            $product->is_active = true;
+            $product->price = $this->price;
+            $product->unit_id = $this->unit_id;
+            $product->product_category_id = $this->product_category_id;
+            $product->save();
+        } else {
+            Yii::$app->session->setFlash('error', 'Такой продукт уже существует');
+        }
     }
 }
