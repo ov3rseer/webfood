@@ -33,8 +33,6 @@ if ($serviceObject) {
     $uploadFileModalId = 'upload-file-modal';
 
     $this->beginBlock('children');
-    Pjax::begin();
-
     echo GridView::widget([
         'dataProvider' => new ActiveDataProvider([
             'query' => Child::find()->alias('t')->andWhere(['t.service_object_id' => $serviceObject->id])->joinWith('schoolClass'),
@@ -59,12 +57,9 @@ if ($serviceObject) {
             'schoolClass',
         ],
     ]);
-    Pjax::end();
     $this->endBlock();
 
     $this->beginBlock('classes');
-    Pjax::begin();
-
     echo GridView::widget([
         'dataProvider' => new ActiveDataProvider([
             'query' => SchoolClass::find()->alias('t')->andWhere(['t.service_object_id' => $serviceObject->id]),
@@ -97,7 +92,6 @@ if ($serviceObject) {
             ]
         ],
     ]);
-    Pjax::end();
     $this->endBlock();
 
 
