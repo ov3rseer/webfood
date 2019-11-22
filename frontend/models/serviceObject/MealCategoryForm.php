@@ -54,6 +54,7 @@ class MealCategoryForm extends CategoryForm
             $productCategory->name = $this->name;
             $productCategory->is_active = true;
             $productCategory->save();
+            Yii::$app->session->setFlash('success', 'Категория успешно добавлена.');
         } else {
             Yii::$app->session->setFlash('error', 'Такая категория же существует');
         }

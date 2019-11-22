@@ -137,8 +137,8 @@ class ChildrenIntroductionForm extends SystemForm
                     $serviceObjectSchoolClass->save();
                 }
 
+                $cardNumber = '';
                 if (!$child) {
-                    $cardNumber = '';
                     $length = 10;
                     for($i = 0; $i < $length; $i++) {
                         $cardNumber .= mt_rand(0, 9);

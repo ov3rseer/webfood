@@ -201,6 +201,7 @@ class ProductForm extends SystemForm
             $product->unit_id = $this->unit_id;
             $product->product_category_id = $this->product_category_id;
             $product->save();
+            Yii::$app->session->setFlash('success', 'Продукт успешно добавлен.');
         } else {
             Yii::$app->session->setFlash('error', 'Такой продукт уже существует');
         }
