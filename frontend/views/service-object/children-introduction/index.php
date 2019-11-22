@@ -89,7 +89,7 @@ if ($serviceObject) {
                     $children = [];
                     foreach ($rowModel->schoolClassChildren as $schoolClassChild) {
                         if (isset($schoolClassChild->child)) {
-                            $children[] = Html::encode($schoolClassChild->child);
+                            $children[] = Html::encode($schoolClassChild->child->name_full);
                         }
                     }
                     return Html::ul($children);
