@@ -86,11 +86,13 @@ if ($serviceObject) {
                 'headerOptions' => ['style' => 'text-align:center;'],
                 'value' => function ($rowModel) {
                     /** @var SchoolClass $rowModel */
-                    $result = '';
-                    foreach ($rowModel->schoolClassChildren as $child) {
-                        $result .= Html::encode($child);
+                    $children = [];
+                    foreach ($rowModel->schoolClassChildren as $schoolClassChild) {
+                        if (isset($schoolClassChild->child)) {
+                            $children[] = Html::encode($schoolClassChild->child);
+                        }
                     }
-                    return $result;
+                    return Html::ul($children);
                 }
             ]
         ],

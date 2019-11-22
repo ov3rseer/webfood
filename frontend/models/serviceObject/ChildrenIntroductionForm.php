@@ -8,6 +8,7 @@ use common\models\reference\Child;
 use common\models\reference\SchoolClass;
 use common\models\reference\ServiceObject;
 use common\models\form\SystemForm;
+use common\models\tablepart\SchoolClassChild;
 use common\models\tablepart\ServiceObjectSchoolClass;
 use Yii;
 use yii\base\UserException;
@@ -121,13 +122,6 @@ class ChildrenIntroductionForm extends SystemForm
                     $schoolClass->service_object_id = $serviceObject->id;
                     $schoolClass->save();
                 }
-                $child = Child::findOne([
-                    'surname' => $this->surname,
-                    'forename' => $this->forename,
-                    'patronymic' => $this->patronymic,
-                    'service_object_id' => $serviceObject->id,
-                    'school_class_id' => $schoolClass->id
-                ]);
 
                 $serviceObjectSchoolClass = ServiceObjectSchoolClass::findOne(['parent_id' => $serviceObject->id, 'school_class_id' => $schoolClass->id]);
                 if (!$serviceObjectSchoolClass) {
@@ -136,11 +130,18 @@ class ChildrenIntroductionForm extends SystemForm
                     $serviceObjectSchoolClass->school_class_id = $schoolClass->id;
                     $serviceObjectSchoolClass->save();
                 }
+                $child = Child::findOne([
+                    'surname' => $this->surname,
+                    'forename' => $this->forename,
+                    'patronymic' => $this->patronymic,
+                    'service_object_id' => $serviceObject->id,
+                    'school_class_id' => $schoolClass->id
+                ]);
 
                 $cardNumber = '';
                 if (!$child) {
                     $length = 10;
-                    for($i = 0; $i < $length; $i++) {
+                    for ($i = 0; $i < $length; $i++) {
                         $cardNumber .= mt_rand(0, 9);
                     }
                     $card = new CardChild();
@@ -157,6 +158,12 @@ class ChildrenIntroductionForm extends SystemForm
                     $child->school_class_id = $schoolClass->id;
                     $child->card_id = $card->id;
                     $child->save();
+
+                    $schoolClassChild = new SchoolClassChild();
+                    $schoolClassChild->parent_id = $schoolClass->id;
+                    $schoolClassChild->child_id = $child->id;
+                    $schoolClassChild->save();
+
                     Yii::$app->session->setFlash('success', 'Ребёнок успешно добавлен.');
                 } else {
                     Yii::$app->session->setFlash('error', 'Этот ребёнок уже существует.');
