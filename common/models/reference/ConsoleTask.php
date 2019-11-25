@@ -4,7 +4,7 @@ namespace common\models\reference;
 
 use common\components\DateTime;
 use common\components\DbManager;
-use common\components\import\TaskProcessorInterface;
+use common\components\TaskProcessorInterface;
 use common\models\enum\ConsoleTaskStatus;
 use common\models\enum\ConsoleTaskType;
 use Yii;
