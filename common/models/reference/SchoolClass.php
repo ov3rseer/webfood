@@ -7,7 +7,7 @@ use common\models\tablepart\SchoolClassChild;
 use yii\db\ActiveQuery;
 
 /**
- * Модель справочника "Класс"
+ * Модель справочника "Класс/Группа"
  *
  * @property string $name_full
  * @property integer $service_object_id
@@ -26,7 +26,7 @@ class SchoolClass extends Reference
      */
     public function getSingularName()
     {
-        return 'Классы';
+        return 'Класс/Группа';
     }
 
     /**
@@ -34,7 +34,7 @@ class SchoolClass extends Reference
      */
     public function getPluralName()
     {
-        return 'Классы';
+        return 'Классы/Группы';
     }
 
     /**

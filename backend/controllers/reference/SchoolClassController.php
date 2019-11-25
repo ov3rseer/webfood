@@ -3,7 +3,7 @@
 namespace backend\controllers\reference;
 
 /**
- * Контроллер для справочника "Классы"
+ * Контроллер для справочника "Классы/Группы"
  */
 class SchoolClassController extends ReferenceController
 {
