@@ -73,11 +73,6 @@ AppAsset::register($this);
                         'url' => ['/reference/user/index'],
                         'visible' => Yii::$app->user->can('super-admin'),
                     ],
-//                    [
-//                        'label' => 'Файлы',
-//                        'url' => ['/reference/file/index'],
-//                        'visible' => Yii::$app->user->can('super-admin'),
-//                    ],
                     [
                         'label' => 'Поставщики продуктов',
                         'url' => ['/reference/product-provider/index'],
@@ -167,6 +162,11 @@ AppAsset::register($this);
                     [
                         'label' => 'Настройки системы',
                         'url' => ['/reference/system-setting/index'],
+                        'visible' => Yii::$app->user->can('super-admin'),
+                    ],
+                    [
+                        'label' => 'Файлы',
+                        'url' => ['/reference/file/index'],
                         'visible' => Yii::$app->user->can('super-admin'),
                     ],
                     [

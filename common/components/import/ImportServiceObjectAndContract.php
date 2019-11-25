@@ -34,10 +34,13 @@ class ImportServiceObjectAndContract extends BaseObject implements TaskProcessor
     {
         $params = Json::decode($consoleTask->params);
         if (empty($params['files_id'])) {
-            throw new UserException('Не указан(ы) файл(ы) для загрузки');
+            throw new UserException('Не указан(ы) файл(ы) для загрузки.');
         }
         if (empty($params['contract_type_id'])) {
-            throw new UserException('Не указан тип договора');
+            throw new UserException('Не указан тип договора.');
+        }
+        if (empty($params['service_object_type_id'])) {
+            throw new UserException('Не указан тип объекта ослуживания.');
         }
         /** @var File $file */
         $files = File::find()->where(['id' => $params['files_id']])->all();
@@ -137,7 +140,6 @@ class ImportServiceObjectAndContract extends BaseObject implements TaskProcessor
                 $serviceObjectContract->address = $contract_values['address'];
                 $serviceObjectContract->save() ? $result['added']++ : $result['skipped']++;
             }
-
         }
 
         return [

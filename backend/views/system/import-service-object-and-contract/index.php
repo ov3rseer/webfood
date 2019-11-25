@@ -56,6 +56,9 @@ $form = ActiveForm::begin(
                 echo '<div class="col-xs-12 col-sm-6 col-md-3">';
                 echo $form->autoField($model, 'contract_type_id');
                 echo '</div>';
+                echo '<div class="col-xs-12 col-sm-6 col-md-3">';
+                echo $form->autoField($model, 'service_object_type_id');
+                echo '</div>';
                 ?>
             </div>
             <div class="row">

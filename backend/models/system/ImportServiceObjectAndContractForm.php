@@ -3,6 +3,7 @@
 namespace backend\models\system;
 
 use common\models\enum\ContractType;
+use common\models\enum\ServiceObjectType;
 use common\models\form\SystemForm;
 use backend\widgets\ActiveField;
 use common\components\DateTime;
@@ -21,9 +22,13 @@ use yii\web\UploadedFile;
 /**
  * Форма для импорта объектов обслуживания и договоров
  *
- * @property File           $file
+ * @property File $file
+ * @property ServiceObjectType $serviceObjectType
+ * @property ContractType $contractType
  * @property UploadedFile[] $uploadedFiles
- * @property integer        $file_id
+ * @property integer $file_id
+ * @property integer $service_object_type_id
+ * @property integer $contract_type_id
  */
 class ImportServiceObjectAndContractForm extends SystemForm
 {
@@ -36,6 +41,11 @@ class ImportServiceObjectAndContractForm extends SystemForm
      * @var integer id загруженного файла
      */
     public $file_id;
+
+    /**
+     * @var integer id тип объекта обслуживания
+     */
+    public $service_object_type_id;
 
     /**
      * @var integer id типа договора
@@ -63,8 +73,8 @@ class ImportServiceObjectAndContractForm extends SystemForm
                 return false;
             }],
             [['file_id'], 'integer'],
-            [['contract_type_id'], 'integer'],
-            [['contract_type_id'], 'required'],
+            [['contract_type_id', 'service_object_type_id'], 'integer'],
+            [['contract_type_id', 'service_object_type_id'], 'required'],
         ]);
     }
 
@@ -76,6 +86,7 @@ class ImportServiceObjectAndContractForm extends SystemForm
         return array_merge(parent::attributeLabels(), [
             'uploadedFiles' => 'Файлы для загрузки',
             'contract_type_id' => 'Тип договора',
+            'service_object_type_id' => 'Тип объекта обслуживания',
         ]);
     }
 
@@ -111,6 +122,15 @@ class ImportServiceObjectAndContractForm extends SystemForm
     }
 
     /**
+     * @return ActiveQuery
+     * @throws InvalidConfigException
+     */
+    public function getServiceObjectType()
+    {
+        return ServiceObjectType::find()->andWhere(['id' => $this->service_object_type_id]);
+    }
+
+    /**
      * @inheritdoc
      * @throws UserException
      */
@@ -137,6 +157,7 @@ class ImportServiceObjectAndContractForm extends SystemForm
             $consoleTask->params = Json::encode([
                 'files_id' => $files_id,
                 'contract_type_id' => $this->contract_type_id,
+                'service_object_type_id' => $this->service_object_type_id,
             ]);
             $consoleTask->start_date = new DateTime('now');
             $consoleTask->save();
