@@ -102,7 +102,7 @@
 
 `sudo a2ensite webfood.local.conf`
 
-`a2enmod rewrite`
+`sudo a2enmod rewrite`
 
 `systemctl restart apache2`
 
