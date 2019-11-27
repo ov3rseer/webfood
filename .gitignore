@@ -36,4 +36,3 @@ phpunit.phar
 
 # npm
 /node_modules
-/source
