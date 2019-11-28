@@ -67,7 +67,7 @@ class Contract extends Reference
      */
     public function getContractProducts()
     {
-        return $this->hasMany(ContractProduct::className(), ['parent_id' => 'id'])
+        return $this->hasMany(ContractProduct::class, ['parent_id' => 'id'])
             ->orderBy('id ASC');
     }
 
@@ -78,7 +78,7 @@ class Contract extends Reference
     public function getContractType()
 
     {
-        return $this->hasOne(ContractType::className(), ['id' => 'contract_type_id']);
+        return $this->hasOne(ContractType::class, ['id' => 'contract_type_id']);
     }
 
     /**
@@ -87,7 +87,7 @@ class Contract extends Reference
     public function getTableParts()
     {
         return array_merge([
-            'contractProducts' => ContractProduct::className(),
+            'contractProducts' => ContractProduct::class,
         ], parent::getTableParts());
     }
 }

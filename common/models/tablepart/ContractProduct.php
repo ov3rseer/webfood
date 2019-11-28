@@ -25,9 +25,8 @@ class ContractProduct extends TablePart
     public function rules()
     {
         return array_merge(parent::rules(), [
-            [['product_id'/*, 'quantity'*/], 'required'],
+            [['product_id'], 'required'],
             [['product_id'], 'integer'],
-            //[['quantity'], 'number', 'min' => 0],
         ]);
     }
 
@@ -38,7 +37,6 @@ class ContractProduct extends TablePart
     {
         return array_merge(parent::attributeLabels(), [
             'product_id'    => 'Продукт',
-            //'quantity'      => 'Количество',
         ]);
     }
 
@@ -47,7 +45,7 @@ class ContractProduct extends TablePart
      */
     public function getParent()
     {
-        return $this->hasOne(Contract::className(), ['id' => 'parent_id']);
+        return $this->hasOne(Contract::class, ['id' => 'parent_id']);
     }
 
     /**
@@ -55,6 +53,6 @@ class ContractProduct extends TablePart
      */
     public function getProduct()
     {
-        return $this->hasOne(Product::className(), ['id' => 'product_id']);
+        return $this->hasOne(Product::class, ['id' => 'product_id']);
     }
 }
