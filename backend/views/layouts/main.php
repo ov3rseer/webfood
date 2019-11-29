@@ -89,11 +89,6 @@ AppAsset::register($this);
                         'visible' => Yii::$app->user->can('super-admin'),
                     ],
                     [
-                        'label' => 'Договора с объектами обслуживания',
-                        'url' => ['/reference/contract/index'],
-                        'visible' => Yii::$app->user->can('super-admin'),
-                    ],
-                    [
                         'label' => 'Классы',
                         'url' => ['/reference/school-class/index'],
                         'visible' => Yii::$app->user->can('super-admin'),
