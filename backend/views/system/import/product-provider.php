@@ -1,14 +1,13 @@
 <?php
 
 use backend\controllers\system\SystemController;
-use yii\bootstrap\ButtonGroup;
 use yii\helpers\Html;
 use backend\widgets\ActiveForm;
 
 /* @var yii\web\View $this */
-/* @var backend\models\system\ImportServiceObjectAndContractForm $model */
+/* @var backend\models\system\ImportProductProviderForm $model */
+/* @var SystemController $controller */
 
-/** @var SystemController $controller */
 $controller = $this->context;
 
 $this->title = $model->getName();
@@ -51,23 +50,14 @@ $form = ActiveForm::begin(
                 </div>
                 <?php
                 echo '<div class="col-xs-12 col-sm-6 col-md-3">';
-                echo $form->field($model, 'uploadedFiles[]')->fileInput(['multiple' => true]);
-                echo '</div>';
-                echo '<div class="col-xs-12 col-sm-6 col-md-3">';
-                echo $form->autoField($model, 'contract_type_id');
-                echo '</div>';
-                echo '<div class="col-xs-12 col-sm-6 col-md-3">';
-                echo $form->autoField($model, 'service_object_type_id');
+                echo $form->field($model, 'uploadedFile')->fileInput();
                 echo '</div>';
                 ?>
             </div>
             <div class="row">
                 <div class="col-xs-12 col-sm-6 col-md-3">
                     <?php
-                    $buttons = [
-                        Html::submitButton('Загрузить файл', ['class' => 'btn btn-success']),
-                    ];
-                    echo ButtonGroup::widget(['buttons' => $buttons]);
+                    echo Html::submitButton('Загрузить файл', ['class' => 'btn btn-success']);
                     ?>
                 </div>
             </div>

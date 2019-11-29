@@ -175,8 +175,13 @@ AppAsset::register($this);
                         'visible' => Yii::$app->user->can('super-admin'),
                     ],
                     [
-                        'label' => 'Импорт объектов обслуживания и договоров',
-                        'url' => ['/system/import-service-object-and-contract/index'],
+                        'label' => 'Импорт поставщиков продуктов',
+                        'url' => ['/system/import-product-provider/index'],
+                        'visible' => Yii::$app->user->can('super-admin'),
+                    ],
+                    [
+                        'label' => 'Импорт объектов обслуживания',
+                        'url' => ['/system/import-service-object/index'],
                         'visible' => Yii::$app->user->can('super-admin'),
                     ],
                 ],

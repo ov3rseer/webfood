@@ -7,14 +7,14 @@ use Yii;
 use yii\filters\AccessControl;
 
 /**
- * Контроллер для управления импортом объектов обслуживания и договоров
+ * Контроллер для управления импортом поставщиков продуктов
  */
-class ImportServiceObjectAndContractController extends SystemController
+class ImportProductProviderController extends SystemController
 {
     /**
      * @inheritdoc
      */
-    public $modelClass = 'backend\models\system\ImportServiceObjectAndContractForm';
+    public $modelClass = 'backend\models\system\ImportProductProviderForm';
 
     /**
      * @inheritdoc
@@ -23,7 +23,7 @@ class ImportServiceObjectAndContractController extends SystemController
     {
         return ArrayHelper::merge(parent::behaviors(), [
             'access' => [
-                'class' => AccessControl::className(),
+                'class' => AccessControl::class,
                 'rules' => [
                     [
                         'actions' => ['download-example-file'],
@@ -44,7 +44,7 @@ class ImportServiceObjectAndContractController extends SystemController
             'index' => [
                 'class' => 'backend\actions\system\base\IndexAction',
                 'modelClass' => $this->modelClass,
-                'viewPath' => '@backend/views/system/import-service-object-and-contract/index',
+                'viewPath' => '@backend/views/system/import/product-provider',
             ],
         ]);
     }
@@ -55,8 +55,8 @@ class ImportServiceObjectAndContractController extends SystemController
     public function actionDownloadExampleFile()
     {
         return Yii::$app->response->sendFile(
-            Yii::getAlias('@backend/web/samples/import-service-object-and-contract/service-object-and-contract.xml'),
-            'Файл-образец с объектами обслуживания и контрактами.xml'
+            Yii::getAlias('@backend/web/samples/import/product-providers.xml'),
+            'Файл-образец с поставщиками продуктов.xml'
         );
     }
 }

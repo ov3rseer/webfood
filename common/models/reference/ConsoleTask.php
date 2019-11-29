@@ -7,6 +7,7 @@ use common\components\DbManager;
 use common\components\TaskProcessorInterface;
 use common\models\enum\ConsoleTaskStatus;
 use common\models\enum\ConsoleTaskType;
+use Exception;
 use Yii;
 use yii\base\InvalidConfigException;
 use yii\base\UserException;
@@ -103,7 +104,7 @@ class ConsoleTask extends Reference
      */
     public function getType()
     {
-        return $this->hasOne(ConsoleTaskType::className(), ['id' => 'type_id']);
+        return $this->hasOne(ConsoleTaskType::class, ['id' => 'type_id']);
     }
 
     /**
@@ -111,12 +112,12 @@ class ConsoleTask extends Reference
      */
     public function getStatus()
     {
-        return $this->hasOne(ConsoleTaskStatus::className(), ['id' => 'status_id']);
+        return $this->hasOne(ConsoleTaskStatus::class, ['id' => 'status_id']);
     }
 
     /**
      * Установка новой даты запуска (для повторяющихся задач)
-     * @throws \Exception
+     * @throws Exception
      */
     public function setNewStartDate()
     {
@@ -129,7 +130,7 @@ class ConsoleTask extends Reference
      * Получение новой даты выполнения задачи
      * @param DateTime $curDate
      * @return DateTime|null
-     * @throws \Exception
+     * @throws Exception
      */
     public function getNewStartDate($curDate = null)
     {
@@ -229,7 +230,7 @@ class ConsoleTask extends Reference
      * @throws InvalidConfigException
      * @throws UserException
      * @throws \yii\base\Exception
-     * @throws \Exception
+     * @throws Exception
      */
     public function execute()
     {
@@ -255,7 +256,7 @@ class ConsoleTask extends Reference
             $this->finish_date = new DateTime();
             $this->save();
             $transaction->commit();
-        } catch (\Exception $ex) {
+        } catch (Exception $ex) {
             $transaction->rollBack();
             if ($ex instanceof UserException) {
                 $this->result_text = $ex->getMessage();
