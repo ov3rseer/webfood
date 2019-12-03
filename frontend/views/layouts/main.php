@@ -5,9 +5,7 @@
 
 /* @throws Exception */
 
-use common\models\enum\ContractType;
 use common\models\enum\UserType;
-use yii\bootstrap\Modal;
 use yii\bootstrap\Nav;
 use yii\bootstrap\NavBar;
 use yii\helpers\Html;
@@ -35,35 +33,6 @@ AppAsset::register($this);
 
 <div class="wrap">
     <?php
-    $modalId = 'choose_contract_type_for_request';
-    Modal::begin([
-        'options' => [
-            'id' => $modalId,
-        ],
-        'header' => 'Выберите тип договора',
-    ]);
-    echo Html::a('Дети', null, [
-        'class' => 'btn btn-lg btn-success btn-block',
-        'data-contract-type' => ContractType::CHILD,
-    ]);
-    echo Html::a('Сотрудники', null, [
-        'class' => 'btn btn-lg btn-success btn-block',
-        'data-contract-type' => ContractType::EMPLOYEES,
-    ]);
-    Modal::end();
-
-    $this->registerJs(" 
-        $('#preliminary-request, #correction-request').click(function(e) {
-            e.preventDefault();
-            var action = this.id;
-            $('#" . $modalId . " a').each(function(){
-                var contractTypeId = $(this).attr('data-contract-type');
-                this.href =  '" . Url::to(['serviceObject/request/index']) . "' + '?contractTypeId=' + contractTypeId + '&action=' + action;
-            });
-            $('#" . $modalId . "').modal('show');
-        });"
-    );
-
     NavBar::begin([
         'brandLabel' => Yii::$app->name,
         'brandUrl' => Yii::$app->homeUrl,
@@ -95,19 +64,13 @@ AppAsset::register($this);
                         'items' => [
                             [
                                 'label' => 'Предварительная заявка',
-                                'url' => ['#'],
+                                'url' => Url::to(['serviceObject/request/index', 'action' => 'preliminary-request']),
                                 'visible' => Yii::$app->user->can('service-object'),
-                                'linkOptions' => [
-                                    'id' => 'preliminary-request',
-                                ]
                             ],
                             [
                                 'label' => 'Корректировка заявки',
-                                'url' => ['#'],
+                                'url' => Url::to(['serviceObject/request/index', 'action' => 'correction-request']),
                                 'visible' => Yii::$app->user->can('service-object'),
-                                'linkOptions' => [
-                                    'id' => 'correction-request',
-                                ]
                             ],
                         ],
                     ],

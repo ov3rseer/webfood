@@ -29,6 +29,11 @@ use yii\web\UploadedFile;
 class ImportServiceObjectForm extends ImportForm
 {
     /**
+     * @var string путь для загрузки файла
+     */
+    public $path = 'service-object';
+
+    /**
      * @var integer id тип объекта обслуживания
      */
     public $service_object_type_id;

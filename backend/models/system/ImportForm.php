@@ -21,6 +21,11 @@ use yii\web\UploadedFile;
 abstract class ImportForm extends SystemForm
 {
     /**
+     * @var string путь для загрузки файла
+     */
+    public $path = 'default';
+
+    /**
      * @var UploadedFile[] загружаемый файл
      */
     public $uploadedFile;
@@ -87,7 +92,7 @@ abstract class ImportForm extends SystemForm
         if ($this->uploadedFile && !$this->uploadedFile->error) {
             $file = new File();
             $file->setUploadFile($this->uploadedFile);
-            $file->path = 'service-objects';
+            $file->path = $this->path;
             $file->save();
             $this->file_id = $file->id;
         }

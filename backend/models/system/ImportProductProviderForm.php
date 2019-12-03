@@ -16,12 +16,18 @@ use yii\web\UploadedFile;
 /**
  * Форма для импорта поставщиков продуктов
  *
+ * @property integer $file_id
+ *
  * @property File $file
  * @property UploadedFile[] $uploadedFiles
- * @property integer $file_id
  */
 class ImportProductProviderForm extends ImportForm
 {
+    /**
+     * @var string путь для загрузки файла
+     */
+    public $path = 'product-provider';
+
     /**
      * @inheritdoc
      */
@@ -45,7 +51,7 @@ class ImportProductProviderForm extends ImportForm
             $consoleTask->name = (string)$consoleTaskType;
             $consoleTask->status_id = ConsoleTaskStatus::PLANNED;
             $consoleTask->params = Json::encode([
-                'files_id' => $this->file_id,
+                'file_id' => $this->file_id,
             ]);
             $consoleTask->start_date = new DateTime('now');
             $consoleTask->save();

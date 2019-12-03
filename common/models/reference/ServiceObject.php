@@ -4,7 +4,6 @@ namespace common\models\reference;
 
 use backend\widgets\ActiveField;
 use common\models\enum\ServiceObjectType;
-use common\models\tablepart\ServiceObjectContract;
 use common\models\tablepart\ServiceObjectEmployee;
 use common\models\tablepart\ServiceObjectSchoolClass;
 use yii\db\ActiveQuery;
@@ -12,14 +11,14 @@ use yii\db\ActiveQuery;
 /**
  * Модель справочника "Объекты обслуживания"
  *
- * @property integer  $user_id
- * @property integer  $service_object_code
- * @property integer  $service_object_type_id
+ * @property integer    $user_id
+ * @property string     $city
+ * @property string     $address
+ * @property integer    $service_object_type_id
  *
  * Отношения:
  * @property User                       $user
  * @property ServiceObjectType          $serviceObjectType
- * @property ServiceObjectContract[]    $serviceObjectContracts
  * @property ServiceObjectEmployee[]    $serviceObjectEmployees
  * @property ServiceObjectSchoolClass[] $serviceObjectSchoolClasses
  */
@@ -47,8 +46,9 @@ class ServiceObject extends Reference
     public function rules()
     {
         return array_merge(parent::rules(), [
-            [['service_object_code', 'user_id', 'service_object_type_id'], 'integer'],
-            [['service_object_code', 'service_object_type_id'], 'required'],
+            [['user_id', 'service_object_type_id'], 'integer'],
+            [['city', 'address'], 'string'],
+            [['city', 'address', 'service_object_type_id'], 'required'],
         ]);
     }
 
@@ -58,12 +58,12 @@ class ServiceObject extends Reference
     public function attributeLabels()
     {
         return array_merge(parent::attributeLabels(), [
-            'user_id'                       => 'Прикреплённый пользователь',
-            'service_object_code'           => 'Номер объекта обслуживания',
-            'service_object_type_id'        => 'Тип объекта обслуживания',
-            'serviceObjectContracts'        => 'Договора',
-            'serviceObjectEmployees'        => 'Сотрудники',
-            'serviceObjectSchoolClasses'    => 'Классы',
+            'city' => 'Город',
+            'address' => 'Адрес',
+            'user_id' => 'Прикреплённый пользователь',
+            'service_object_type_id' => 'Тип объекта обслуживания',
+            'serviceObjectEmployees' => 'Сотрудники',
+            'serviceObjectSchoolClasses' => 'Классы',
         ]);
     }
 
@@ -96,15 +96,6 @@ class ServiceObject extends Reference
     /**
      * @return ActiveQuery
      */
-    public function getServiceObjectContracts()
-    {
-        return $this->hasMany(ServiceObjectContract::class, ['parent_id' => 'id'])
-            ->orderBy('id ASC');
-    }
-
-    /**
-     * @return ActiveQuery
-     */
     public function getServiceObjectEmployees()
     {
         return $this->hasMany(ServiceObjectEmployee::class, ['parent_id' => 'id'])
@@ -119,7 +110,6 @@ class ServiceObject extends Reference
         return array_merge([
             'serviceObjectSchoolClasses'    => ServiceObjectSchoolClass::class,
             'serviceObjectEmployees'        => ServiceObjectEmployee::class,
-            'serviceObjectContracts'        => ServiceObjectContract::class,
         ], parent::getTableParts());
     }
 
