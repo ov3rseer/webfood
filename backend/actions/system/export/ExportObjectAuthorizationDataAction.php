@@ -3,6 +3,7 @@
 namespace backend\actions\system\export;
 
 use common\components\DateTime;
+use common\helpers\StringHelper;
 use common\models\enum\UserType;
 use common\models\reference\ServiceObject;
 use common\models\reference\User;
@@ -20,7 +21,7 @@ use yii\helpers\Html;
 /**
  * Действие для выгрузки авторизационных данных новых объектов обслуживания
  */
-class ExportServiceObjectAuthorizationDataAction extends Action
+class ExportObjectAuthorizationDataAction extends Action
 {
     /**
      * @inheritdoc
@@ -42,7 +43,7 @@ class ExportServiceObjectAuthorizationDataAction extends Action
                 ->setSize(18)
                 ->setName('Arial');
             $sheet = $spreadsheet->getActiveSheet();
-            $sheet->setTitle('Выгрузка авторизационных данных')
+            $sheet->setTitle('Выгрузка данных авторизации')
                 ->freezePane('A2')
                 ->setShowGridlines(true)
                 ->getPageSetup()
@@ -51,10 +52,11 @@ class ExportServiceObjectAuthorizationDataAction extends Action
 
             $rowIndex = 1;
             $rows[$rowIndex] = [
-                'A' => 'Код объекта обслуживания',
-                'B' => 'Объект обслуживания',
-                'C' => 'Логин',
-                'D' => 'Пароль',
+                'A' => 'Объект обслуживания',
+                'B' => 'Логин',
+                'C' => 'Пароль',
+                'D' => 'Город',
+                'E' => 'Адрес',
             ];
 
             foreach ($serviceObjects as $serviceObject) {
@@ -63,8 +65,9 @@ class ExportServiceObjectAuthorizationDataAction extends Action
                 }
                 $rowIndex++;
 
-                $login = 'contr' . time() . $rowIndex;
-                $password = 'pass' . time() . $rowIndex;
+                $serviceObjectMaxId = ServiceObject::find()->max('id');
+                $login = 'object' . $serviceObjectMaxId . $rowIndex;
+                $password = StringHelper::generatePassword(10);
 
                 $user = new User();
                 $user->name = $login;
@@ -78,7 +81,13 @@ class ExportServiceObjectAuthorizationDataAction extends Action
 
                 $serviceObject->user_id = $user->id;
                 $serviceObject->save();
-                $rows[$rowIndex] = ['A' => $serviceObject->service_object_code, 'B' => htmlspecialchars_decode(Html::encode((string)$serviceObject)), 'C' => $login, 'D' => $password];
+                $rows[$rowIndex] = [
+                    'A' => htmlspecialchars_decode(Html::encode((string)$serviceObject)),
+                    'B' => $login,
+                    'C' => $password,
+                    'D' => $serviceObject->city,
+                    'E' => $serviceObject->address,
+                ];
             }
 
             foreach ($rows as $rowIndex => $row) {

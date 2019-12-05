@@ -43,14 +43,15 @@ class ImportProductProvider extends BaseObject implements TaskProcessorInterface
         $objects = $xml->children();
         foreach ($objects as $object) {
             $name = trim($object['Наименование']);
-            /** @var ProductProvider $serviceObject */
-            $serviceObject = ProductProvider::find()->andWhere(['name' => $name])->one();
-            if (!$serviceObject) {
-                $serviceObject = new ProductProvider();
-                $serviceObject->name = $name;
-                $serviceObject->city = trim($object['Город']);
-                $serviceObject->address = trim($object['Адрес']);
-                $serviceObject->save();
+            /** @var ProductProvider $productProvider */
+            $productProvider = ProductProvider::find()->andWhere(['name' => $name])->one();
+            if (!$productProvider) {
+                $productProvider = new ProductProvider();
+                $productProvider->name = $name;
+                $productProvider->is_active = false;
+                $productProvider->city = trim($object['Город']);
+                $productProvider->address = trim($object['Адрес']);
+                $productProvider->save();
                 $result['added']++;
             } else {
                 $result['skipped']++;

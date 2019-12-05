@@ -1,4 +1,5 @@
 <?php
+
 namespace backend\controllers;
 
 use common\models\enum\UserType;
@@ -23,8 +24,11 @@ class SiteController extends Controller
             'error' => [
                 'class' => 'yii\web\ErrorAction',
             ],
-            'export-service-object-authorization-data' => [
-                'class' => 'backend\actions\system\export\ExportServiceObjectAuthorizationDataAction',
+            'export-object-authorization-data' => [
+                'class' => 'backend\actions\system\export\ExportObjectAuthorizationDataAction',
+            ],
+            'export-provider-authorization-data' => [
+                'class' => 'backend\actions\system\export\ExportProviderAuthorizationDataAction',
             ],
             'export-many-requests' => [
                 'class' => 'backend\actions\system\export\ExportManyRequestsAction',
@@ -51,12 +55,7 @@ class SiteController extends Controller
                         'roles' => ['@'],
                     ],
                     [
-                        'actions' => ['export-service-object-authorization-data'],
-                        'allow' => true,
-                        'roles' => ['super-admin'],
-                    ],
-                    [
-                        'actions' => ['export-many-requests'],
+                        'actions' => ['export-object-authorization-data', 'export-provider-authorization-data', 'export-many-requests'],
                         'allow' => true,
                         'roles' => ['super-admin'],
                     ],
@@ -79,7 +78,7 @@ class SiteController extends Controller
      */
     public function actionIndex()
     {
-        if(Yii::$app->user->identity->user_type_id != UserType::ADMIN){
+        if (Yii::$app->user->identity->user_type_id != UserType::ADMIN) {
             Yii::$app->user->logout();
             return $this->actionLogin();
         }

@@ -53,6 +53,7 @@ class ImportServiceObject extends BaseObject implements TaskProcessorInterface
             if (!$serviceObject) {
                 $serviceObject = new ServiceObject();
                 $serviceObject->name = $name;
+                $serviceObject->is_active = false;
                 $serviceObject->service_object_type_id = $params['service_object_type_id'];
                 $serviceObject->city = trim($object['Город']);
                 $serviceObject->address = trim($object['Адрес']);
