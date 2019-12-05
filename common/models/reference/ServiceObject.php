@@ -6,7 +6,9 @@ use backend\widgets\ActiveField;
 use common\models\enum\ServiceObjectType;
 use common\models\tablepart\ServiceObjectEmployee;
 use common\models\tablepart\ServiceObjectSchoolClass;
+use yii\base\UserException;
 use yii\db\ActiveQuery;
+use yii\db\StaleObjectException;
 
 /**
  * Модель справочника "Объекты обслуживания"
@@ -49,7 +51,18 @@ class ServiceObject extends Reference
             [['user_id', 'service_object_type_id'], 'integer'],
             [['city', 'address'], 'string'],
             [['city', 'address', 'service_object_type_id'], 'required'],
+            [['user_id'], 'validateUser', 'skipOnEmpty' => false, 'skipOnError' => false],
         ]);
+    }
+
+    /**
+     * Проверка на прикрепленного пользователя
+     */
+    public function validateUser()
+    {
+        if ($this->is_active && !$this->user_id) {
+            $this->addError('summary', 'Чтобы объект обслуживания стал активен, необходимо прикрепить пользователя.');
+        }
     }
 
     /**
@@ -58,12 +71,12 @@ class ServiceObject extends Reference
     public function attributeLabels()
     {
         return array_merge(parent::attributeLabels(), [
-            'city' => 'Город',
-            'address' => 'Адрес',
-            'user_id' => 'Прикреплённый пользователь',
-            'service_object_type_id' => 'Тип объекта обслуживания',
-            'serviceObjectEmployees' => 'Сотрудники',
-            'serviceObjectSchoolClasses' => 'Классы',
+            'city'                          => 'Город',
+            'address'                       => 'Адрес',
+            'user_id'                       => 'Прикреплённый пользователь',
+            'service_object_type_id'        => 'Тип объекта обслуживания',
+            'serviceObjectEmployees'        => 'Сотрудники',
+            'serviceObjectSchoolClasses'    => 'Классы',
         ]);
     }
 
@@ -149,6 +162,13 @@ class ServiceObject extends Reference
         return $parentResult;
     }
 
+    /**
+     * @param bool $insert
+     * @param array $changedAttributes
+     * @throws UserException
+     * @throws StaleObjectException
+     * @throws \Throwable
+     */
     public function afterSave($insert, $changedAttributes)
     {
         parent::afterSave($insert, $changedAttributes);

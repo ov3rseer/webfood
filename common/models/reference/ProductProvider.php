@@ -45,7 +45,18 @@ class ProductProvider extends Reference
             [['user_id'], 'integer'],
             [['city', 'address'], 'string'],
             [['city', 'address'], 'required'],
+            [['user_id'], 'validateUser', 'skipOnEmpty' => false, 'skipOnError' => false],
         ]);
+    }
+
+    /**
+     * Проверка на прикрепленного пользователя
+     */
+    public function validateUser()
+    {
+        if ($this->is_active && !$this->user_id) {
+            $this->addError('summary', 'Чтобы поставщик стал активен, необходимо прикрепить пользователя.');
+        }
     }
 
     /**
@@ -54,9 +65,9 @@ class ProductProvider extends Reference
     public function attributeLabels()
     {
         return array_merge(parent::attributeLabels(), [
-            'user_id' => 'Прикреплённый пользователь',
-            'city' => 'Город',
-            'address' => 'Адрес',
+            'user_id'                       => 'Прикреплённый пользователь',
+            'city'                          => 'Город',
+            'address'                       => 'Адрес',
             'productProviderServiceObjects' => 'Объекты обслуживания',
         ]);
     }

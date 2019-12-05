@@ -4,7 +4,10 @@ namespace common\models\reference;
 
 use backend\widgets\ActiveField;
 use common\models\tablepart\FatherChild;
+use Throwable;
+use yii\base\UserException;
 use yii\db\ActiveQuery;
+use yii\db\StaleObjectException;
 
 /**
  * Модель справочника "Родитель"
@@ -49,7 +52,18 @@ class Father extends Reference
             [['forename', 'surname', 'patronymic'], 'string'],
             [['forename', 'surname', 'patronymic'], 'filter', 'filter' => 'ucfirst'],
             [['forename', 'surname'], 'required'],
+            [['user_id'], 'validateUser', 'skipOnEmpty' => false, 'skipOnError' => false],
         ]);
+    }
+
+    /**
+     * Проверка на прикрепленного пользователя
+     */
+    public function validateUser()
+    {
+        if ($this->is_active && !$this->user_id) {
+            $this->addError('summary', 'Чтобы родитель стал активен, необходимо прикрепить пользователя.');
+        }
     }
 
     /**
@@ -135,6 +149,13 @@ class Father extends Reference
         return $parentResult;
     }
 
+    /**
+     * @param bool $insert
+     * @param array $changedAttributes
+     * @throws Throwable
+     * @throws UserException
+     * @throws StaleObjectException
+     */
     public function afterSave($insert, $changedAttributes)
     {
         parent::afterSave($insert, $changedAttributes);

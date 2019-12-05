@@ -49,7 +49,18 @@ class Employee extends Reference
             [['forename', 'surname', 'patronymic'], 'string'],
             [['forename', 'surname', 'patronymic'], 'filter', 'filter' => 'ucfirst'],
             [['forename', 'surname', 'service_object_id'], 'required'],
+            [['user_id'], 'validateUser', 'skipOnEmpty' => false, 'skipOnError' => false],
         ]);
+    }
+
+    /**
+     * Проверка на прикрепленного пользователя
+     */
+    public function validateUser()
+    {
+        if ($this->is_active && !$this->user_id) {
+            $this->addError('summary', 'Чтобы сотрудник стал активен, необходимо прикрепить пользователя.');
+        }
     }
 
     /**
