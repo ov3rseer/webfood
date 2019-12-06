@@ -14,15 +14,17 @@ class m191129_133528_delete_contracts extends Migration
         $this->dropColumn('{{%doc_request}}', 'contract_code');
         $this->dropColumn('{{%doc_request}}', 'address');
         $this->dropColumn('{{%doc_request}}', 'contract_id');
-        $this->addColumn('{{%ref_service_object}}', 'city', $this->string(128));
-        $this->addColumn('{{%ref_service_object}}', 'address', $this->string(256));
+        $this->addColumn('{{%ref_service_object}}', 'city', $this->string(128)->notNull());
+        $this->addColumn('{{%ref_service_object}}', 'zip_code', $this->integer(6)->notNull());
+        $this->addColumn('{{%ref_service_object}}', 'address', $this->string(256)->notNull());
         $this->dropColumn('{{%ref_service_object}}', 'service_object_code');
         $this->dropTable('{{%tab_service_object_contract}}');
         $this->dropTable('{{%tab_contract_product}}');
         $this->dropTable('{{%ref_contract}}');
         $this->dropTable('{{%enum_contract_type}}');
-        $this->addColumn('{{%ref_product_provider}}', 'city', $this->string(128));
-        $this->addColumn('{{%ref_product_provider}}', 'address', $this->string(256));
+        $this->addColumn('{{%ref_product_provider}}', 'city', $this->string(128)->notNull());
+        $this->addColumn('{{%ref_product_provider}}', 'zip_code', $this->integer(6)->notNull());
+        $this->addColumn('{{%ref_product_provider}}', 'address', $this->string(256)->notNull());
     }
 
     /**
@@ -33,7 +35,9 @@ class m191129_133528_delete_contracts extends Migration
     public function safeDown()
     {
         $this->dropColumn('{{%ref_product_provider}}', 'city');
+        $this->dropColumn('{{%ref_product_provider}}', 'zip_code');
         $this->dropColumn('{{%ref_product_provider}}', 'address');
+
         $this->createEnumTable('{{%enum_contract_type}}', [
             1 => 'Дети',
             2 => 'Сотрудники'
@@ -54,6 +58,7 @@ class m191129_133528_delete_contracts extends Migration
 
         $this->addColumn('{{%ref_service_object}}', 'service_object_code', $this->string(9)->unique());
         $this->dropColumn('{{%ref_service_object}}', 'address');
+        $this->dropColumn('{{%ref_service_object}}', 'zip_code');
         $this->dropColumn('{{%ref_service_object}}', 'city');
 
         $this->addColumn('{{%doc_request}}', 'contract_id',

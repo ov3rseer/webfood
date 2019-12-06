@@ -87,7 +87,7 @@ class ExportProviderAuthorizationDataAction extends Action
                     'B' => $login,
                     'C' => $password,
                     'D' => $productProvider->city,
-                    'E' => $productProvider->address
+                    'E' => $productProvider->zip_code . ', ' . $productProvider->address,
                 ];
             }
 

@@ -14,6 +14,7 @@ use yii\db\StaleObjectException;
  * Модель справочника "Объекты обслуживания"
  *
  * @property integer    $user_id
+ * @property integer    $zip_code
  * @property string     $city
  * @property string     $address
  * @property integer    $service_object_type_id
@@ -48,9 +49,9 @@ class ServiceObject extends Reference
     public function rules()
     {
         return array_merge(parent::rules(), [
-            [['user_id', 'service_object_type_id'], 'integer'],
+            [['user_id', 'service_object_type_id', 'zip_code'], 'integer'],
             [['city', 'address'], 'string'],
-            [['city', 'address', 'service_object_type_id'], 'required'],
+            [['city', 'address', 'service_object_type_id', 'zip_code'], 'required'],
             [['user_id'], 'validateUser', 'skipOnEmpty' => false, 'skipOnError' => false],
         ]);
     }
@@ -72,6 +73,7 @@ class ServiceObject extends Reference
     {
         return array_merge(parent::attributeLabels(), [
             'city'                          => 'Город',
+            'zip_code'                      => 'Индекс',
             'address'                       => 'Адрес',
             'user_id'                       => 'Прикреплённый пользователь',
             'service_object_type_id'        => 'Тип объекта обслуживания',
@@ -121,8 +123,8 @@ class ServiceObject extends Reference
     public function getTableParts()
     {
         return array_merge([
-            'serviceObjectSchoolClasses'    => ServiceObjectSchoolClass::class,
-            'serviceObjectEmployees'        => ServiceObjectEmployee::class,
+            'serviceObjectSchoolClasses' => ServiceObjectSchoolClass::class,
+            'serviceObjectEmployees' => ServiceObjectEmployee::class,
         ], parent::getTableParts());
     }
 

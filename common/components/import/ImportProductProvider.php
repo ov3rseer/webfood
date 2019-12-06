@@ -50,6 +50,7 @@ class ImportProductProvider extends BaseObject implements TaskProcessorInterface
                 $productProvider->name = $name;
                 $productProvider->is_active = false;
                 $productProvider->city = trim($object['Город']);
+                $productProvider->zip_code = trim($object['Индекс']);
                 $productProvider->address = trim($object['Адрес']);
                 $productProvider->save();
                 $result['added']++;

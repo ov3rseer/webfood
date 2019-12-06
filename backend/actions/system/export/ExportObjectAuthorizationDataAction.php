@@ -86,7 +86,7 @@ class ExportObjectAuthorizationDataAction extends Action
                     'B' => $login,
                     'C' => $password,
                     'D' => $serviceObject->city,
-                    'E' => $serviceObject->address,
+                    'E' => $serviceObject->zip_code . ', ' . $serviceObject->address,
                 ];
             }
 

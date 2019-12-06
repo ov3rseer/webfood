@@ -11,6 +11,7 @@ use yii\db\ActiveQuery;
  * Модель справочника "Поставщик продуктов"
  *
  * @property integer $user_id
+ * @property integer $zip_code
  * @property string $city
  * @property string $address
  *
@@ -42,9 +43,9 @@ class ProductProvider extends Reference
     public function rules()
     {
         return array_merge(parent::rules(), [
-            [['user_id'], 'integer'],
+            [['user_id', 'zip_code'], 'integer'],
             [['city', 'address'], 'string'],
-            [['city', 'address'], 'required'],
+            [['city', 'address', 'zip_code'], 'required'],
             [['user_id'], 'validateUser', 'skipOnEmpty' => false, 'skipOnError' => false],
         ]);
     }
@@ -66,6 +67,7 @@ class ProductProvider extends Reference
     {
         return array_merge(parent::attributeLabels(), [
             'user_id'                       => 'Прикреплённый пользователь',
+            'zip_code'                      => 'Индекс',
             'city'                          => 'Город',
             'address'                       => 'Адрес',
             'productProviderServiceObjects' => 'Объекты обслуживания',

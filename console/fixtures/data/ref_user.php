@@ -48,6 +48,14 @@ $users = [
         'email' => 'object2@webfood.test',
         'password_hash' => Yii::$app->security->generatePasswordHash('object2')
     ],
+    'user-provider-1' => [
+        'id' => 6,
+        'is_active' => true,
+        'name' => 'provider1',
+        'user_type_id' => UserType::PRODUCT_PROVIDER,
+        'email' => 'provider1@webfood.test',
+        'password_hash' => Yii::$app->security->generatePasswordHash('provider1')
+    ],
 ];
 
 $auth = Yii::$app->authManager;
