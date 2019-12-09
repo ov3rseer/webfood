@@ -15,12 +15,10 @@ class m190822_094907_add_ref_card_child extends Migration
             'limit_per_day' => $this->decimal(10, 2)->defaultValue(0)->notNull(),
         ]);
         $this->insert('{{%sys_entity}}', ['class_name' => 'common\models\reference\CardChild']);
-        $this->addColumn('{{%ref_child}}', 'card_id', $this->integer()->indexed()->foreignKey('{{%ref_card_child}}', 'id'));
     }
 
     public function safeDown()
     {
-        $this->dropColumn('{{%ref_child}}', 'card_id');
         $this->delete('{{%sys_entity}}', ['class_name' => 'common\models\reference\CardChild']);
         $this->dropTable('{{%ref_card_child}}');
     }
