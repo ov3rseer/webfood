@@ -41,6 +41,7 @@ class StringHelper extends YiiStringHelper
     }
 
     /**
+     * Генерация случайного пароля указанной длины
      * @param integer $number
      * @return string
      */
