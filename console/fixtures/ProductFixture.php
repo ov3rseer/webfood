@@ -8,5 +8,6 @@ class ProductFixture extends Fixture
 
     public $depends = [
         'console\fixtures\ProductCategoryFixture',
+        'console\fixtures\ProductProviderFixture',
     ];
 }
