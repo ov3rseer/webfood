@@ -9,11 +9,13 @@ use yii\db\ActiveQuery;
  *
  * @property integer    $unit_id
  * @property integer    $product_category_id
+ * @property integer    $product_provider_id
  * @property float      $price
  *
  * Отношения:
  * @property Unit               $unit
  * @property ProductCategory    $productCategory
+ * @property ProductProvider    $productProvider
  */
 class Product extends Reference
 {
@@ -39,9 +41,9 @@ class Product extends Reference
     public function rules()
     {
         return array_merge(parent::rules(), [
-            [['unit_id', 'product_category_id'], 'integer'],
+            [['unit_id', 'product_category_id', 'product_provider_id'], 'integer'],
             [['price'], 'number', 'min' => 0],
-            [['price', 'unit_id', 'product_category_id'], 'required'],
+            [['price', 'unit_id', 'product_category_id', 'product_provider_id'], 'required'],
         ]);
     }
 
@@ -54,6 +56,7 @@ class Product extends Reference
             'price'                 => 'Цена за единицу измерения',
             'unit_id'               => 'Единица измерения',
             'product_category_id'   => 'Категория продукта',
+            'product_provider_id'   => 'Поставщик',
         ]);
     }
 
@@ -71,5 +74,13 @@ class Product extends Reference
     public function getProductCategory()
     {
         return $this->hasOne(ProductCategory::class, ['id' => 'product_category_id']);
+    }
+
+    /**
+     * @return ActiveQuery
+     */
+    public function getProductProvider()
+    {
+        return $this->hasOne(ProductProvider::class, ['id' => 'product_provider_id']);
     }
 }

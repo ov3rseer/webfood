@@ -12,10 +12,12 @@ use yii\db\ActiveQuery;
  * @property string  $forename
  * @property string  $surname
  * @property string  $patronymic
+ * @property string  $reason_not_feeding
  * @property integer $service_object_id
  * @property integer $school_class_id
  * @property integer $father_id
  * @property integer $card_id
+ * @property boolean $is_feeding
  *
  * Отношения:
  * @property ServiceObject  $serviceObject
@@ -49,9 +51,10 @@ class Child extends Reference
         return array_merge(parent::rules(), [
             [['name_full'], 'string', 'max' => 1024],
             [['name_full'], 'filter', 'filter' => 'trim'],
-            [['forename', 'surname', 'patronymic'], 'string'],
+            [['forename', 'surname', 'patronymic', 'reason_not_feeding'], 'string'],
             [['forename', 'surname', 'patronymic'], 'filter', 'filter' => 'ucfirst'],
             [['service_object_id', 'school_class_id', 'father_id', 'card_id'], 'integer'],
+            [['is_feeding'], 'boolean'],
             [['forename', 'surname', 'patronymic', 'service_object_id', 'school_class_id'], 'required'],
         ]);
     }
@@ -62,15 +65,17 @@ class Child extends Reference
     public function attributeLabels()
     {
         return array_merge(parent::attributeLabels(), [
-            'name'              => 'ФИО',
-            'name_full'         => 'ФИО полностью',
-            'forename'          => 'Имя',
-            'surname'           => 'Фамилия',
-            'patronymic'        => 'Отчество',
-            'service_object_id' => 'Объект обслуживания',
-            'school_class_id'   => 'Класс',
-            'father_id'         => 'Родитель',
-            'card_id'           => 'Номер карты',
+            'name'                  => 'ФИО',
+            'name_full'             => 'ФИО полностью',
+            'forename'              => 'Имя',
+            'surname'               => 'Фамилия',
+            'patronymic'            => 'Отчество',
+            'service_object_id'     => 'Объект обслуживания',
+            'school_class_id'       => 'Класс',
+            'father_id'             => 'Родитель',
+            'card_id'               => 'Номер карты',
+            'is_feeding'            => 'Подключен к питанию',
+            'reason_not_feeding'    => 'Причина снятия с питания',
         ]);
     }
 
