@@ -6,7 +6,7 @@ use yii\db\Query;
 class m190807_105733_add_ref_father extends Migration
 {
     private $_userTypes = [
-        5 => 'Родитель'
+        6 => 'Родитель'
     ];
 
     /**

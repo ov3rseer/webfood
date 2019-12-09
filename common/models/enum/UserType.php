@@ -23,17 +23,17 @@ class UserType extends Enum
     const SERVICE_OBJECT = 3;
 
     /**
+     * Поставщик продуктов
+     */
+    const PRODUCT_PROVIDER = 4;
+
+    /**
      * Сотрудник объекта обслуживания
      */
-    const EMPLOYEE = 4;
+    const EMPLOYEE = 5;
 
     /**
      * Родитель
      */
-    const FATHER = 5;
-
-    /**
-     * Поставщик продуктов
-     */
-    const PRODUCT_PROVIDER = 6;
+    const FATHER = 6;
 }

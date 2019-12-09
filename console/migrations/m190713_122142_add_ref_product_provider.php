@@ -3,10 +3,10 @@
 use common\components\pgsql\Migration;
 use yii\db\Query;
 
-class m190807_122142_add_ref_product_provider extends Migration
+class m190713_122142_add_ref_product_provider extends Migration
 {
     private $_userTypes = [
-        6 => 'Поставщик продуктов'
+        4 => 'Поставщик продуктов'
     ];
 
     /**
@@ -23,6 +23,9 @@ class m190807_122142_add_ref_product_provider extends Migration
 
         $this->createReferenceTable('{{%ref_product_provider}}', [
             'user_id' => $this->integer()->indexed()->foreignKey('{{%ref_user}}', 'id'),
+            'city' => $this->string(128)->notNull(),
+            'zip_code' => $this->integer(6)->notNull(),
+            'address' => $this->string(256)->notNull(),
         ]);
         $this->insert('{{%sys_entity}}', ['class_name' => 'common\models\reference\ProductProvider']);
 
@@ -51,6 +54,7 @@ class m190807_122142_add_ref_product_provider extends Migration
         $this->delete('{{%ref_product_provider}}', ['user_id' => $userIds]);
         $this->update('{{%ref_user}}', ['user_type_id' => 2, 'is_active' => false], ['id' => $userIds]);
         $this->delete('{{%enum_user_type}}', ['id' => array_keys($this->_userTypes)]);
+
         $this->delete('{{%sys_entity}}', ['class_name' => 'common\models\reference\ProductProvider']);
         $this->dropTable('{{%ref_product_provider}}');
     }

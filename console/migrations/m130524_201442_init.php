@@ -16,8 +16,6 @@ class m130524_201442_init extends Migration
         ]);
 
         $this->createReferenceTable('{{%ref_user}}', [
-            'forename' => $this->string(256),
-            'surname' => $this->string(256),
             'user_type_id' => $this->integer()->notNull()->indexed()->foreignKey('{{%enum_user_type}}', 'id'),
             'email' => $this->string()->notNull(),
             'auth_key' => $this->string(32),
@@ -40,8 +38,6 @@ class m130524_201442_init extends Migration
             'id'            => 1,
             'name'          => 'admin',
             'name_full'     => 'Администратор',
-            'forename'      => '',
-            'surname'       => '',
             'user_type_id'  => 1,
             'password_hash' => Yii::$app->security->generatePasswordHash('admin'),
             'email'         => 'admin@example.com',

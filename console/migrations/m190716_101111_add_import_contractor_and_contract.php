@@ -15,7 +15,7 @@ class m190716_101111_add_import_contractor_and_contract extends Migration
     {
         $this->insert('{{%enum_console_task_type}}', [
             'id'   => 1,
-            'name' => 'Импорт контрагентов и договоров',
+            'name' => 'Импорт объектов обслуживания',
         ]);
         $this->resetSequence('{{%enum_console_task_type}}');
     }

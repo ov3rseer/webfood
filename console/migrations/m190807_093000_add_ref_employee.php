@@ -6,7 +6,7 @@ use yii\db\Query;
 class m190807_093000_add_ref_employee extends Migration
 {
     private $_userTypes = [
-        4 => 'Сотрудник'
+        5 => 'Сотрудник'
     ];
 
     /**
@@ -31,7 +31,7 @@ class m190807_093000_add_ref_employee extends Migration
         ]);
         $this->insert('{{%sys_entity}}', ['class_name' => 'common\models\reference\Employee']);
 
-        $this->createTablePartTable('{{%tab_service_object_employee}}','{{%ref_service_object}}',[
+        $this->createTablePartTable('{{%tab_service_object_employee}}', '{{%ref_service_object}}', [
             'employee_id' => $this->integer()->notNull()->indexed()->foreignKey('{{%ref_employee}}', 'id'),
         ]);
 

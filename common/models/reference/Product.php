@@ -7,7 +7,6 @@ use yii\db\ActiveQuery;
 /**
  * Модель справочника "Продукт"
  *
- * @property integer    $product_code
  * @property integer    $unit_id
  * @property integer    $product_category_id
  * @property float      $price
@@ -42,8 +41,7 @@ class Product extends Reference
         return array_merge(parent::rules(), [
             [['unit_id', 'product_category_id'], 'integer'],
             [['price'], 'number', 'min' => 0],
-            [['product_code'], 'string', 'max' => 9],
-            [['name', 'product_code', 'price', 'unit_id', 'product_category_id'], 'required'],
+            [['price', 'unit_id', 'product_category_id'], 'required'],
         ]);
     }
 
@@ -53,7 +51,6 @@ class Product extends Reference
     public function attributeLabels()
     {
         return array_merge(parent::attributeLabels(), [
-            'product_code'          => 'Код продукта',
             'price'                 => 'Цена за единицу измерения',
             'unit_id'               => 'Единица измерения',
             'product_category_id'   => 'Категория продукта',
