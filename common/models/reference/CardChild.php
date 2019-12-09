@@ -45,8 +45,8 @@ class CardChild extends Reference
     public function attributeLabels()
     {
         return array_merge(parent::attributeLabels(), [
-            'card_number' => 'Номер карты',
-            'balance' => 'Баланс',
+            'card_number'   => 'Номер карты',
+            'balance'       => 'Баланс',
             'limit_per_day' => 'Лимит в день',
         ]);
     }
