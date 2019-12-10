@@ -1,6 +1,6 @@
 <?php
 
-namespace frontend\controllers\serviceObject;
+namespace frontend\controllers\productProvider;
 
 use common\helpers\ArrayHelper;
 use common\models\ActiveRecord;
@@ -23,7 +23,7 @@ class ProductController extends FrontendModelController
     /**
      * @var string имя класса модели
      */
-    public $modelClass = 'frontend\models\serviceObject\ProductForm';
+    public $modelClass = 'frontend\models\productProvider\ProductForm';
 
     /**
      * @inheritdoc
@@ -37,7 +37,7 @@ class ProductController extends FrontendModelController
                     [
                         'actions' => ['index', 'delete-checked', 'delete', 'update'],
                         'allow' => true,
-                        'roles' => ['service-object'],
+                        'roles' => ['product-provider'],
                     ],
                 ],
             ],
@@ -61,7 +61,7 @@ class ProductController extends FrontendModelController
             'index' => [
                 'class' => 'frontend\actions\base\IndexAction',
                 'modelClass' => $this->modelClass,
-                'viewPath' => '@frontend/views/service-object/product/index',
+                'viewPath' => '@frontend/views/product-provider/product/index',
             ],
         ]);
     }
@@ -119,7 +119,6 @@ class ProductController extends FrontendModelController
         $id = Yii::$app->request->post('id');
         $name = Yii::$app->request->post('name');
         $is_active = Yii::$app->request->post('is_active');
-        $product_code = Yii::$app->request->post('product_code');
         $price = Yii::$app->request->post('price');
         $unit_id = Yii::$app->request->post('unit_id');
         $category_id = Yii::$app->request->post('category_id');
@@ -130,7 +129,6 @@ class ProductController extends FrontendModelController
             if ($model instanceof Reference || $model instanceof Document) {
                 $model->name = $name;
                 $model->is_active = $is_active;
-                $model->product_code = $product_code;
                 $model->unit_id = $unit_id;
                 $model->price = $price;
                 $model->product_category_id = $category_id;

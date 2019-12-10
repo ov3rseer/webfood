@@ -89,16 +89,6 @@ AppAsset::register($this);
                         'visible' => Yii::$app->user->can('service-object'),
                         'items' => [
                             [
-                                'label' => 'Категории продуктов',
-                                'url' => ['/serviceObject/product-category/index'],
-                                'visible' => Yii::$app->user->can('service-object'),
-                            ],
-                            [
-                                'label' => 'Продукты',
-                                'url' => ['/serviceObject/product/index'],
-                                'visible' => Yii::$app->user->can('service-object'),
-                            ],
-                            [
                                 'label' => 'Категории блюд',
                                 'url' => ['/serviceObject/meal-category/index'],
                                 'visible' => Yii::$app->user->can('service-object'),
@@ -131,6 +121,20 @@ AppAsset::register($this);
             case UserType::OTHER:
             case UserType::EMPLOYEE:
             case UserType::PRODUCT_PROVIDER:
+                $menuItems = [
+                    [
+                        'label' => 'Столовая',
+                        'visible' => Yii::$app->user->can('product-provider'),
+                        'items' => [
+                            [
+                                'label' => 'Продукты',
+                                'url' => ['/productProvider/product/index'],
+                                'visible' => Yii::$app->user->can('product-provider'),
+                            ],
+                        ],
+                    ],
+                ];
+                break;
             case UserType::FATHER:
                 break;
         }

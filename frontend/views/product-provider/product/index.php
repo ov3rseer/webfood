@@ -5,7 +5,7 @@ use backend\widgets\GridView\GridViewWithToolbar;
 use common\models\reference\Product;
 use common\models\reference\ProductCategory;
 use common\models\reference\Unit;
-use frontend\models\serviceObject\ProductForm;
+use frontend\models\productProvider\ProductForm;
 use yii\bootstrap\Modal;
 use yii\helpers\Html;
 use yii\helpers\Url;
@@ -36,7 +36,6 @@ echo Html::beginTag('div', ['class' => 'report-attributes']);
 echo Html::beginTag('div', ['class' => 'row']);
 echo Html::beginTag('div', ['class' => 'col-xs-4']);
 echo $form->field($model, 'name')->textInput(['class' => 'form-control']);
-echo $form->field($model, 'product_code')->textInput(['class' => 'form-control']);
 echo $form->field($model, 'price')->textInput(['class' => 'form-control']);
 echo $form->field($model, 'unit_id')->dropDownList($units, ['class' => 'form-control']);
 echo $form->field($model, 'product_category_id')->dropDownList($productCategories, ['class' => 'form-control']);
@@ -90,10 +89,6 @@ echo GridViewWithToolbar::widget([
                     echo Html::endTag('div');
                     echo Html::beginTag('div', ['class' => 'row mt-3']);
                     echo Html::beginTag('div', ['class' => 'col-xs-6']);
-                    echo Html::label('Код продукта', 'product-code-' . $rowModel->id);
-                    echo Html::textInput('product_code', $rowModel->product_code, ['id' => 'product-code-' . $rowModel->id, 'class' => 'form-control']);
-                    echo Html::endTag('div');
-                    echo Html::beginTag('div', ['class' => 'col-xs-6']);
                     echo Html::label('Цена', 'product-price-' . $rowModel->id);
                     echo Html::textInput('price', $rowModel->price, ['id' => 'product-price-' . $rowModel->id, 'class' => 'form-control']);
                     echo Html::endTag('div');
@@ -119,14 +114,13 @@ echo GridViewWithToolbar::widget([
                                 var id = $(this).data('id');
                                 var name = $('#product-name-" . $rowModel->id . "').val();
                                 var is_active = $('#active-" . $rowModel->id . "').is(':checked');
-                                var product_code = $('#product-code-" . $rowModel->id . "').val();
                                 var price = $('#product-price-" . $rowModel->id . "').val();
                                 var unit_id = $('#product-unit-" . $rowModel->id . "').val();
                                 var category_id = $('#product-category-" . $rowModel->id . "').val();
                                 $('#" . $modalId . "').on('hidden.bs.modal', function () {                 
                                     $.ajax({
                                         url: '" . Url::to(['update']) . "',
-                                        data: {id: id, is_active: is_active, name: name, product_code: product_code, price: price, unit_id: unit_id, category_id: category_id},
+                                        data: {id: id, is_active: is_active, name: name, price: price, unit_id: unit_id, category_id: category_id},
                                         dataType: 'json',
                                         type: 'POST',
                                         success: function(data) {    

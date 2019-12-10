@@ -1,7 +1,8 @@
 <?php
 
-namespace frontend\models\serviceObject;
+namespace frontend\models\productProvider;
 
+use common\models\enum\UserType;
 use common\models\form\SystemForm;
 use common\models\reference\Product;
 use common\models\reference\ProductCategory;
@@ -19,7 +20,6 @@ use yii\helpers\Html;
  *
  * Свойства:
  * @property string $name наименование
- * @property string $product_code код продукта
  * @property string $price цена
  * @property string $unit_id единица измерения
  * @property string $product_category_id категория продукта
@@ -32,11 +32,6 @@ class ProductForm extends SystemForm
      * @var string название продукта
      */
     public $name;
-
-    /**
-     * @var string код продукта
-     */
-    public $product_code;
 
     /**
      * @var string цена
@@ -71,7 +66,6 @@ class ProductForm extends SystemForm
             [['unit_id', 'product_category_id'], 'integer'],
             [['price'], 'number', 'min' => 0],
             [['name'], 'string', 'max' => 255],
-            [['product_code'], 'string', 'max' => 9],
             [['name'], 'filter', 'filter' => 'trim'],
         ]);
     }
@@ -86,7 +80,6 @@ class ProductForm extends SystemForm
             'price' => 'Цена',
             'unit_id' => 'Единица измерения',
             'product_category_id' => 'Категория продукта',
-            'product_code' => 'Код продукта',
         ]);
     }
 
@@ -134,7 +127,7 @@ class ProductForm extends SystemForm
      */
     public function getColumns()
     {
-        $columns = [
+        return [
             [
                 'attribute' => 'name',
                 'format' => 'raw',
@@ -181,7 +174,6 @@ class ProductForm extends SystemForm
             ],
 
         ];
-        return $columns;
     }
 
     /**
@@ -191,19 +183,28 @@ class ProductForm extends SystemForm
      */
     public function proceed()
     {
-        $product = Product::find()->orWhere(['name' => $this->name, 'product_code' => $this->product_code])->one();
-        if (!$product) {
-            $product = new Product();
-            $product->name = $this->name;
-            $product->product_code = $this->product_code;
-            $product->is_active = true;
-            $product->price = $this->price;
-            $product->unit_id = $this->unit_id;
-            $product->product_category_id = $this->product_category_id;
-            $product->save();
-            Yii::$app->session->setFlash('success', 'Продукт успешно добавлен.');
-        } else {
-            Yii::$app->session->setFlash('error', 'Такой продукт уже существует');
+        $user = Yii::$app->user ? Yii::$app->user->identity : null;
+        if ($user && $user->user_type_id == UserType::PRODUCT_PROVIDER) {
+            $productProvider = Yii::$app->user->identity->getProfile();
+            $product = Product::find()
+                ->andWhere([
+                    'name' => $this->name,
+                    'product_provider_id' => $productProvider->id
+                ])
+                ->one();
+            if (!$product) {
+                $product = new Product();
+                $product->name = $this->name;
+                $product->is_active = true;
+                $product->price = $this->price;
+                $product->unit_id = $this->unit_id;
+                $product->product_category_id = $this->product_category_id;
+                $product->product_provider_id = $productProvider->id;
+                $product->save();
+                Yii::$app->session->setFlash('success', 'Продукт успешно добавлен.');
+            } else {
+                Yii::$app->session->setFlash('error', 'Такой продукт уже существует');
+            }
         }
     }
 }
