@@ -9,7 +9,9 @@ use common\models\ActiveRecord;
 use common\models\document\Document;
 use common\models\enum\Enum;
 use common\models\reference\Reference;
+use Exception;
 use ReflectionClass;
+use ReflectionException;
 use Yii;
 use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
@@ -23,16 +25,13 @@ class ActiveField extends \yii\widgets\ActiveField
     const STRING = 'string';
     const TEXT = 'text';
     const BOOL = 'boolean';
-    const SMALLINT = 'smallint';
     const INT = 'integer';
-    const BIGINT = 'bigint';
     const FLOAT = 'float';
     const DECIMAL = 'decimal';
     const DATETIME = 'datetime';
     const TIMESTAMP = 'timestamp';
     const TIME = 'time';
     const DATE = 'date';
-    const BINARY = 'binary';
     const MONEY = 'money';
     const HIDDEN = 'hidden';
     const READONLY = 'readonly';
@@ -121,7 +120,7 @@ class ActiveField extends \yii\widgets\ActiveField
      * Генерация поля для ввода даты со временем
      * @param boolean $singleDate выбор только одной даты
      * @return $this
-     * @throws \Exception
+     * @throws Exception
      */
     public function dateTime($singleDate = true)
     {
@@ -187,7 +186,7 @@ class ActiveField extends \yii\widgets\ActiveField
      * Генерация поля для ввода даты со временем
      * @param boolean $singleDate выбор только одной даты
      * @return $this
-     * @throws \Exception
+     * @throws Exception
      */
     public function date($singleDate = true)
     {
@@ -250,7 +249,7 @@ class ActiveField extends \yii\widgets\ActiveField
      * Генерация поля для вывода ссылки
      * @param boolean $hasMultiselect
      * @return $this
-     * @throws \Exception
+     * @throws Exception
      */
     public function reference($hasMultiselect = false)
     {
@@ -258,6 +257,19 @@ class ActiveField extends \yii\widgets\ActiveField
         if ($relation = $this->model->getAttributeRelation($attribute)) {
             /** @var ActiveRecord $class */
             $class = $relation['class'];
+            $method = $relation['method'];
+            $query = $this->model->{$method}();
+            $where = '';
+            if (is_array($query->where)) {
+                foreach ($query->where as $key => $value) {
+                    if ($where) {
+                        $where .= ' AND ';
+                    }
+                    $where .= $key . ' = ' . $value;
+                }
+            } elseif (is_string($query->where)) {
+                $where .= $query->where;
+            }
             if (is_subclass_of($class, Enum::class, true)) {
                 if (!isset($this->inputOptions['prompt'])) {
                     $this->inputOptions['prompt'] = '(не указано)';
@@ -333,7 +345,16 @@ class ActiveField extends \yii\widgets\ActiveField
                         'url' => (!empty($this->additionalOptions['searchUrl']) ? $this->additionalOptions['searchUrl'] : Url::to([$controllerId . '/search'])),
                         'dataType' => 'json',
                         'quietMillis' => 250,
-                        'data' => new JsExpression('function(term, page) {return term;}'),
+                        'data' => new JsExpression('
+                            function (params) {
+                                var params = {
+                                    term: params.term,
+                                    page: params.page,
+                                    condition: "' . $where . '"
+                                }  
+                                return params;
+                            }
+                       '),
                         'processResults' => new JsExpression('function(data, page) { return { results: data }; }'),
                     ], !empty($this->additionalOptions['ajax-options']) ? $this->additionalOptions['ajax-options'] : []);
                 }
@@ -372,7 +393,7 @@ class ActiveField extends \yii\widgets\ActiveField
      * Генерация поля для вывода значения без возможности ручного изменения
      * @param array $options
      * @return $this
-     * @throws \ReflectionException
+     * @throws ReflectionException
      */
     public function readonly($options = [])
     {
@@ -396,7 +417,7 @@ class ActiveField extends \yii\widgets\ActiveField
      * Генерация поля для вывода значения пароля без возможности ручного изменения
      * @param array $options
      * @return $this
-     * @throws \ReflectionException
+     * @throws ReflectionException
      */
     public function passwordReadonly($options = [])
     {

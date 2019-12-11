@@ -23,17 +23,18 @@ class SearchAction extends BackendModelAction
     /**
      * Построение запроса
      * @param string $term
+     * @param string $conditions
      * @return ActiveQuery $this
-     * @throws NotSupportedException
      * @throws InvalidConfigException
+     * @throws NotSupportedException
      */
-    protected function buildQuery($term = '')
+    protected function buildQuery($term = '', $conditions = '')
     {
         $modelClass = $this->modelClass;
         if (!is_subclass_of($modelClass, ActiveRecord::class, true)) {
             throw new NotSupportedException('Модель не поддерживается');
         }
-        $query = $modelClass::find()->limit(10);
+        $query = $modelClass::find()->andWhere($conditions)->limit(10);
         /** @var ActiveRecord $model */
         $model = new $modelClass();
         if ($term && $this->searchFields) {
@@ -69,12 +70,12 @@ class SearchAction extends BackendModelAction
      * @throws NotSupportedException
      * @throws InvalidConfigException
      */
-    public function run($term = '')
+    public function run($term = '', $condition = '')
     {
         Yii::$app->response->format = Response::FORMAT_JSON;
         $result = [];
         /** @var ActiveRecord[] $models */
-        $models = $this->buildQuery($term)->all();
+        $models = $this->buildQuery($term, $condition)->all();
         foreach ($models as $model) {
             $result[] = [
                 'id' => $model->primaryKey,

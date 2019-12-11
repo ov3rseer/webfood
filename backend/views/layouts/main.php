@@ -48,6 +48,11 @@ AppAsset::register($this);
                 'visible' => Yii::$app->user->can('super-admin'),
                 'items' => [
                     [
+                        'label' => 'Поступления продуктов',
+                        'url' => ['/document/arrival/index'],
+                        'visible' => Yii::$app->user->can('super-admin'),
+                    ],
+                    [
                         'label' => 'Заявки',
                         'url' => ['/document/request/index'],
                         'visible' => Yii::$app->user->can('super-admin'),
