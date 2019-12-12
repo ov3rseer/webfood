@@ -2,7 +2,7 @@
 
 use common\components\pgsql\Migration;
 
-class m191206_131349_add_reg_provider_warehouse extends Migration
+class m191210_131349_add_reg_provider_warehouse extends Migration
 {
     public function safeUp()
     {

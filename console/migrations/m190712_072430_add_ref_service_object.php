@@ -34,6 +34,7 @@ class m190712_072430_add_ref_service_object extends Migration
             'city' => $this->string(128)->notNull(),
             'zip_code' => $this->integer(6)->notNull(),
             'address' => $this->string(256)->notNull(),
+            'is_buffet_connected' => $this->boolean()->defaultValue(false),
         ]);
         $this->insert('{{%sys_entity}}', ['class_name' => 'common\models\reference\ServiceObject']);
     }

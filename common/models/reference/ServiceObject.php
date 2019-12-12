@@ -51,6 +51,7 @@ class ServiceObject extends Reference
         return array_merge(parent::rules(), [
             [['user_id', 'service_object_type_id', 'zip_code'], 'integer'],
             [['city', 'address'], 'string'],
+            [['is_buffet_connected'], 'boolean'],
             [['city', 'address', 'service_object_type_id', 'zip_code'], 'required'],
             [['user_id'], 'validateUser', 'skipOnEmpty' => false, 'skipOnError' => false],
         ]);
@@ -76,6 +77,7 @@ class ServiceObject extends Reference
             'zip_code'                      => 'Индекс',
             'address'                       => 'Адрес',
             'user_id'                       => 'Прикреплённый пользователь',
+            'is_buffet_connected'           => 'Подключение буфета',
             'service_object_type_id'        => 'Тип объекта обслуживания',
             'serviceObjectEmployees'        => 'Сотрудники',
             'serviceObjectSchoolClasses'    => 'Классы',
