@@ -4,9 +4,7 @@ namespace common\models\register\registerAccumulate;
 
 use common\models\reference\CardChild;
 use common\models\reference\Child;
-use yii\base\InvalidConfigException;
 use yii\db\ActiveQuery;
-use yii\db\ActiveRecord;
 
 /**
  * Модель регистра накопления "История карт"
