@@ -9,7 +9,7 @@ use yii\db\ActiveQuery;
 use yii\db\ActiveRecord;
 
 /**
- * Модель регистра накопления "История карты"
+ * Модель регистра накопления "История карт"
  *
  * Свойства:
  * @property integer $card_id
@@ -26,7 +26,7 @@ class CardHistory extends RegisterAccumulate
      */
     public function getPluralName()
     {
-        return 'Поступления товаров';
+        return 'История карт';
     }
 
     /**
