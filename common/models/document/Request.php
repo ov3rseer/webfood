@@ -2,29 +2,23 @@
 
 namespace common\models\document;
 
-use backend\controllers\document\DocumentController;
-use backend\widgets\ActiveForm;
-use common\models\enum\ContractType;
-use common\models\reference\Contract;
+use common\components\DateTime;
+use common\models\enum\RequestStatus;
 use common\models\reference\ServiceObject;
-use common\models\tablepart\RequestDate;
-use ReflectionException;
-use yii\base\InvalidConfigException;
+use common\models\tablepart\RequestProduct;
 use yii\db\ActiveQuery;
 
 /**
  * Модель документа "Предварительная заявка"
  *
- * @property integer $contract_id
  * @property integer $service_object_id
- * @property string  $service_object_code
- * @property string  $contract_code
- * @property string  $address
+ * @property integer $request_status_id
+ * @property DateTime $delivery_day
  *
  * Отношения:
- * @property RequestDate[]  $requestDates
- * @property ServiceObject  $serviceObject
- * @property Contract       $contract
+ * @property RequestProduct[] $requestProducts
+ * @property ServiceObject $serviceObject
+ * @property RequestStatus $requestStatus
  */
 class Request extends Document
 {
@@ -50,9 +44,9 @@ class Request extends Document
     public function rules()
     {
         return array_merge(parent::rules(), [
-            [['contract_id', 'service_object_id'], 'integer'],
-            [['address', 'contract_code', 'service_object_code'], 'string'],
-            [['service_object_code', 'contract_code', 'address', 'service_object_id', 'contract_id'], 'required'],
+            [['service_object_id', 'request_status_id'], 'integer'],
+            [['delivery_day'], 'date', 'format' => 'php:' . DateTime::DB_DATETIME_FORMAT],
+            [['service_object_id', 'request_status_id'], 'required'],
         ]);
     }
 
@@ -63,21 +57,10 @@ class Request extends Document
     {
         return array_merge(parent::attributeLabels(), [
             'service_object_id'     => 'Объект обслуживания',
-            'service_object_code'   => 'Код объекта обслуживания',
-            'contract_id'           => 'Контракт',
-            'contract_code'         => 'Код контракта',
-            'address'               => 'Место поставки',
-            'requestDates'          => 'Дни недели',
+            'request_status_id'     => 'Статус заявки',
+            'delivery_day'          => 'День доставки',
+            'requestProducts'       => 'Продукты',
         ]);
-    }
-
-    /**
-     * @return ActiveQuery
-     */
-    public function getRequestDates()
-    {
-        return $this->hasMany(RequestDate::class, ['parent_id' => 'id'])
-            ->orderBy('id ASC');
     }
 
     /**
@@ -91,9 +74,18 @@ class Request extends Document
     /**
      * @return ActiveQuery
      */
-    public function getContract()
+    public function getRequestStatus()
     {
-        return $this->hasOne(Contract::class, ['id' => 'contract_id']);
+        return $this->hasOne(RequestStatus::class, ['id' => 'request_status_id']);
+    }
+
+    /**
+     * @return ActiveQuery
+     */
+    public function getRequestProducts()
+    {
+        return $this->hasMany(RequestProduct::class, ['parent_id' => 'id'])
+            ->orderBy('id ASC');
     }
 
     /**
@@ -102,52 +94,7 @@ class Request extends Document
     public function getTableParts()
     {
         return array_merge([
-            'requestDates' => RequestDate::class,
+            'requestProducts' => RequestProduct::class,
         ], parent::getTableParts());
-    }
-
-    /**
-     * @inheritdoc
-     * @throws ReflectionException
-     * @throws InvalidConfigException
-     */
-    public function getTablePartColumns($tablePartRelation, $form, $readonly = false)
-    {
-        /** @var ActiveForm $form */
-        $model = $this;
-        $parentResult = DocumentController::getTablePartColumns($model, $tablePartRelation, $form, $readonly);
-        if ($tablePartRelation == 'requestDates') {
-            // Колонка продукты
-            $parentResult['products'] = [
-                'format' => 'raw',
-                'label' => 'Продукты',
-                'headerOptions' => ['style' => 'text-align:center;'],
-                'value' => function ($rowModel) use ($form, $model) {
-                    /** @var RequestDate $rowModel */
-                    $result = '';
-                    if (!$rowModel->isNewRecord && isset($rowModel->requestDateProducts)) {
-
-                        $result .= '<table class="table table-bordered">';
-                        $result .= '<tr>';
-                        $result .= '<th>Продукт</th>';
-                        $result .= '<th>Единица измерения</th>';
-                        $result .= '<th>Планируемое количество</th>';
-                        $result .= '<th>Фактическое количество</th>';
-                        $result .= '</tr>';
-                        foreach ($rowModel->requestDateProducts as $requestDateProduct) {
-                            $result .= '<tr>';
-                            $result .= '<th>'.$requestDateProduct->product.'</th>';
-                            $result .= '<th>'.$requestDateProduct->unit.'</th>';
-                            $result .= '<th>'.$requestDateProduct->planned_quantity.'</th>';
-                            $result .= '<th>'.$requestDateProduct->current_quantity.'</th>';
-                            $result .= '</tr>';
-                        }
-                        $result .= '</table>';
-                    }
-                    return $result;
-                }
-            ];
-        }
-        return $parentResult;
     }
 }
