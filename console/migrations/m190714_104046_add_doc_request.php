@@ -23,6 +23,7 @@ class m190714_104046_add_doc_request extends Migration
             'delivery_day' => $this->date()->notNull(),
             'service_object_id' => $this->integer()->notNull()->indexed()->foreignKey('{{%ref_service_object}}', 'id'),
             'request_status_id' => $this->integer()->notNull()->indexed()->foreignKey('{{enum_request_status}}', 'id'),
+            'product_provider_id' => $this->integer()->notNull()->indexed()->foreignKey('{{%ref_product_provider}}', 'id'),
         ]);
 
         $this->insert('{{%sys_entity}}', ['class_name' => 'common\models\document\Request']);
