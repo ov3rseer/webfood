@@ -2,7 +2,7 @@
 
 namespace frontend\controllers;
 
-use common\models\enum\UserType;
+use common\models\reference\User;
 use frontend\models\site\PasswordResetRequestForm;
 use frontend\models\site\ResendVerificationEmailForm;
 use frontend\models\site\ResetPasswordForm;
@@ -81,8 +81,11 @@ class SiteController extends Controller
         if (Yii::$app->user->isGuest) {
             return $this->redirect(['site/login']);
         }
-        if (Yii::$app->user && Yii::$app->user->identity->user_type_id == UserType::FATHER) {
+        if (User::isFather()) {
             return $this->redirect(['father/my-child/index']);
+        }
+        if (User::isProductProvider()) {
+            return $this->redirect(['productProvider/my-object/index']);
         }
         return $this->render('index');
     }
