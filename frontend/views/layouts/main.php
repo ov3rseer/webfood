@@ -123,15 +123,9 @@ AppAsset::register($this);
             case UserType::PRODUCT_PROVIDER:
                 $menuItems = [
                     [
-                        'label' => 'Столовая',
+                        'label' => 'Продукты',
+                        'url' => ['/productProvider/product/index'],
                         'visible' => Yii::$app->user->can('product-provider'),
-                        'items' => [
-                            [
-                                'label' => 'Продукты',
-                                'url' => ['/productProvider/product/index'],
-                                'visible' => Yii::$app->user->can('product-provider'),
-                            ],
-                        ],
                     ],
                 ];
                 break;
