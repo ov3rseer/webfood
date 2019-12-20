@@ -45,7 +45,7 @@ class ProductProviderServiceObject extends TablePart
      */
     public function getParent()
     {
-        return $this->hasOne(ProductProvider::className(), ['id' => 'parent_id']);
+        return $this->hasOne(ProductProvider::class, ['id' => 'parent_id']);
     }
 
     /**
@@ -53,6 +53,6 @@ class ProductProviderServiceObject extends TablePart
      */
     public function getServiceObject()
     {
-        return $this->hasOne(ServiceObject::className(), ['id' => 'service_object_id']);
+        return $this->hasOne(ServiceObject::class, ['id' => 'service_object_id']);
     }
 }
