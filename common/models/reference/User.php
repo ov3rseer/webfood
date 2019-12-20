@@ -308,6 +308,38 @@ class User extends Reference implements IdentityInterface
     }
 
     /**
+     * Проверка является ли пользователь родителем
+     */
+    static public function isFather()
+    {
+        return Yii::$app->user && Yii::$app->user->identity->user_type_id == UserType::FATHER;
+    }
+
+    /**
+     * Проверка является ли пользователь сотрудником
+     */
+    static public function isEmployee()
+    {
+        return Yii::$app->user && Yii::$app->user->identity->user_type_id == UserType::FATHER;
+    }
+
+    /**
+     * Проверка является ли пользователь поставщиком
+     */
+    static public function isProductProvider()
+    {
+        return Yii::$app->user && Yii::$app->user->identity->user_type_id == UserType::PRODUCT_PROVIDER;
+    }
+
+    /**
+     * Проверка является ли пользователь объектом обслуживания
+     */
+    static public function isServiceObject()
+    {
+        return Yii::$app->user && Yii::$app->user->identity->user_type_id == UserType::SERVICE_OBJECT;
+    }
+
+    /**
      * Получение профиля по типу пользователя
      * @return Employee|Father|ProductProvider|ServiceObject|null
      */
