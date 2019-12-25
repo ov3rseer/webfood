@@ -14,7 +14,7 @@ class ProfileController extends FrontendModelController
     /**
      * @var string имя класса модели
      */
-    public $modelClass = 'frontend\models\user\Profile';
+    public $modelClassForm = 'frontend\models\user\Profile';
 
     /**
      * @inheritdoc
@@ -24,7 +24,7 @@ class ProfileController extends FrontendModelController
         return array_merge(parent::actions(), [
             'index' => [
                 'class' => 'frontend\actions\base\IndexAction',
-                'modelClass' => $this->modelClass,
+                'modelClassForm' => $this->modelClassForm,
                 'viewPath' => '@frontend/views/user/profile/index',
             ],
         ]);

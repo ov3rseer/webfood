@@ -23,7 +23,7 @@ class SetMenuController extends FrontendModelController
     /**
      * @var string имя класса модели
      */
-    public $modelClass = 'frontend\models\serviceObject\SetMenuForm';
+    public $modelClassForm = 'frontend\models\serviceObject\SetMenuForm';
 
     /**
      * @inheritdoc
@@ -52,7 +52,7 @@ class SetMenuController extends FrontendModelController
         return array_merge(parent::actions(), [
             'index' => [
                 'class' => 'frontend\actions\base\IndexAction',
-                'modelClass' => $this->modelClass,
+                'modelClassForm' => $this->modelClassForm,
                 'viewPath' => '@frontend/views/service-object/set-menu/index',
             ],
         ]);

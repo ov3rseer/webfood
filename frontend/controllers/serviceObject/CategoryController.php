@@ -59,7 +59,7 @@ abstract class CategoryController extends FrontendModelController
         return array_merge(parent::actions(), [
             'index' => [
                 'class' => 'frontend\actions\base\IndexAction',
-                'modelClass' => $this->modelClass,
+                'modelClassForm' => $this->modelClassForm,
                 'viewPath' => '@frontend/views/service-object/category/index',
             ],
         ]);

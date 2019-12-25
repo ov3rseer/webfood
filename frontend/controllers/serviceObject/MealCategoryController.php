@@ -12,7 +12,7 @@ class MealCategoryController extends CategoryController
     /**
      * @var string имя класса модели
      */
-    public $modelClass = 'frontend\models\serviceObject\MealCategoryForm';
+    public $modelClassForm = 'frontend\models\serviceObject\MealCategoryForm';
 
     /**
      * @var string имя модели категорий

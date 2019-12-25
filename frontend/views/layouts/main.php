@@ -60,19 +60,8 @@ AppAsset::register($this);
                 $menuItems = [
                     [
                         'label' => 'Заявки',
+                        'url' => Url::to(['serviceObject/request/index']),
                         'visible' => Yii::$app->user->can('service-object'),
-                        'items' => [
-                            [
-                                'label' => 'Предварительная заявка',
-                                'url' => Url::to(['serviceObject/request/index', 'action' => 'preliminary-request']),
-                                'visible' => Yii::$app->user->can('service-object'),
-                            ],
-                            [
-                                'label' => 'Корректировка заявки',
-                                'url' => Url::to(['serviceObject/request/index', 'action' => 'correction-request']),
-                                'visible' => Yii::$app->user->can('service-object'),
-                            ],
-                        ],
                     ],
 //                    [
 //                        'label' => 'Сотрудники',

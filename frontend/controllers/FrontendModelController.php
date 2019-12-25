@@ -21,6 +21,11 @@ use yii\web\Response;
 class FrontendModelController extends Controller
 {
     /**
+     * @var string имя класса формы
+     */
+    public $modelClassForm;
+
+    /**
      * @var string имя класса модели
      */
     public $modelClass;
@@ -32,14 +37,18 @@ class FrontendModelController extends Controller
     public function init()
     {
         parent::init();
-        if ($this->modelClass === null) {
-            throw new InvalidConfigException(get_class($this) . '::$modelClass не указан.');
+        if ($this->modelClassForm === null) {
+            throw new InvalidConfigException(get_class($this) . '::$modelClassForm не указан.');
         }
-        if (!is_subclass_of($this->modelClass, ActiveRecord::class, true) &&
-            !is_subclass_of($this->modelClass, Form::class, true)) {
-            throw new InvalidConfigException(get_class($this) . '::$modelClass не является подклассом ' .
+        if ($this->modelClass && !is_subclass_of($this->modelClass, ActiveRecord::class, true)) {
+            throw new InvalidConfigException(get_class($this) . '::$modelClass не существует или не является подклассом ' .
                 ActiveRecord::class . '.');
         }
+        if (!is_subclass_of($this->modelClassForm, Form::class, true)) {
+            throw new InvalidConfigException(get_class($this) . '::$modelClassForm не является подклассом ' .
+                Form::class . '.');
+        }
+
     }
 
     /**
@@ -51,7 +60,20 @@ class FrontendModelController extends Controller
             'index' => [
                 'class' => 'frontend\actions\base\IndexAction',
                 'modelClass' => $this->modelClass,
+                'modelClassForm' => $this->modelClassForm,
                 'viewPath' => '@frontend/views/base/index',
+            ],
+            'create' => [
+                'class' => 'frontend\actions\base\CreateAction',
+                'modelClass' => $this->modelClass,
+                'modelClassForm' => $this->modelClassForm,
+                'viewPath' => '@frontend/views/base/update',
+            ],
+            'update' => [
+                'class' => 'frontend\actions\base\UpdateAction',
+                'modelClass' => $this->modelClass,
+                'modelClassForm' => $this->modelClassForm,
+                'viewPath' => '@frontend/views/base/update',
             ],
         ]);
     }
@@ -66,7 +88,7 @@ class FrontendModelController extends Controller
                 'class' => AccessControl::class,
                 'rules' => [
                     [
-                        'actions' => ['index'],
+                        'actions' => ['index', 'create', 'update'],
                         'allow' => true,
                         'roles' => ['super-admin'],
                     ],

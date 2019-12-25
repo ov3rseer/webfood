@@ -56,6 +56,6 @@ class RequestProduct extends TablePart
      */
     public function getProduct()
     {
-        return $this->hasOne(Product::class, ['id' => 'product_id']);
+        return $this->hasOne(Product::class, ['id' => 'product_id'])->andWhere(['product_provider_id' => $this->parent->product_provider_id]);
     }
 }
