@@ -19,9 +19,9 @@ use yii\web\UploadedFile;
 class ChildrenIntroductionController extends FrontendModelController
 {
     /**
-     * @var string имя класса модели
+     * @var string имя класса формы
      */
-    public $modelClass = 'frontend\models\serviceObject\ChildrenIntroductionForm';
+    public $modelClassForm = 'frontend\models\serviceObject\ChildrenIntroductionForm';
 
     /**
      * @inheritdoc
@@ -29,7 +29,7 @@ class ChildrenIntroductionController extends FrontendModelController
     public function actions()
     {
         $result = parent::actions();
-        unset($result['index']);
+        unset($result['index'], $result['update'], $result['create']);
         return $result;
     }
 
@@ -66,7 +66,7 @@ class ChildrenIntroductionController extends FrontendModelController
     public function actionIndex()
     {
         /** @var ChildrenIntroductionForm $model */
-        $model = new $this->modelClass();
+        $model = new $this->modelClassForm();
         $requestData = array_merge(Yii::$app->request->post(), Yii::$app->request->get());
         $action = Yii::$app->request->post('action');
         $model->load($requestData);
