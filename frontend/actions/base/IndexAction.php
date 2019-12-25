@@ -19,7 +19,7 @@ class IndexAction extends FrontendModelAction
     public function run()
     {
         /** @var SystemForm $model */
-        $model = new $this->modelClass();
+        $model = new $this->modelClassForm();
         $requestData = array_merge(Yii::$app->request->post(), Yii::$app->request->get());
         if (Yii::$app->request->isAjax && !Yii::$app->request->isPjax && $model->load($requestData)) {
             Yii::$app->response->format = Response::FORMAT_JSON;
