@@ -1,93 +1,51 @@
 <?php
 
-use backend\widgets\ActiveForm;
+
+use backend\controllers\BackendModelController;
 use backend\widgets\GridView\GridViewWithToolbar;
-use frontend\models\serviceObject\RequestForm;
-use yii\helpers\Html;
-use yii\helpers\Url;
-use yii\widgets\Pjax;
+use yii\bootstrap\Tabs;
+use yii\data\ActiveDataProvider;
 
-/* @var RequestForm $model */
+/* @var yii\web\View $this */
+/* @var frontend\models\serviceObject\RequestForm $model */
+/* @var yii\data\ActiveDataProvider $requests */
 /* @var array $columns */
-/* @var array $contracts */
-/* @var array $dataProvider */
 
-$this->title = $model->getName();
+$this->title = $model->getPluralName();
 $this->params['breadcrumbs'][] = $this->title;
 
-$reflection = new ReflectionClass($model->className());
-$shortClassName = $reflection->getShortName();
-$gridWidgetId = $shortClassName . '-grid';
-$formId = $shortClassName . '-form';
-$pjaxId = $shortClassName . '-pjax';
+/** @var BackendModelController $controller */
+$controller = $this->context;
 
-
-$form = ActiveForm::begin([
-    'id' => $formId,
-    'method' => 'POST',
-]);
-
-echo Html::beginTag('div', ['class' => 'container']);
-echo Html::beginTag('div', ['class' => 'row']);
-echo Html::beginTag('div', ['class' => 'col-md-3']);
-echo $form->field($model, 'service_object')->readonly();
-echo $form->field($model, 'service_object_id')->hiddenInput();
-echo Html::endTag('div');
-echo Html::beginTag('div', ['class' => 'col-md-9']);
-echo $form->field($model, 'contract_id')->dropDownList($contracts);
-echo Html::endTag('div');
-echo Html::endTag('div');
-echo Html::endTag('div'); //container
-
-$pjax = Pjax::begin(['id' => $pjaxId]);
-
-echo Html::beginTag('div', ['class' => 'container-fluid']);
 /** @noinspection PhpUnhandledExceptionInspection */
+$reflection = new \ReflectionClass($model->className());
+$shortClassName = $reflection->getShortName();
+$gridWidgetId = 'grid-' . $shortClassName;
+$toolbarLayout = [['refresh', 'create']];
 
-echo GridViewWithToolbar::widget([
-    'id' => $gridWidgetId,
-    'gridToolbarOptions' => [
-        'layout' => ['refresh', 'save'],
-        'tokens' => [
-            'refresh' => function () use ($formId, $pjaxId) {
-                $buttonId = 'refresh-request-table';
-                return Html::submitButton('Сформировать', [
-                    'id' => $buttonId,
-                    'class' => 'btn btn-primary',
-                    'title' => 'Сформировать таблицу',
-                ]);
-            },
-            'save' => function () use ($formId, $model) {
-                $buttonId = 'save-request-table';
-                $this->registerJs("
-                    $('#" . $buttonId . "').click(function(e){             
-                        var data = $('#" . $formId . "').serialize() + '&scenario=" . $model->scenario . "';           
-                        $.ajax({
-                            url: '" . Url::to(['save-request-table']) . "',
-                            replace: false,
-                            timeout: 5000,
-                            type: 'POST',
-                            data: data,
-                        });
-                    });
-                ");
-                return Html::submitButton('Сохранить', [
-                    'id' => $buttonId,
-                    'class' => 'btn btn-success',
-                    'title' => 'Сохранить заявку',
-                ]);
-            }
+foreach ($requests as $key => $request) {
+    $this->beginBlock('grid' .$key);
+    echo GridViewWithToolbar::widget([
+        'id' => $gridWidgetId,
+        'gridToolbarOptions' => [
+            'layout' => $toolbarLayout,
         ],
-    ],
-    'gridOptions' => [
-        'dataProvider' => $dataProvider,
-        'columns' => $columns,
-        'checkboxColumn' => false,
-        'actionColumn' => false,
-    ]
+        'gridOptions' => [
+            'dataProvider' => new ActiveDataProvider(['query' => $request[1]]),
+            'columns' => $columns,
+        ],
+    ]);
+    $this->endBlock();
+}
+
+$tabs = [];
+foreach ($requests as $key => $request) {
+    $tabs[] = [
+        'label' => $request[0],
+        'content' => $this->blocks['grid' . $key],
+    ];;
+}
+
+echo Tabs::widget([
+    'items' => $tabs,
 ]);
-echo Html::endTag('div'); //container-fluid
-
-$pjax->end();
-
-ActiveForm::end();

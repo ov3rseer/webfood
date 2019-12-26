@@ -13,6 +13,8 @@ use common\models\tablepart\TablePart;
 use Yii;
 use yii\base\InvalidConfigException;
 use yii\filters\AccessControl;
+use yii\filters\ContentNegotiator;
+use yii\filters\VerbFilter;
 use yii\helpers\Html;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
@@ -21,14 +23,15 @@ use yii\web\Response;
 class FrontendModelController extends Controller
 {
     /**
+     * @var string имя класса модели
+     */
+    public $modelClass;
+
+    /**
      * @var string имя класса формы
      */
     public $modelClassForm;
 
-    /**
-     * @var string имя класса модели
-     */
-    public $modelClass;
 
     /**
      * @inheritdoc
@@ -75,6 +78,16 @@ class FrontendModelController extends Controller
                 'modelClassForm' => $this->modelClassForm,
                 'viewPath' => '@frontend/views/base/update',
             ],
+            'delete' => [
+                'class' => 'frontend\actions\base\DeleteAction',
+                'modelClass' => $this->modelClass,
+                'modelClassForm' => $this->modelClassForm,
+            ],
+            'delete-checked' => [
+                'class' => 'frontend\actions\base\DeleteCheckedAction',
+                'modelClass' => $this->modelClass,
+                'modelClassForm' => $this->modelClassForm,
+            ],
         ]);
     }
 
@@ -93,6 +106,18 @@ class FrontendModelController extends Controller
                         'roles' => ['super-admin'],
                     ],
                 ],
+            ],
+            'verbs' => [
+                'class' => VerbFilter::class,
+                'actions' => [
+                    'delete' => ['POST'],
+                    'delete-checked' => ['POST'],
+                ],
+            ],
+            'contentNegotiator' => [
+                'class' => ContentNegotiator::class,
+                'only' => ['delete-checked', 'search'],
+                'formats' => ['application/json' => Response::FORMAT_JSON],
             ],
         ]);
     }

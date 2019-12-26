@@ -2,11 +2,11 @@
 
 namespace frontend\models\productProvider;
 
-use common\models\enum\UserType;
 use common\models\form\SystemForm;
 use common\models\reference\Product;
 use common\models\reference\ProductCategory;
 use common\models\reference\Unit;
+use common\models\reference\User;
 use Yii;
 use yii\base\InvalidConfigException;
 use yii\base\UserException;
@@ -108,18 +108,23 @@ class ProductForm extends SystemForm
      */
     public function getDataProvider()
     {
-        $query = Product::find();
+        if (User::isProductProvider()) {
+            $productProvider = Yii::$app->user->identity->getProfile();
 
-        return new ActiveDataProvider([
-            'query' => $query,
-            'pagination' => [
-                'defaultPageSize' => 20,
-                'pageSizeLimit' => false,
-            ],
-            'sort' => [
-                'defaultOrder' => ['id' => SORT_DESC],
-            ],
-        ]);
+            $query = Product::find()->andWhere(['product_provider_id' => $productProvider->id]);
+
+            return new ActiveDataProvider([
+                'query' => $query,
+                'pagination' => [
+                    'defaultPageSize' => 20,
+                    'pageSizeLimit' => false,
+                ],
+                'sort' => [
+                    'defaultOrder' => ['id' => SORT_DESC],
+                ],
+            ]);
+        }
+        return new ActiveDataProvider([]);
     }
 
     /**
@@ -172,7 +177,17 @@ class ProductForm extends SystemForm
                     return Html::encode($rowModel->productCategory);
                 },
             ],
-
+            [
+                'attribute' => 'quantity',
+                'format' => 'raw',
+                'value' => function ($rowModel) {
+                    /** @var Product $rowModel */
+                    if (isset($rowModel->quantity)) {
+                        return Html::encode($rowModel->quantity);
+                    }
+                    return '';
+                }
+            ],
         ];
     }
 
@@ -183,8 +198,7 @@ class ProductForm extends SystemForm
      */
     public function proceed()
     {
-        $user = Yii::$app->user ? Yii::$app->user->identity : null;
-        if ($user && $user->user_type_id == UserType::PRODUCT_PROVIDER) {
+        if (User::isProductProvider()) {
             $productProvider = Yii::$app->user->identity->getProfile();
             $product = Product::find()
                 ->andWhere([

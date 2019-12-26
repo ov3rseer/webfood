@@ -2,6 +2,8 @@
 
 namespace common\models\reference;
 
+use common\models\register\registerAccumulate\ProviderWarehouse;
+use yii\base\InvalidConfigException;
 use yii\db\ActiveQuery;
 
 /**
@@ -13,9 +15,10 @@ use yii\db\ActiveQuery;
  * @property float      $price
  *
  * Отношения:
- * @property Unit               $unit
- * @property ProductCategory    $productCategory
- * @property ProductProvider    $productProvider
+ * @property Unit                   $unit
+ * @property ProductCategory        $productCategory
+ * @property ProductProvider        $productProvider
+ * @property ProviderWarehouse[]    $providerWarehouse
  */
 class Product extends Reference
 {
@@ -57,6 +60,7 @@ class Product extends Reference
             'unit_id'               => 'Единица измерения',
             'product_category_id'   => 'Категория продукта',
             'product_provider_id'   => 'Поставщик',
+            'quantity'              => 'Количество на складе',
         ]);
     }
 
@@ -82,5 +86,39 @@ class Product extends Reference
     public function getProductProvider()
     {
         return $this->hasOne(ProductProvider::class, ['id' => 'product_provider_id']);
+    }
+
+    /**
+     * @return ActiveQuery
+     */
+    public function getProviderWarehouse()
+    {
+        return $this->hasMany(ProviderWarehouse::class, ['product_id' => 'id']);
+    }
+
+    /**
+     * @return array|false
+     */
+    public function fields()
+    {
+        $fields = [
+            'quantity' => function ($model) {
+                return $model->getQuantity();
+            },
+        ];
+        return array_merge(parent::fields(), $fields);
+    }
+
+    /**
+     * @return false|string|null
+     * @throws InvalidConfigException
+     */
+    public function getQuantity()
+    {
+        return ProviderWarehouse::find()
+            ->select('SUM(quantity) AS quantity')
+            ->where(['product_id' => $this->id])
+            ->groupBy(['product_id'])
+            ->scalar();
     }
 }
