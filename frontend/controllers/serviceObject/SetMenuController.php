@@ -47,8 +47,8 @@ class SetMenuController extends FrontendModelController
                 'class' => 'frontend\actions\setMenu\DeleteMenuAction',
                 'modelClassForm' => $this->modelClassForm,
             ],
-            'edit-menu' => [
-                'class' => 'frontend\actions\setMenu\EditMenuCalendar',
+            'edit-weekend' => [
+                'class' => 'frontend\actions\setMenu\EditWeekendAction',
                 'modelClassForm' => $this->modelClassForm,
             ],
             'render-calendar' => [

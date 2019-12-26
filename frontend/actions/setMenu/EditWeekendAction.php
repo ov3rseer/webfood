@@ -10,7 +10,7 @@ use Yii;
 use yii\base\UserException;
 use yii\db\StaleObjectException;
 
-class EditMenuAction extends FrontendModelAction
+class EditWeekendAction extends FrontendModelAction
 {
     /**
      * @return bool
