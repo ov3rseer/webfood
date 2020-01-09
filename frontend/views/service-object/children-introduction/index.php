@@ -3,16 +3,13 @@
 use backend\widgets\ActiveForm;
 use backend\widgets\GridView\GridView;
 use common\models\enum\UserType;
-use common\models\reference\Child;
 use common\models\reference\SchoolClass;
 use common\models\reference\ServiceObject;
 use frontend\models\serviceObject\ChildrenIntroductionForm;
 use frontend\models\serviceObject\ChildrenIntroductionUploadFile;
 use yii\bootstrap\Modal;
-use yii\bootstrap\Tabs;
 use yii\data\ActiveDataProvider;
 use yii\helpers\Html;
-use yii\widgets\Pjax;
 
 /* @var yii\web\View $this */
 /* @var ChildrenIntroductionForm $model */
@@ -32,33 +29,6 @@ if ($serviceObject) {
     $uploadFileButtonId = 'upload-file-button';
     $uploadFileModalId = 'upload-file-modal';
 
-    $this->beginBlock('children');
-    echo GridView::widget([
-        'dataProvider' => new ActiveDataProvider([
-            'query' => Child::find()->alias('t')->andWhere(['t.service_object_id' => $serviceObject->id])->joinWith('schoolClass'),
-            'sort' => [
-                'attributes' => [
-                    'surname',
-                    'forename',
-                    'patronymic',
-                    'schoolClass' => [
-                        'asc' => ['number' => SORT_ASC,],
-                        'desc' => ['number' => SORT_DESC,],
-                    ],
-                ],
-            ],
-        ]),
-        'actionColumn' => false,
-        'checkboxColumn' => false,
-        'columns' => [
-            'surname',
-            'forename',
-            'patronymic',
-            'schoolClass',
-        ],
-    ]);
-    $this->endBlock();
-
     $this->beginBlock('classes');
     echo GridView::widget([
         'dataProvider' => new ActiveDataProvider([
@@ -73,36 +43,38 @@ if ($serviceObject) {
         'actionColumn' => false,
         'checkboxColumn' => false,
         'columns' => [
-            'number',
-            'litter',
+            'name' =>[
+                'format' => 'raw',
+                'label' => 'Класс',
+                'value' => function($rowModel){
+                    /** @var SchoolClass $rowModel */
+                    return $rowModel->name;
+                }
+            ],
             'children' => [
                 'format' => 'raw',
                 'label' => 'Ученики',
                 'headerOptions' => ['style' => 'text-align:center;'],
                 'value' => function ($rowModel) {
                     /** @var SchoolClass $rowModel */
-                    $children = [];
-                    foreach ($rowModel->schoolClassChildren as $schoolClassChild) {
-                        if (isset($schoolClassChild->child)) {
-                            $children[] = Html::encode($schoolClassChild->child->name_full);
+                    $result = '';
+                    if (!empty($rowModel->schoolClassChildren)) {
+                        $result = '<table class="table table-striped table-bordered">';
+                        $result .= '<thead><tr><td><strong>Ученик</strong></td><td style="width: 250px"><strong>Поставлен на питание</strong></td></tr></thead><tbody>';
+                        foreach ($rowModel->schoolClassChildren as $schoolClassChild) {
+                            if (isset($schoolClassChild->child)) {
+                                $result .= '<tr><td>' . Html::encode($schoolClassChild->child->name_full) . '</td><td>';
+                                $result .= Html::checkbox('is_feeding', $schoolClassChild->child->is_feeding, ['data-child-id' => $schoolClassChild->child_id]) . '</td></tr>';
+                            }
                         }
+                        $result .= '</tbody></table>';
                     }
-                    return Html::ul($children);
+                    return $result;
                 }
             ]
         ],
     ]);
     $this->endBlock();
-
-
-    $tabs[] = [
-        'label' => 'Ученики',
-        'content' => $this->blocks['children'],
-    ];
-    $tabs[] = [
-        'label' => 'Классы',
-        'content' => $this->blocks['classes'],
-    ];
 
     echo Html::beginTag('div', ['class' => 'container-fluid']);
 
@@ -117,11 +89,22 @@ if ($serviceObject) {
     echo Html::endTag('div');
 
     echo Html::beginTag('div', ['class' => 'row', 'style' => 'margin-top:25px;']);
-    echo Tabs::widget(['items' => $tabs]);
+    echo $this->blocks['classes'];
     echo Html::endTag('div');
     echo Html::endTag('div');
 
     $this->registerJs("
+        $('[name = is_feeding]').click(function(e){ 
+            var childId = $(this).data('child-id');
+            var isFeeding = $(this).is(':checked');
+            console.log(childId, isFeeding);
+            $.ajax({
+                url: 'set-on-food',
+                method: 'POST',
+                dataType: 'json',
+                data: {childId: childId, isFeeding: isFeeding},            
+            });
+        });
         $('#" . $handInputButtonId . "').click(function(e){ 
             $('#" . $handInputModalId . "').modal('show');
         });

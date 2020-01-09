@@ -3,6 +3,7 @@
 namespace frontend\controllers\serviceObject;
 
 use common\helpers\ArrayHelper;
+use common\models\reference\Child;
 use frontend\controllers\FrontendModelController;
 use frontend\models\serviceObject\ChildrenIntroductionForm;
 use frontend\models\serviceObject\ChildrenIntroductionUploadFile;
@@ -43,12 +44,7 @@ class ChildrenIntroductionController extends FrontendModelController
                 'class' => AccessControl::class,
                 'rules' => [
                     [
-                        'actions' => ['index'],
-                        'allow' => true,
-                        'roles' => ['service-object'],
-                    ],
-                    [
-                        'actions' => ['download-example-file'],
+                        'actions' => ['index', 'set-on-food', 'download-example-file'],
                         'allow' => true,
                         'roles' => ['service-object'],
                     ],
@@ -88,6 +84,23 @@ class ChildrenIntroductionController extends FrontendModelController
         }
         $model->scenario = ChildrenIntroductionForm::SCENARIO_HAND_INPUT;
         return $this->renderUniversal('@frontend/views/service-object/children-introduction/index', ['model' => $model, 'uploadFileForm' => $openCardUploadFile]);
+    }
+
+    /**
+     * Изменение параметра "Постановка на питание"
+     * @throws UserException
+     */
+    public function actionSetOnFood()
+    {
+        $childId = Yii::$app->request->post('childId');
+        $isFeeding = Yii::$app->request->post('isFeeding');
+        if($childId && $isFeeding){
+            $child = Child::findOne(['id' => $childId]);
+            if($child){
+                $child->is_feeding = $isFeeding == 'true';
+                $child->save();
+            }
+        }
     }
 
     /**
