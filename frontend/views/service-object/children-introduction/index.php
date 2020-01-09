@@ -60,7 +60,7 @@ if ($serviceObject) {
                     $result = '';
                     if (!empty($rowModel->schoolClassChildren)) {
                         $result = '<table class="table table-striped table-bordered">';
-                        $result .= '<thead><tr><td><strong>Ученик</strong></td><td style="width: 250px"><strong>Поставлен на питание</strong></td></tr></thead><tbody>';
+                        $result .= '<thead><tr><td><strong>Ученик</strong></td><td style="width: 250px"><strong>Подключен к питанию</strong></td></tr></thead><tbody>';
                         foreach ($rowModel->schoolClassChildren as $schoolClassChild) {
                             if (isset($schoolClassChild->child)) {
                                 $result .= '<tr><td>' . Html::encode($schoolClassChild->child->name_full) . '</td><td>';
