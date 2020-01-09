@@ -17,7 +17,6 @@ use yii\helpers\Html;
 class RequestForm extends Form
 {
     public $service_object_id;
-    public $delivery_day;
     public $product_provider_id;
 
     /**

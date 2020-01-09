@@ -2,12 +2,16 @@
 
 namespace common\models\document;
 
+use backend\controllers\document\DocumentController;
 use common\components\DateTime;
 use common\models\enum\RequestStatus;
 use common\models\reference\ProductProvider;
 use common\models\reference\ServiceObject;
 use common\models\tablepart\RequestProduct;
+use ReflectionException;
+use yii\base\InvalidConfigException;
 use yii\db\ActiveQuery;
+use yii\helpers\Html;
 
 /**
  * Модель документа "Предварительная заявка"
@@ -111,5 +115,35 @@ class Request extends Document
             ], $result);
         }
         return $result;
+    }
+
+    /**
+     * @param $tablePartRelation
+     * @param $form
+     * @param bool $readonly
+     * @return array
+     * @throws ReflectionException
+     * @throws InvalidConfigException
+     */
+    public function getTablePartColumns($tablePartRelation, $form, $readonly = false)
+    {
+        $model = $this;
+        $parentResult = DocumentController::getTablePartColumns($model, $tablePartRelation, $form, $readonly);
+        if ($tablePartRelation == 'requestProducts') {
+            $parentResult['unit'] = [
+                'format' => 'raw',
+                'label' => 'Ед. измерения',
+                'headerOptions' => ['style' => 'text-align:center;'],
+                'value' => function ($rowModel) use ($form, $model, $tablePartRelation) {
+                    /** @var RequestProduct $rowModel */
+                    $result = '';
+                    if ($rowModel->product && $rowModel->product->unit) {
+                        $result = Html::encode($rowModel->product->unit);
+                    }
+                    return $result;
+                }
+            ];
+        }
+        return $parentResult;
     }
 }
