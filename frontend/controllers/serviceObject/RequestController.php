@@ -3,6 +3,7 @@
 namespace frontend\controllers\serviceObject;
 
 use common\helpers\ArrayHelper;
+use common\models\document\Request;
 use frontend\controllers\FrontendModelController;
 use yii\filters\AccessControl;
 
@@ -37,9 +38,7 @@ class RequestController extends FrontendModelController
      */
     public function actions()
     {
-        $result = parent::actions();
-        unset($result['index']);
-        $result = array_merge($result, [
+        return array_merge(parent::actions(), [
             'index' => [
                 'class' => 'frontend\actions\request\IndexAction',
                 'modelClass' => $this->modelClass,
@@ -59,7 +58,6 @@ class RequestController extends FrontendModelController
                 'viewPath' => '@frontend/views/service-object/request/update',
             ],
         ]);
-        return $result;
     }
 
     /**
@@ -79,5 +77,14 @@ class RequestController extends FrontendModelController
                 ],
             ],
         ]);
+    }
+
+    /**
+     * @inheritdoc
+     * @param Request $model
+     */
+    static public function getTablePartColumns($model, $tablePartRelation, $form, $readonly = false)
+    {
+        return $model->getTablePartColumns($tablePartRelation, $form, $readonly);
     }
 }

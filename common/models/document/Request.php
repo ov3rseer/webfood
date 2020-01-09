@@ -133,7 +133,6 @@ class Request extends Document
             $parentResult['unit'] = [
                 'format' => 'raw',
                 'label' => 'Ед. измерения',
-                'headerOptions' => ['style' => 'text-align:center;'],
                 'value' => function ($rowModel) use ($form, $model, $tablePartRelation) {
                     /** @var RequestProduct $rowModel */
                     $result = '';
