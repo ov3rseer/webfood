@@ -27,4 +27,10 @@ if ($cardHistories) {
         echo Html::endTag('div');
         echo Html::endTag('div');
     }
+} else {
+    echo Html::beginTag('div', ['class' => 'row list-group-item']);
+    echo Html::beginTag('div', ['class' => 'col-xs-12']);
+    echo 'Нет никаких операций по карте.';
+    echo Html::endTag('div');
+    echo Html::endTag('div');
 }
