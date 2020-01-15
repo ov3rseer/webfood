@@ -46,10 +46,9 @@ class RequestController extends FrontendModelController
                 'viewPath' => '@frontend/views/service-object/request/index',
             ],
             'create' => [
-                'class' => 'frontend\actions\base\CreateAction',
+                'class' => 'frontend\actions\request\CreateAction',
                 'modelClass' => $this->modelClass,
                 'modelClassForm' => $this->modelClassForm,
-                'viewPath' => '@frontend/views/service-object/request/update',
             ],
             'update' => [
                 'class' => 'frontend\actions\base\UpdateAction',

@@ -103,18 +103,18 @@ if (!$model->isNewRecord) {
 <?php
 
 echo $form->errorSummary($model);
-
-foreach ($model->getFieldsOptions() as $field => $fieldOptions) {
-    if(!in_array($field, ['document_basis_id', 'create_user_id', 'update_user_id'])){
-        echo $form->autoField($model, $field, $fieldOptions);
-        if ($fieldOptions['type'] == ActiveField::FILE && isset($fieldOptions['options']['related_field'])) {
-        $fileId = $model->{$fieldOptions['options']['related_field']};
-        if ($fileId) {
-            echo '<div class="form-group">' . Html::a('Скачать файл', ['/reference/file/download', 'id' => $fileId],
-                    ['target' => '_blank', 'data-pjax' => 0]) . '</div>';
-        }
-    }}
-}
+$fieldsOptions = $model->getFieldsOptions();
+echo '<div class="row">';
+echo '<div class="col-xs-3">';
+echo $form->autoField($model, 'delivery_day', $fieldsOptions['delivery_day']);
+echo '</div>';
+echo '<div class="col-xs-3">';
+echo $form->autoField($model, 'request_status_id', $fieldsOptions['request_status_id'])->readonly();
+echo '</div>';
+echo '<div class="col-xs-3">';
+echo $form->autoField($model, 'product_provider_id', $fieldsOptions['product_provider_id'])->readonly();
+echo '</div>';
+echo '</div>';
 
 $tabs = [];
 foreach ($controller->getTabs($model) as $relation => $tab) {

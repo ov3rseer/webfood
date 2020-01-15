@@ -3,12 +3,10 @@
 namespace frontend\models\serviceObject;
 
 use backend\widgets\ActiveField;
+use common\components\DateTime;
 use common\models\document\Request;
-use common\models\reference\ServiceObject;
 use Exception;
 use common\models\form\Form;
-use yii\base\InvalidConfigException;
-use yii\db\ActiveQuery;
 use yii\helpers\Html;
 
 /**
@@ -16,8 +14,10 @@ use yii\helpers\Html;
  */
 class RequestForm extends Form
 {
-    public $service_object_id;
-    public $product_provider_id;
+    /**
+     * @var DateTime дата поставки
+     */
+    public $delivery_day;
 
     /**
      * @inheritdoc
@@ -41,7 +41,8 @@ class RequestForm extends Form
     public function rules()
     {
         return array_merge(parent::rules(), [
-            [['service_object_id'], 'safe'],
+            [['delivery_day'], 'date', 'format' => 'php:' . DateTime::DB_DATE_FORMAT],
+            [['delivery_day'], 'required'],
         ]);
     }
 
@@ -51,17 +52,8 @@ class RequestForm extends Form
     public function attributeLabels()
     {
         return array_merge(parent::attributeLabels(), [
-            'service_object_id' => 'Заказчик',
+            'delivery_day' => 'Дата поставки',
         ]);
-    }
-
-    /**
-     * @return ActiveQuery
-     * @throws InvalidConfigException
-     */
-    public function getServiceObject()
-    {
-        return ServiceObject::find()->andWhere(['id' => $this->service_object_id]);
     }
 
     /**
@@ -102,7 +94,7 @@ class RequestForm extends Form
                     /** @var Request $rowModel */
                     $result = '';
                     foreach ($rowModel->requestProducts as $requestProduct) {
-                        $result .= Html::encode($requestProduct->product) . ' - ' . Html::encode($requestProduct->quantity) . ' ' . Html::encode($requestProduct->product->unit). '<br>';
+                        $result .= Html::encode($requestProduct->product) . ' - ' . Html::encode($requestProduct->quantity) . ' ' . Html::encode($requestProduct->product->unit) . '<br>';
                     }
                     return $result;
                 }
