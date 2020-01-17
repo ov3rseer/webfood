@@ -1,10 +1,10 @@
 <?php
 
-
 use backend\controllers\BackendModelController;
 use backend\widgets\ActiveForm;
 use backend\widgets\GridView\GridView;
-use backend\widgets\GridView\GridViewWithToolbar;
+use common\models\document\Request;
+use common\models\enum\RequestStatus;
 use yii\bootstrap\Html;
 use yii\bootstrap\Tabs;
 use yii\data\ActiveDataProvider;
@@ -21,7 +21,7 @@ $this->params['breadcrumbs'][] = $this->title;
 $controller = $this->context;
 
 /** @noinspection PhpUnhandledExceptionInspection */
-$reflection = new \ReflectionClass($model->className());
+$reflection = new ReflectionClass($model->className());
 $shortClassName = $reflection->getShortName();
 $gridWidgetId = 'grid-' . $shortClassName;
 
@@ -29,6 +29,43 @@ foreach ($requests as $key => $request) {
     $this->beginBlock('grid' . $key);
     echo GridView::widget([
         'id' => $gridWidgetId,
+        'actionColumn' => [
+            'class' => 'yii\grid\ActionColumn',
+            'header' => 'Действия',
+            'template' => '{update} <br> {change-status}',
+            'buttons' => [
+                'change-status' => function ($url, $rowModel) {
+                    /** @var Request $rowModel */
+                    if ($rowModel->request_status_id == RequestStatus::NEW) {
+                        //ACTIVE
+                        $title = 'Забронировать';
+                        $class = 'btn btn-success';
+                        $status = '3';
+                    } else if ($rowModel->request_status_id == RequestStatus::IN_ROUTE) {
+                        //DEACTIVE
+                        $title = 'Принять груз';
+                        $class = 'btn btn-success';
+                        $status = '1';
+                    }
+                    $content = $title;
+                    $options = [
+                        //'id' => 'sa-params',
+                        'title' => $title,
+                        'aria-label' => $title,
+                        'data-pjax' => '0',
+                        'class' => $class,
+                        'onclick' => 'updateStatus("' . $title . '",' . $rowModel->id . ', ' . $status . ')',
+                    ];
+                    return Html::a($content, $url,$options);
+                },
+                'update' => function ($url, $rowModel) {
+                    if ($rowModel->request_status_id == RequestStatus::NEW) {
+                        return Html::a('Изменить', $url, ['title' => 'Изменить', 'class' => 'btn btn-success']);
+                    }
+                    return null;
+                }
+            ],
+        ],
         'dataProvider' => new ActiveDataProvider(['query' => $request[1]]),
         'columns' => $columns,
     ]);
