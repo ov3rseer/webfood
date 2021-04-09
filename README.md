@@ -159,26 +159,6 @@
 
 пароль: `1234`
 
-### **Как скачать проект:**
-
-В папке где будет находиться проект нужно выполнить команду:
-
-`git clone http://adlibtech.ru/git/SergeyDashko/WebFood_extend.git`
-
-
-### **Правила:**
-
-Перед тем как локально вносить изменения, необходимо сделать новую ветку. 
-После внесения изменений выполнить команды:
-
-`git commit`
-
-`git push`
-
-Создаем новый Pull Request от своей ветки.
-
-**`НИ В КОЕМ СЛУЧАЕ НЕ ДЕЛАЕМ COMMIT В MASTER!!!`**
-
 
 ### **Настройка cron:**
 
@@ -216,10 +196,3 @@ GitHub: https://github.com/yii2tech/crontab
 `composer install`
 
 `php ./vendor/bin/codecept build`
-
-
-### **Почтовый сервер**
-
-E-mail: `webfood.test@gmail.com`
-
-Пароль: `GrDM7b6h57HvZCq`
